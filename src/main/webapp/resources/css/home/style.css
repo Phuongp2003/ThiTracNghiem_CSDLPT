@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+ul{
+    list-style: none;
+}
+a{
+    color: black;
+    text-decoration: none !important; 
+}
+
+.favorite-types .card:hover {
+    transform: translate(0px, -5px);
+    transition: all 0.5s;
+    box-shadow: 2.5px 5px 7.5px 5px lightgrey;
+}
+
+.favorite-types .card {
+    min-height: 4rem;
+    margin-bottom: 1.3rem;
+    background-color:#EEEEEE;
+}
+
+.favorite-types .title {
+    margin-bottom: 1rem;
+}
+.top-sell .card {
+    display: inline-flex;
+    margin-bottom:1.5rem;
+    width: 18.6rem;
+    height: 36rem;
+}
+
+.top-sell .card:hover {
+    transition: all 0.5s;
+    box-shadow: 2.5px 2.5px 2.5px 2.5px lightgrey;
+}
+
+.top-sell .title {
+    margin-bottom: 1rem;
+}
+
+.shop {
+    margin-top: 2rem;
+}
+.collection-link{
+    display: flex;
+}
+.collection .card-header {
+    display: flex;
+    justify-content: space-around;
+}
+.collection-group{
+    background: #f9f9f9;
+    margin-bottom: 2rem;
+    border-radius: 1rem;
+    display: flex;
+    justify-content:space-around;
+}
+.collection-product{
+    margin-top: 1rem;
+}
+.collection-product .card{
+    margin-bottom: 1.5rem;
+}
+.collection-product .card:hover {
+    transform: translate(0px, -5px);
+
+    transition: all 0.5s ease-in-out;
+    box-shadow: 2.5px 5px 7.5px 5px lightgrey;
+}

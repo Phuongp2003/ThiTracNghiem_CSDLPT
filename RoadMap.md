@@ -1,0 +1,4 @@
+- [x] Khởi tạo dự án
+- [x] Kết nối database, thử kết nối và lấy data
+- [ ] Tạo phần đăng nhập
+- [ ] Import bean

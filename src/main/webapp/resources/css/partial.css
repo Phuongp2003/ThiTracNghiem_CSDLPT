@@ -1,0 +1,66 @@
+body {
+    box-sizing: border-box;
+}
+
+nav .navbar-brand img {
+    max-width: 200px;
+    aspect-ratio: 4;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color:#EEEEEE;
+}
+ul{
+    list-style: none;
+}
+a{
+    color: black;
+    text-decoration: none !important; 
+}
+
+.footer {
+    margin-top: 5rem;
+    position: relative;
+}
+
+.footer-bg {
+    background-color: #09182e;
+    z-index: 1;
+    position: absolute;
+    height: 100%;
+}
+
+.footer .navbar-nav {
+    z-index: 2;
+}
+
+.footer .nav-link {
+    color: white;
+}
+
+.footer a {
+    color: white;
+}
+
+.footer-copyright {
+    padding-top: 1rem;
+    z-index: 2;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: white;
+    background-color: gray;
+}
+
+.message-box {
+    width: 100%;
+}
+
+.message-box--button {
+    border: none;
+    background: initial;
+    backdrop-filter: contrast(0.7);
+    position: absolute;
+    right: 10px;
+}

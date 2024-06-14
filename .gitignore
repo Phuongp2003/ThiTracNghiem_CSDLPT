@@ -1,0 +1,15 @@
+/target
+/.bin
+/.classpath
+/.project
+/.settings
+.vscode
+/src/main/java/lib
+/src/main/webapp/WEB-INF/classes
+src/main/webapp/WEB-INF/configs/spring-config-hibernate.xml  
+/bin/
+/build/
+!/.settings/org.eclipse.wst.common.component
+!/.settings/.jsdtscope
+!/.settings/jsdtscope.txt
+!/.vscode/settings.json.example

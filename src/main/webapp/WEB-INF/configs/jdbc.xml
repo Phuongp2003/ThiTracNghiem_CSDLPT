@@ -1,0 +1,48 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd ">
+	
+	<!-- Initialization for primary data source -->
+	<bean id="mainSite" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://localhost:16240;Database=TN_CSDLPT;encrypt=false;" />
+	</bean>
+	
+	<!-- Initialization for secondary data source -->
+	<bean id="firstSite" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://localhost:16241;Database=TN_CSDLPT;encrypt=false;" />
+	</bean>
+	
+	<!-- Initialization for secondary data source -->
+	<bean id="secondSite" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://localhost:16242;Database=TN_CSDLPT;encrypt=false;" />
+	</bean>
+	
+	<!-- Initialization for secondary data source -->
+	<bean id="reportSite" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+		<property name="url" value="jdbc:sqlserver://localhost:16243;Database=TN_CSDLPT;encrypt=false;" />
+	</bean>
+	
+	<!-- Definition for primary JdbcTemplate -->
+	<bean id="mainSiteTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="mainSite" />
+	</bean>
+	
+	<!-- Definition for secondary JdbcTemplate -->
+	<bean id="firstSiteTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="firstSite" />
+	</bean>
+	
+	<!-- Definition for secondary JdbcTemplate -->
+	<bean id="secondSiteTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="secondSite" />
+	</bean>
+	
+	<!-- Definition for secondary JdbcTemplate -->
+	<bean id="reportSiteTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="reportSite" />
+	</bean>
+	
+</beans>
