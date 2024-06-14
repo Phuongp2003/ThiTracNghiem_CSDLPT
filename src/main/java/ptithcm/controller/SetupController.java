@@ -40,11 +40,11 @@ public class SetupController {
         String username = "sa";
         String password = "sa";
         currentConnection = new GlobalVariable();
-        currentConnection.setSite(secondSite);
-        secondSite.setUsername(username);
-        secondSite.setPassword(password);
-        currentConnection.setUsername(secondSite.getUsername());
-        currentConnection.setPassword(secondSite.getPassword());
+        currentConnection.setSite(firstSite);
+        firstSite.setUsername(username);
+        firstSite.setPassword(password);
+        currentConnection.setUsername(firstSite.getUsername());
+        currentConnection.setPassword(firstSite.getPassword());
         session.setAttribute("currentConnection", currentConnection);
         return "redirect:/home.htm";
     }

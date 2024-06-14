@@ -7,15 +7,8 @@
 	<head>
 		<jsp:include page="${viewsPath}/partial/head.jsp" />
 	</head>
-	
-	<body class="bg-body-tertiary">
-		<jsp:include page="${elements}/navbar.jsp" />
-		<jsp:include page="${elements}/theme.jsp" />
-		Hello web
-		Account ${account.USERNAME} with id ${account.ID} and password ${account.PASSWORD}
-	</body>
-	
-	<jsp:include page="${partial}/footer.jsp" />
+	<jsp:include page="${elements}/login/index.jsp" />
 	<jsp:include page="${elements}/theme.jsp" />
+	<jsp:include page="${partial}/script_al.jsp" />
 	
 </html>

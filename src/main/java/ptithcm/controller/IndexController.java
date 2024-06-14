@@ -1,5 +1,7 @@
 package ptithcm.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,22 @@ public class IndexController {
     @Autowired
     private GlobalVariable currentConnection;
 
+    @Autowired
+    SinhVienJDBCTemplate sinhVienJDBCTemplate;
+
     @RequestMapping("/home")
     public String home(Model model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         model.addAttribute("title", "PTITHCM Book Shop");
         model.addAttribute("type", "home");
-        SinhVienJDBCTemplate sinhVienJDBCTemplate = new SinhVienJDBCTemplate();
+        return "pages/home";
+    }
+
+    @RequestMapping("/test")
+    public String test(Model model, HttpSession session) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        model.addAttribute("title", "PTITHCM Book Shop");
+        model.addAttribute("type", "home");
         if (currentConnection != null) {
             // Ví dụ
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
@@ -31,6 +43,11 @@ public class IndexController {
             else
                 System.out.println("Không tìm thấy sinh viên");
         }
+        List<String> res = sinhVienJDBCTemplate.login("001", "001");
+        if (res != null)
+            System.out.println(res);
+        else
+            System.out.println("Không tìm thấy sinh viên");
         return "pages/home";
     }
 

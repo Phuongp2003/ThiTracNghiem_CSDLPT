@@ -35,6 +35,7 @@ public class GlobalVariable {
 
     public void setUsername(String username) {
         this.username = username;
+        site.setUsername(username);
     }
 
     public String getPassword() {
@@ -43,5 +44,6 @@ public class GlobalVariable {
 
     public void setPassword(String password) {
         this.password = password;
+        site.setPassword(password);
     }
 }

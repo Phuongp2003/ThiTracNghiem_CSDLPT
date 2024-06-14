@@ -18,7 +18,7 @@
 		font-weight: bold;
 	}
 </style>
-<nav class="navbar navbar-light bg-light fs-3">
+<nav class="navbar navbar-light bg-light fs-3 bg-body-tertiary">
 	<div class="container-fluid flex-row-reverse mx-auto justify-content-start w-75">
 		<div class="d-flex me-3">
 			<a href="cart.htm" class="cart-icon">
@@ -34,7 +34,7 @@
 		<div class="d-flex me-3"><a href="#"><i class="bi bi-search"></i></a></div>
 	</div>
 </nav>
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top fs-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top fs-3 bg-body-tertiary">
 	<div class="container-fluid mx-auto w-75">
 		<a class="navbar-brand" href="home.htm"> <img src="resources/imgs/ptitlogo.png" alt="Navbar Brand" srcset=""> </a>
 		<button class="navbar-toggler" type="button" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="Toggle navigation">

@@ -1,7 +1,9 @@
 package ptithcm.JDBCtemplate;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 import ptithcm.bean.SinhVien;
 import ptithcm.mapper.SinhVienMapper;
@@ -9,9 +11,14 @@ import ptithcm.util.IDFix;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class SinhVienJDBCTemplate {
+    @Autowired
+    private JdbcTemplate mainSiteTemplate;
+
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
@@ -77,5 +84,24 @@ public class SinhVienJDBCTemplate {
     public List<SinhVien> findSinhVien(String name) {
         String SQL = "SELECT * FROM SinhVien WHERE TEN LIKE ?";
         return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new SinhVienMapper());
+    }
+
+    // Login SinhVien by Procedure
+    public List<String> login(String masv, String matkhau) {
+        String SQL = "{call SP_DangNhapSinhVien(?, ?)}";
+        List<List<String>> res;
+        try {
+            res = mainSiteTemplate.query(SQL, new Object[] { masv, matkhau }, (ResultSet rs, int rowNum) -> {
+                // return USERNAME and TENNHOM
+                List<String> list = new ArrayList<String>();
+                list.add(rs.getString("HOTEN"));
+                list.add(rs.getString("TENNHOM"));
+                return list;
+            });
+        } catch (DataAccessException e) {
+            System.err.println("Error: " + e.getMessage());
+            res = null;
+        }
+        return res.get(0);
     }
 }

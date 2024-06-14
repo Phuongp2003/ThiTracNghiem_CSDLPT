@@ -53,3 +53,4 @@
 		<p>©Bản quyền.</p>
 	</div>
 </div>
+<jsp:include page="script_al.jsp" />
