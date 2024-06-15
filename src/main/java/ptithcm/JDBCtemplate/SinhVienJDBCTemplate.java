@@ -5,6 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.SinhVien;
 import ptithcm.mapper.SinhVienMapper;
 import ptithcm.util.IDFix;
@@ -19,10 +20,14 @@ public class SinhVienJDBCTemplate {
     @Autowired
     private JdbcTemplate mainSiteTemplate;
 
+    @Autowired
+    private GlobalVariable currentConnection;
+
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.currentConnection.setCmd(jdbcTemplate);
     }
 
     // New SinhVien
@@ -118,7 +123,7 @@ public class SinhVienJDBCTemplate {
         String SQL = "{call SP_DangNhapSinhVien(?, ?)}";
         List<List<String>> res;
         try {
-            res = mainSiteTemplate.query(SQL, new Object[] { masv, matkhau }, (ResultSet rs, int rowNum) -> {
+            res = jdbcTemplate.query(SQL, new Object[] { masv, matkhau }, (ResultSet rs, int rowNum) -> {
                 // return USERNAME and TENNHOM
                 List<String> list = new ArrayList<String>();
                 list.add(rs.getString("HOTEN"));

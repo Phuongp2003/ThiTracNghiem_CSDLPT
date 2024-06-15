@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.GiaoVien;
+import ptithcm.bean.GlobalVariable;
 import ptithcm.mapper.GiaoVienMapper;
 
 @Service
@@ -18,10 +19,14 @@ public class GiaoVienJDBCTemplate {
     @Autowired
     private JdbcTemplate mainSiteTemplate;
 
+    @Autowired
+    private GlobalVariable currentConnection;
+
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.currentConnection.setCmd(jdbcTemplate);
     }
 
     // New GiaoVien

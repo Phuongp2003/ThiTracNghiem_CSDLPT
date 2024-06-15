@@ -1,14 +1,21 @@
 package ptithcm.bean;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class GlobalVariable {
+    @Autowired
+    private DriverManagerDataSource mainSite;
+
     private DriverManagerDataSource site;
+    private JdbcTemplate root_cmd;
+    private JdbcTemplate cmd;
     private String username;
     private String password;
     private CurrentUser currentUser;
@@ -74,6 +81,18 @@ public class GlobalVariable {
 
     public void setSite(DriverManagerDataSource site) {
         this.site = site;
+    }
+
+    public JdbcTemplate getRoot_cmd() {
+        return root_cmd;
+    }
+
+    public JdbcTemplate getCmd() {
+        return cmd;
+    }
+
+    public void setCmd(JdbcTemplate cmd) {
+        this.cmd = cmd;
     }
 
     public String getUsername() {
