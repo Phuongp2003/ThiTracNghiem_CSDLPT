@@ -12,101 +12,116 @@ public class BoDe {
 	private String DAPAN;
 	private String MAGV;
 
-	public BoDe() {}
+	public BoDe() {
+	}
 
-	public BoDe(int cAUHOI, String mAMH, String tRINHDO, String nOIDUNG, String a, String b, String c, String d,
-			String dAPAN, String mAGV) {
-		CAUHOI = cAUHOI;
-		MAMH = mAMH;
-		TRINHDO = tRINHDO;
-		NOIDUNG = nOIDUNG;
-		A = a;
-		B = b;
-		C = c;
-		D = d;
-		DAPAN = dAPAN;
-		MAGV = mAGV;
+	public BoDe(int CAUHOI, String MAMH, String TRINHDO, String NOIDUNG, String A, String B, String C, String D,
+			String DAPAN, String MAGV) {
+		this.CAUHOI = CAUHOI;
+		this.MAMH = MAMH;
+		this.TRINHDO = TRINHDO;
+		this.NOIDUNG = NOIDUNG;
+		this.A = A;
+		this.B = B;
+		this.C = C;
+		this.D = D;
+		this.DAPAN = DAPAN;
+		this.MAGV = MAGV;
 	}
 
 	public int getCAUHOI() {
 		return CAUHOI;
 	}
 
-	public void setCAUHOI(int cAUHOI) {
-		CAUHOI = cAUHOI;
+	public void setCAUHOI(int CAUHOI) {
+		this.CAUHOI = CAUHOI;
 	}
 
 	public String getMAMH() {
 		return MAMH;
 	}
 
-	public void setMAMH(String mAMH) {
-		MAMH = mAMH;
+	public void setMAMH(String MAMH) {
+		this.MAMH = MAMH;
 	}
 
 	public String getTRINHDO() {
 		return TRINHDO;
 	}
 
-	public void setTRINHDO(String tRINHDO) {
-		TRINHDO = tRINHDO;
+	public void setTRINHDO(String TRINHDO) {
+		this.TRINHDO = TRINHDO;
 	}
 
 	public String getNOIDUNG() {
 		return NOIDUNG;
 	}
 
-	public void setNOIDUNG(String nOIDUNG) {
-		NOIDUNG = nOIDUNG;
+	public void setNOIDUNG(String NOIDUNG) {
+		this.NOIDUNG = NOIDUNG;
 	}
 
 	public String getA() {
 		return A;
 	}
 
-	public void setA(String a) {
-		A = a;
+	public void setA(String A) {
+		this.A = A;
 	}
 
 	public String getB() {
 		return B;
 	}
 
-	public void setB(String b) {
-		B = b;
+	public void setB(String B) {
+		this.B = B;
 	}
 
 	public String getC() {
 		return C;
 	}
 
-	public void setC(String c) {
-		C = c;
+	public void setC(String C) {
+		this.C = C;
 	}
 
 	public String getD() {
 		return D;
 	}
 
-	public void setD(String d) {
-		D = d;
+	public void setD(String D) {
+		this.D = D;
 	}
 
 	public String getDAPAN() {
 		return DAPAN;
 	}
 
-	public void setDAPAN(String dAPAN) {
-		DAPAN = dAPAN;
+	public void setDAPAN(String DAPAN) {
+		this.DAPAN = DAPAN;
 	}
 
 	public String getMAGV() {
 		return MAGV;
 	}
 
-	public void setMAGV(String mAGV) {
-		MAGV = mAGV;
+	public void setMAGV(String MAGV) {
+		this.MAGV = MAGV;
 	}
-	
-	
+
+	@Override
+	public String toString() {
+		return "BoDe{" +
+				"CAUHOI=" + CAUHOI +
+				", MAMH='" + MAMH + '\'' +
+				", TRINHDO='" + TRINHDO + '\'' +
+				", NOIDUNG='" + NOIDUNG + '\'' +
+				", A='" + A + '\'' +
+				", B='" + B + '\'' +
+				", C='" + C + '\'' +
+				", D='" + D + '\'' +
+				", DAPAN='" + DAPAN + '\'' +
+				", MAGV='" + MAGV + '\'' +
+				'}';
+	}
 }

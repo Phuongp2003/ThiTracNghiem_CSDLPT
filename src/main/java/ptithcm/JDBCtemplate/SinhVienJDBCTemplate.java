@@ -27,10 +27,15 @@ public class SinhVienJDBCTemplate {
 
     // New SinhVien
     public void create(SinhVien sinhVien) {
-        String SQL = "INSERT INTO SinhVien (MASV, HO, TEN, NGAYSINH, DIACHI, MALOP, MATKHAU) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(SQL, sinhVien.getMASV(), sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(),
-                sinhVien.getDIACHI(), sinhVien.getMALOP(), sinhVien.getMATKHAU());
-        System.out.println("Created Record Name = " + sinhVien.getTEN());
+        try {
+            String SQL = "INSERT INTO SinhVien (MASV, HO, TEN, NGAYSINH, DIACHI, MALOP, MATKHAU) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            jdbcTemplate.update(SQL, sinhVien.getMASV(), sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(),
+                    sinhVien.getDIACHI(), sinhVien.getMALOP(), sinhVien.getMATKHAU());
+            System.out.println("Created Record Name = " + sinhVien.getTEN());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - create error: " + e.getMessage());
+        }
     }
 
     // Get SinhVien by ID
@@ -52,7 +57,7 @@ public class SinhVienJDBCTemplate {
             });
         } catch (DataAccessException e) {
             e.printStackTrace();
-            System.err.println("Error: " + e.getMessage());
+            System.err.println("Sinh Vien - select Error: " + e.getMessage());
             res = null;
         }
 
@@ -61,29 +66,51 @@ public class SinhVienJDBCTemplate {
 
     // Get all SinhVien
     public List<SinhVien> listSinhVien() {
-        String SQL = "SELECT * FROM SinhVien";
-        return jdbcTemplate.query(SQL, new SinhVienMapper());
+        try {
+            String SQL = "SELECT * FROM SinhVien";
+            return jdbcTemplate.query(SQL, new SinhVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - list Error: " + e.getMessage());
+            return null;
+        }
     }
 
     // Update SinhVien (input: Id, SinhVien)
     public void update(String masv, SinhVien sinhVien) {
-        String SQL = "UPDATE SinhVien SET HO = ?, TEN = ?, NGAYSINH = ?, DIACHI = ?, MALOP = ?, MATKHAU = ? WHERE MASV = ?";
-        jdbcTemplate.update(SQL, sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(), sinhVien.getDIACHI(),
-                sinhVien.getMALOP(), sinhVien.getMATKHAU(), masv);
-        System.out.println("Updated Record with ID = " + masv);
+        try {
+            String SQL = "UPDATE SinhVien SET HO = ?, TEN = ?, NGAYSINH = ?, DIACHI = ?, MALOP = ?, MATKHAU = ? WHERE MASV = ?";
+            jdbcTemplate.update(SQL, sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(), sinhVien.getDIACHI(),
+                    sinhVien.getMALOP(), sinhVien.getMATKHAU(), masv);
+            System.out.println("Updated Record with ID = " + masv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - update Error: " + e.getMessage());
+        }
     }
 
     // Delete SinhVien (input: Id)
     public void delete(String masv) {
-        String SQL = "DELETE FROM SinhVien WHERE MASV = ?";
-        jdbcTemplate.update(SQL, masv);
-        System.out.println("Deleted Record with ID = " + masv);
+        try {
+            String SQL = "DELETE FROM SinhVien WHERE MASV = ?";
+            jdbcTemplate.update(SQL, masv);
+            System.out.println("Deleted Record with ID = " + masv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - delete Error: " + e.getMessage());
+        }
     }
 
     // Find SinhVien by Name
     public List<SinhVien> findSinhVien(String name) {
-        String SQL = "SELECT * FROM SinhVien WHERE TEN LIKE ?";
-        return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new SinhVienMapper());
+        try {
+            String SQL = "SELECT * FROM SinhVien WHERE TEN LIKE ?";
+            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new SinhVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            return null;
+        }
     }
 
     // Login SinhVien by Procedure

@@ -18,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
+import ptithcm.service.GiaoVienService;
+import ptithcm.service.SinhVienService;
 
 @Controller
 @RequestMapping("/auth")
@@ -29,7 +31,10 @@ public class UserController {
     private JdbcTemplate mainSiteTemplate;
 
     @Autowired
-    private SinhVienJDBCTemplate sinhVienJDBCTemplate;
+    private SinhVienService sinhVienService;
+
+    @Autowired
+    private GiaoVienService giaoVienService;
 
     @Autowired
     private DriverManagerDataSource firstSite;
@@ -91,12 +96,21 @@ public class UserController {
             currentConnection.setUsername(username);
             currentConnection.setPassword(password);
 
-            // Check login
+            // Check login - Server
             currentConnection.getSite().getConnection();
 
-            // Check login - SinhVien
-            List<String> sinhVienInfo = sinhVienJDBCTemplate.login(svUsername, svPassword);
-            System.out.println(sinhVienInfo);
+            // Check login - DB
+            if (usertype.equals("SV")) {
+                sinhVienService.setDataSource(currentConnection.getSite());
+                List<String> sinhVienInfo = sinhVienService.dangNhap(svUsername, svPassword);
+                System.out.println(sinhVienInfo);
+                currentConnection.setCurrentUser(username, sinhVienInfo.get(0), "Sinh Viên");
+            } else {
+                giaoVienService.setDataSource(currentConnection.getSite());
+                List<String> giaoVienInfo = giaoVienService.dangNhap(username);
+                System.out.println(giaoVienInfo);
+                currentConnection.setCurrentUser(username, giaoVienInfo.get(0), "Giáo Viên");
+            }
 
         } catch (SQLException e) {
             System.out.println("LOGIN FAIL" + e);
