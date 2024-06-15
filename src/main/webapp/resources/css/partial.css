@@ -3,7 +3,8 @@ body {
 }
 
 nav .navbar-brand img {
-    max-width: 200px;
+    max-width: 130px;
+    height: 75px;
     aspect-ratio: 4;
 }
 

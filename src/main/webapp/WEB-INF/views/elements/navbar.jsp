@@ -41,15 +41,27 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5 gap-3">
 				<li class="nav-item">
-					<a class="nav-link" href="shop.htm">Sách</a>
+					<a class="nav-link" href="teacher.htm">Giáo viên</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="forum.htm">Bài viết</a>
+					<a class="nav-link" href="student.htm">Sinh viên</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">Về chúng tôi</a>
+					<a class="nav-link" href="subject.htm">Môn học</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="department-class.htm">Khoa, lớp</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="">Nhập đề</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="">Chuẩn bị thi</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="">Thi</a>
 				</li>
 			</ul>
 		</div>
