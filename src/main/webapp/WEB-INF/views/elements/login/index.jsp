@@ -41,7 +41,7 @@
 					<option value="GV">Giảng Viên</option>
 					<option value="SV">Sinh Viên</option>
 				</select>
-				<label for="floatingInput">Cơ sở</label>
+				<label for="floatingInput">Vai trò</label>
 			</div>
 			<div class="form-floating">
 				<select class="form-select" id="site" name="site" required="true">

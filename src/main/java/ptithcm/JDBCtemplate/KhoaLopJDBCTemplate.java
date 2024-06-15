@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import ptithcm.bean.Khoa;
 import ptithcm.bean.Lop;
+import ptithcm.bean.MonHoc;
 import ptithcm.mapper.KhoaMapper;
 import ptithcm.mapper.LopMapper;
+import ptithcm.mapper.SinhVienMapper;
 import ptithcm.util.IDFix;
 
 @Service
