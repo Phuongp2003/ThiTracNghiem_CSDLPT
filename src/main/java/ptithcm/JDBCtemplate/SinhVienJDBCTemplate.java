@@ -118,6 +118,17 @@ public class SinhVienJDBCTemplate {
         }
     }
 
+    public List<SinhVien> findSinhVienByLop(String malop) {
+        try {
+            String SQL = "SELECT * FROM SinhVien WHERE MALOP = ?";
+            return jdbcTemplate.query(SQL, new Object[] { malop }, new SinhVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     // Login SinhVien by Procedure
     public List<String> login(String masv, String matkhau) {
         String SQL = "{call SP_DangNhapSinhVien(?, ?)}";

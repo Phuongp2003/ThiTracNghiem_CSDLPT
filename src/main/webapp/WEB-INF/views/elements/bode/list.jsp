@@ -11,9 +11,9 @@
 				</form>
 			</div>
 			<div class="col-md-6 col-sm-6 col-lg-6">
-				<a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Thêm giáo viên</button></a>
+				<a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Thêm đề</button></a>
                 <a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Undo</button></a>
-                <a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">In danh sách giáo viên</button></a>
+                <a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">In danh sách đề</button></a>
             </div>
 		</div>
 		<thead>
@@ -28,6 +28,7 @@
                 <th scope="col">D</th>
                 <th scope="col">Đáp án</th>
                 <th scope="col">Mã giáo viên</th>
+				<th scope="col">Thao tác</th>
 			</tr>
 		</thead>
 		<tbody>

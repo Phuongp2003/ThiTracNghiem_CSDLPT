@@ -29,7 +29,6 @@ public class TeacherController {
             giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
             List<GiaoVien> giaoViens = giaoVienJDBCTemplate.listGiaoVien();
             model.addAttribute("giaoViens", giaoViens);
-            System.out.println(giaoViens);
         }
         else{
             model.addAttribute("message", "Không có giáo viên nào!");

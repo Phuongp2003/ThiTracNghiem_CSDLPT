@@ -19,6 +19,7 @@
 			<tr>
 				<th scope="col">Mã môn học</th>
 				<th scope="col">Tên môn học</th>
+				<th scope="col">Thao tác</th>
 			</tr>
 		</thead>
 		<tbody>

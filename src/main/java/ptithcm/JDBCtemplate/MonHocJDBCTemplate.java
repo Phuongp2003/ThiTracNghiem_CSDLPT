@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.MonHoc;
+import ptithcm.bean.SinhVien;
 import ptithcm.mapper.MonHocMapper;
+import ptithcm.mapper.SinhVienMapper;
 import ptithcm.util.IDFix;
 
 @Service

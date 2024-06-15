@@ -21,6 +21,7 @@
 				<th scope="col">Tên</th>
 				<th scope="col">Địa chỉ</th>
                 <th scope="col">Mã khoa</th>
+				<th scope="col">Thao tác</th>
 			</tr>
 		</thead>
 		<tbody>

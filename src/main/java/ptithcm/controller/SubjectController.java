@@ -29,7 +29,6 @@ public class SubjectController {
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
             model.addAttribute("monhocs", monhocs);
-            System.out.println(monhocs);
         }
         else{
             model.addAttribute("message", "Không có môn học nào!");
