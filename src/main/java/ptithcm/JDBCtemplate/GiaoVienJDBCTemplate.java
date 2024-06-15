@@ -123,10 +123,10 @@ public class GiaoVienJDBCTemplate {
 
     // Login GiaoVien by Procedure
     public List<String> login(String magv) {
-        String SQL = "{call [dbo].[SP_DangNhapGiangVien](?)}";
+        String SQL = "{call SP_DangNhapGiangVien(?)}";
         List<List<String>> res;
         try {
-            res = mainSiteTemplate.query(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
+            res = jdbcTemplate.query(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
                 List<String> list = new ArrayList<String>();
                 list.add(rs.getString("USERNAME"));
                 list.add(rs.getString("HOTEN"));
