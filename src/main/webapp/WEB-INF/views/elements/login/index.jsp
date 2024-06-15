@@ -46,8 +46,8 @@
 			<div class="form-floating">
 				<select class="form-select" id="site" name="site" required="true">
 					<option value="">Chọn cơ sở</option>
-					<option value="1">CS2</option>
-					<option value="2">CS3</option>
+					<option value="1">CS1</option>
+					<option value="2">CS2</option>
 				</select>
 				<label for="floatingInput">Cơ sở</label>
 			</div>
