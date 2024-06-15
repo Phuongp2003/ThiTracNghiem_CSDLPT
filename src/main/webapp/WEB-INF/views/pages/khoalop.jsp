@@ -11,7 +11,7 @@
 	<body class="bg-body-tertiary">
 		<jsp:include page="${elements}/navbar.jsp" />
 		<jsp:include page="${elements}/theme.jsp" />
-		Account ${account.USERNAME} with id ${account.ID} and password ${account.PASSWORD}
+		<jsp:include page="${elements}/khoalop/list.jsp" />
 	</body>
 
 	<jsp:include page="${elements}/theme.jsp" />

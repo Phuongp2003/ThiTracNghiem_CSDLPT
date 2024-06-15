@@ -1,0 +1,54 @@
+<%@ page pageEncoding="UTF-8"%>
+<style>
+    
+</style>
+<div class="bode container-fluid" style="width:85%;">
+    <table class="bode-list table">
+		<div class="filter-wrapper row mb-2">
+			<div class="col-md-6 col-sm-12 col-lg-6">
+				<form role="search" action="manage/category/search.htm">
+					<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+				</form>
+			</div>
+			<div class="col-md-6 col-sm-6 col-lg-6">
+				<a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Thêm giáo viên</button></a>
+                <a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Undo</button></a>
+                <a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">In danh sách giáo viên</button></a>
+            </div>
+		</div>
+		<thead>
+			<tr>
+				<th scope="col">Câu hỏi</th>
+				<th scope="col">Mã môn học</th>
+				<th scope="col">Trình độ</th>
+                <th scope="col">Nội dung</th>
+                <th scope="col">A</th>
+                <th scope="col">B</th>
+                <th scope="col">C</th>
+                <th scope="col">D</th>
+                <th scope="col">Đáp án</th>
+                <th scope="col">Mã giáo viên</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="category" items="${categories}">
+				<tr>
+					<td>${category.TENTL}</td>
+					<td>${category.getBooks().size()}</td>
+					<td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+					<td>
+						<a href="manage/category/${category.MATL}/delete.htm" onclick="return confirm('Bạn có chắc muốn xóa thể loại ${category.TENTL}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
+						<a href="manage/category/${category.MATL}/update.htm"><button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button></a>
+					</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>
