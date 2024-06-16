@@ -22,9 +22,10 @@
 		<div class="col-md-2">
 			<form id="khoaLop" action="department-class.htm">
 				<select class="form-select" id="khoa" name="makh" onchange="submitForm()">
-					<option value="all">Khoa: Tất cả</option>
+					<option value="all" ${mkh=="all" ? 'selected' : '' }>Khoa: Tất cả</option>
 					<c:forEach var="k" items="${khoas}">
-						<option value="${k.MAKH}">Mã khoa: ${k.MAKH} (${k.TENKH})</option>
+						<option value="${k.MAKH}" ${k.MAKH==makh ? 'selected' : '' }
+						>Mã khoa: ${k.MAKH} (${k.TENKH})</option>
 					</c:forEach>
 				</select>
 			</form>

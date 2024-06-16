@@ -26,9 +26,10 @@
 		<div class="col-md-2">
 			<form id="lopForm" action="student.htm">
 				<select class="form-select" id="lop" name="malop" onchange="submitForm()">
-					<option value="all">Lớp: Tất cả</option>
+					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
-						<option value="${l.MALOP}">Mã lớp: ${l.MALOP} (${l.TENLOP})</option>
+						<option value="${l.MALOP}" ${l.MALOP==malop ? 'selected' : '' }>
+							Mã lớp: ${l.MALOP} (${l.TENLOP})</option>
 					</c:forEach>
 				</select>
 			</form>

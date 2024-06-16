@@ -39,6 +39,7 @@ public class KhoaLopController {
             }
             model.addAttribute("khoas", khoas);
             model.addAttribute("lops", lops);
+            model.addAttribute("makh", makh);
         }
         else{
             model.addAttribute("message", "Không có khoa nào!");
