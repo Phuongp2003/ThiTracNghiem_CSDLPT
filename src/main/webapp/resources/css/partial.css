@@ -10,14 +10,16 @@ nav .navbar-brand img {
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background-color:#EEEEEE;
+    background-color: #EEEEEE;
 }
-ul{
+
+ul {
     list-style: none;
 }
-a{
+
+a {
     color: black;
-    text-decoration: none !important; 
+    text-decoration: none !important;
 }
 
 .footer {

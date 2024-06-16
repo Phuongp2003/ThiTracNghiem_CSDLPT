@@ -20,18 +20,10 @@
 </style>
 <nav class="navbar navbar-light bg-light fs-3 bg-body-tertiary">
 	<div class="container-fluid flex-row-reverse mx-auto justify-content-start w-75">
-		<div class="d-flex me-3">
-			<a href="cart" class="cart-icon">
-				<i class="bi bi-cart"></i>
-			</a>
-		</div>
-		<c:if test="${not empty cookie.uid}">
-			<div class="d-flex me-3"><a href="user/${cookie.uid.value}"><i class="bi bi-person"></i></a></div>
+		<div class="user-bar"></div>
+		<c:if test="${empty cookie.username}">
+			<div class="d-flex me-3"><a href="auth/login"><i class="bi bi-person"></i></a></div>
 		</c:if>
-		<c:if test="${empty cookie.uid}">
-			<div class="d-flex me-3"><a href="user/login"><i class="bi bi-person"></i></a></div>
-		</c:if>
-		<div class="d-flex me-3"><a href="#"><i class="bi bi-search"></i></a></div>
 	</div>
 </nav>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top fs-3 bg-body-tertiary">
@@ -67,3 +59,17 @@
 		</div>
 	</div>
 </nav>
+
+<script>
+	fetch('auth/user-info', {
+			method: 'POST'
+		})
+		.then(response => response.text())
+		.then(data => {
+			const userBar = document.querySelector('.user-bar');
+			userBar.innerHTML = data;
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
+</script>

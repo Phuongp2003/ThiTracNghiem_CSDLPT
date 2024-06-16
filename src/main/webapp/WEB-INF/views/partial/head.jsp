@@ -14,12 +14,6 @@
 	<link rel="stylesheet" type="text/css" href="resources/css/${type}/style.css">
 	<link rel="stylesheet" type="text/css" href="resources/scripts/${type}/index.js">
 </c:if>
-<c:if test="${type_2 != null}">
-	<link rel="stylesheet" type="text/css" href="resources/css/${type_2}/style.css">
-</c:if>
-<c:if test="${type_3 != null}">
-	<link rel="stylesheet" type="text/css" href="resources/css/${type_3}/style.css">
-</c:if>
 
 
 <%@ include file="script.jsp" %>

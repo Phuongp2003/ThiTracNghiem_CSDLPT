@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.SinhVien;
@@ -22,10 +21,11 @@ public class IndexController {
     @Autowired
     SinhVienService sinhVienService;
 
-    @RequestMapping("/home")
+    
+
+    @RequestMapping({ "/home", "/" })
     public String home(Model model, HttpSession session) {
-        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        model.addAttribute("title", "PTITHCM Book Shop");
+        model.addAttribute("title", "Thi trắc nghiệm trực tuyến");
         model.addAttribute("type", "home");
         return "pages/home";
     }
@@ -39,7 +39,6 @@ public class IndexController {
 
     @RequestMapping("/test2")
     public String test2(Model model, HttpSession session) {
-        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         model.addAttribute("title", "PTITHCM Book Shop");
         model.addAttribute("type", "home");
         List<SinhVien> sinhVienList = sinhVienService.docDanhSachSinhVien();

@@ -18,9 +18,14 @@
 	<!-- Cấu hình GlobalVariable -->
 	<bean id="globalVariable" class="ptithcm.bean.GlobalVariable"> </bean>
 	
+	<mvc:interceptors>
+		<bean class="ptithcm.interceptor.LoginInterceptor" />
+	</mvc:interceptors>
+	
 	<!-- Cấu hình package chứa các controller -->
 	<context:component-scan base-package="ptithcm.controller" />
 	<context:component-scan base-package="ptithcm.service" />
 	<context:component-scan base-package="ptithcm.bean" />
 	<context:component-scan base-package="ptithcm.JDBCtemplate" />
+	<context:component-scan base-package="ptithcm.interceptor" />
 </beans>

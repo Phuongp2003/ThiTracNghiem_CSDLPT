@@ -32,7 +32,7 @@
 	
 	<main class="form-signin w-100 m-auto">
 		<form action="auth/check-login" method="POST">
-			<img class="mb-4" src="resources/imgs/bootstrap-logo.svg" alt="" width="72" height="57">
+			<img class="mb-4" src="resources/imgs/ptitlogo.png" alt="" width="72" height="57">
 			<h1 class="h3 mb-3 fw-normal">Hãy đăng nhập</h1>
 			
 			<div class="form-floating">

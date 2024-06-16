@@ -104,12 +104,3 @@
 - [ ] Bảng điểm môn học của lớp, output: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
 - [ ] Báo cáo danh sách đăng ký thi
 </details>
-
-<style>
-    .task-list-item input[type="checkbox"]:checked + span {
-        color: cyan;
-    }
-    .task-list-item input[type="checkbox"]:not(:checked) + span {
-        color: red;
-    }
-</style>

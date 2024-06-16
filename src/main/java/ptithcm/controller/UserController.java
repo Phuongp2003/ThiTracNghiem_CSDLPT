@@ -1,9 +1,13 @@
 package ptithcm.controller;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -55,8 +60,27 @@ public class UserController {
         }
         model.addAttribute("title", "Đăng nhập");
         model.addAttribute("type", "login");
-        session.removeAttribute("currentConnection");
         return "pages/login";
+    }
+
+    @RequestMapping("/logout")
+    public String logout(Model model, HttpSession session,
+            @RequestParam(value = "message", required = false) String message,
+            RedirectAttributes redirectAttributes,
+            @CookieValue(value = "username", defaultValue = "") String username,
+            HttpServletResponse response) {
+        model.addAttribute("title", "Home");
+        model.addAttribute("type", "home");
+        session.removeAttribute("currentConnection");
+
+        Cookie usernameCookie = new Cookie("username", null);
+        usernameCookie.setMaxAge(0);
+        usernameCookie.setPath("/");
+
+        response.addCookie(usernameCookie);
+
+        redirectAttributes.addFlashAttribute("message", "logout-success");
+        return "redirect:/home";
     }
 
     @RequestMapping(value = "check-login", method = RequestMethod.POST)
@@ -65,7 +89,8 @@ public class UserController {
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestParam("usertype") String usertype,
-            HttpSession session) {
+            HttpSession session,
+            HttpServletResponse response) {
         String svUsername = username;
         String svPassword = password;
         GlobalVariable currentConnection = new GlobalVariable();
@@ -109,8 +134,14 @@ public class UserController {
                 giaoVienService.setDataSource(currentConnection.getSite());
                 List<String> giaoVienInfo = giaoVienService.dangNhap(username);
                 System.out.println(giaoVienInfo);
-                currentConnection.setCurrentUser(username, giaoVienInfo.get(0), "Giáo Viên");
+                currentConnection.setCurrentUser(username, giaoVienInfo.get(1), "GV");
             }
+
+            Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUsername());
+
+            usernameCookie.setMaxAge(60 * 60 * 1);
+            usernameCookie.setPath("/");
+            response.addCookie(usernameCookie);
 
         } catch (SQLException e) {
             System.out.println("LOGIN FAIL" + e);
@@ -129,6 +160,14 @@ public class UserController {
         model.addAttribute("currentConnection", currentConnection);
         model.addAttribute("message", "login-success");
         return "redirect:/home";
+    }
+
+    @RequestMapping(value = "user-info", method = RequestMethod.POST)
+    public String userInfo(Model model, HttpSession session) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        model.addAttribute("fullname", currentConnection.getCurrentUser().getFullname());
+        model.addAttribute("role", currentConnection.getCurrentUser().getRole());
+        return "elements/user_info_bar";
     }
 
     @RequestMapping(value = "test", method = RequestMethod.POST)
