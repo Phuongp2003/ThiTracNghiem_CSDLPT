@@ -45,6 +45,7 @@ public class StudentController {
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             model.addAttribute("sinhViens", sinhViens);
             model.addAttribute("lops", lops);
+            model.addAttribute("malop", malop);
         }
         else{
             model.addAttribute("message", "Không có sinh viên nào!");
