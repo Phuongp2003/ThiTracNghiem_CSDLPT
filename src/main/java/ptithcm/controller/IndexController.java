@@ -30,8 +30,7 @@ public class IndexController {
         return "pages/home";
     }
 
-    @RequestMapping(value = "/test")
-    @ResponseBody
+    @RequestMapping("/test")
     public String test(Model model, HttpSession session) {
         List<SinhVien> sinhVienList = sinhVienService.docDanhSachSinhVien();
         model.addAttribute("students", sinhVienList);

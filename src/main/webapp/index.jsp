@@ -2,6 +2,6 @@
 
 <script>
 	setTimeout(function() {
-		window.location.href = 'home.htm';
+		window.location.href = 'home';
 	}, 10);
 </script>

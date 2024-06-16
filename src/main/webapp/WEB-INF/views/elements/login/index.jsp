@@ -31,7 +31,7 @@
 	</style>
 	
 	<main class="form-signin w-100 m-auto">
-		<form action="auth/check-login.htm" method="POST">
+		<form action="auth/check-login" method="POST">
 			<img class="mb-4" src="resources/imgs/bootstrap-logo.svg" alt="" width="72" height="57">
 			<h1 class="h3 mb-3 fw-normal">Hãy đăng nhập</h1>
 			

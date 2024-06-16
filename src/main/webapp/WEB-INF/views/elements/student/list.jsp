@@ -1,11 +1,12 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <style>
-	.student-list{
+	.student-list {
 		height: 35vh;
 		overflow-y: scroll;
 	}
-	.class-list{
+	
+	.class-list {
 		height: 100%;
 		overflow-y: scroll;
 	}
@@ -19,12 +20,12 @@
 			</select>
 		</div>
 		<div class="col-md-4">
-			<form role="search" action="manage/category/search.htm">
+			<form role="search" action="manage/category/search">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form id="lopForm" action="student.htm">
+			<form id="lopForm" action="student">
 				<select class="form-select" id="lop" name="malop" onchange="submitForm()">
 					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
@@ -35,12 +36,12 @@
 			</form>
 		</div>
 		<div class="">
-			<a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Thêm sinh viên</button></a>
-			<a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">Undo</button></a>
-			<a href="manage/category/add-category.htm"><button type="button" class="btn btn-outline-primary">In danh sách sinh viên</button></a>
+			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Thêm sinh viên</button></a>
+			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
+			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách sinh viên</button></a>
 		</div>
 	</div>
-    <div class="student-list">
+	<div class="student-list">
 		<table class="table">
 			<thead>
 				<tr>
@@ -65,8 +66,8 @@
 						<td>${sv.MALOP}</td>
 						<td>${sv.MATKHAU}</td>
 						<td>
-							<a href="manage/category/${category.MATL}/delete.htm" onclick="return confirm('Bạn có chắc muốn xóa thể loại ${category.TENTL}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
-							<a href="manage/category/${category.MATL}/update.htm"><button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button></a>
+							<a href="manage/category/${category.MATL}/delete" onclick="return confirm('Bạn có chắc muốn xóa thể loại ${category.TENTL}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
+							<a href="manage/category/${category.MATL}/update"><button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button></a>
 						</td>
 					</tr>
 				</c:forEach>
@@ -84,12 +85,12 @@
 			</thead>
 			<tbody>
 				<c:forEach var="l" items="${lops}">
-				<tr>
-					<td>${l.MALOP}</td>
-					<td>${l.TENLOP}</td>
-					<td>${l.MAKH}</td>
-				</tr>
-			</c:forEach>
+					<tr>
+						<td>${l.MALOP}</td>
+						<td>${l.TENLOP}</td>
+						<td>${l.MAKH}</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>

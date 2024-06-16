@@ -8,7 +8,7 @@
 		<title>${title}</title>
 		<script>
 			function loadStudents() {
-				fetch('test.htm')
+				fetch('test')
 					.then(response => response.text())
 					.then(data => {
 						console.log("🚀 ~ loadStudents ~ data:", data)

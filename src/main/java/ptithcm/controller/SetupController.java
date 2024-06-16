@@ -46,6 +46,6 @@ public class SetupController {
         currentConnection.setUsername(firstSite.getUsername());
         currentConnection.setPassword(firstSite.getPassword());
         session.setAttribute("currentConnection", currentConnection);
-        return "redirect:/home.htm";
+        return "redirect:/home";
     }
 }

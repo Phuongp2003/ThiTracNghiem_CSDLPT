@@ -13,7 +13,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
-		<url-pattern>*.htm</url-pattern>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
 	<!-- CharacterEncodingFilter -->
@@ -43,7 +43,7 @@
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 	<error-page>
-		<location>/error.htm</location>
+		<location>/error</location>
 	</error-page>
 	
 </web-app>
