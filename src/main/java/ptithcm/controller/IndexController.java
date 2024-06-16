@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.SinhVien;
+import ptithcm.service.SinhVienService;
 
 @Controller
 public class IndexController {
@@ -19,7 +20,7 @@ public class IndexController {
     private GlobalVariable currentConnection;
 
     @Autowired
-    SinhVienJDBCTemplate sinhVienJDBCTemplate;
+    SinhVienService sinhVienService;
 
     @RequestMapping("/home")
     public String home(Model model, HttpSession session) {
@@ -29,26 +30,23 @@ public class IndexController {
         return "pages/home";
     }
 
-    @RequestMapping("/test")
+    @RequestMapping(value = "/test")
+    @ResponseBody
     public String test(Model model, HttpSession session) {
+        List<SinhVien> sinhVienList = sinhVienService.docDanhSachSinhVien();
+        model.addAttribute("students", sinhVienList);
+        return "pages/test_e";
+    }
+
+    @RequestMapping("/test2")
+    public String test2(Model model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         model.addAttribute("title", "PTITHCM Book Shop");
         model.addAttribute("type", "home");
-        if (currentConnection != null) {
-            // Ví dụ
-            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            SinhVien sinhVien = sinhVienJDBCTemplate.getStudent("003");
-            if (sinhVien != null)
-                System.out.println(sinhVien);
-            else
-                System.out.println("Không tìm thấy sinh viên");
-        }
-        List<String> res = sinhVienJDBCTemplate.login("001", "001");
-        if (res != null)
-            System.out.println(res);
-        else
-            System.out.println("Không tìm thấy sinh viên");
-        return "pages/home";
+        List<SinhVien> sinhVienList = sinhVienService.docDanhSachSinhVien();
+        sinhVienList = sinhVienList.subList(0, 3);
+        model.addAttribute("students", sinhVienList);
+        return "pages/test";
     }
 
     @RequestMapping("/error")

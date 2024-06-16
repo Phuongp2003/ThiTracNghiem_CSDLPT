@@ -25,9 +25,25 @@ public class SinhVienJDBCTemplate {
 
     private JdbcTemplate jdbcTemplate;
 
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.currentConnection.setCmd(jdbcTemplate);
+    public int setDataSource(DataSource dataSource) {
+        try {
+            this.jdbcTemplate = new JdbcTemplate(dataSource);
+            this.currentConnection.setCmd(jdbcTemplate);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - setDataSource Error: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public int tryGetSources() {
+        if (this.jdbcTemplate == null) {
+            this.jdbcTemplate = this.mainSiteTemplate;
+            this.currentConnection.setCmd(jdbcTemplate);
+            return 1;
+        }
+        return 0;
     }
 
     // New SinhVien
@@ -71,10 +87,15 @@ public class SinhVienJDBCTemplate {
 
     // Get all SinhVien
     public List<SinhVien> listSinhVien() {
+        tryGetSources();
         try {
             String SQL = "SELECT * FROM SinhVien";
             return jdbcTemplate.query(SQL, new SinhVienMapper());
         } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - list Error: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - list Error: " + e.getMessage());
             return null;
