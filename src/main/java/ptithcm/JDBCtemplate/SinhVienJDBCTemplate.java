@@ -51,7 +51,8 @@ public class SinhVienJDBCTemplate {
         try {
             String SQL = "INSERT INTO SinhVien (MASV, HO, TEN, NGAYSINH, DIACHI, MALOP, MATKHAU) VALUES (?, ?, ?, ?, ?, ?, ?)";
             jdbcTemplate.update(SQL, sinhVien.getMASV(), sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(),
-                    sinhVien.getDIACHI(), sinhVien.getMALOP(), sinhVien.getMATKHAU());
+                    sinhVien.getDIACHI(), sinhVien.getMALOP(),
+                    sinhVien.getMATKHAU() != null ? sinhVien.getMATKHAU() : sinhVien.getMASV());
             System.out.println("Created Record Name = " + sinhVien.getTEN());
         } catch (Exception e) {
             e.printStackTrace();
