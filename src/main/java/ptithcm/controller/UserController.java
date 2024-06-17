@@ -56,7 +56,7 @@ public class UserController {
             RedirectAttributes redirectAttributes) {
         if (message != null) {
             redirectAttributes.addFlashAttribute("message", message);
-            return "redirect:/auth/login";
+            return "redirect:/auth/login.htm";
         }
         model.addAttribute("title", "Đăng nhập");
         model.addAttribute("type", "login");
@@ -80,7 +80,7 @@ public class UserController {
         response.addCookie(usernameCookie);
 
         redirectAttributes.addFlashAttribute("message", "logout-success");
-        return "redirect:/home";
+        return "redirect:/home.htm";
     }
 
     @RequestMapping(value = "check-login", method = RequestMethod.POST)
@@ -147,19 +147,19 @@ public class UserController {
             System.out.println("LOGIN FAIL" + e);
             model.addAttribute("type", "login");
             model.addAttribute("message", "Thông tin đăng nhập không chính xác!");
-            return "redirect:/auth/login";
+            return "redirect:/auth/login.htm";
         } catch (Exception e) {
             System.out.println("LOGIN FAIL" + e);
             model.addAttribute("type", "login");
             model.addAttribute("message", "Không tồn tại cơ sở!");
-            return "redirect:/auth/login";
+            return "redirect:/auth/login.htm";
         }
         session.setAttribute("currentConnection", currentConnection);
         model.addAttribute("title", "PTITHCM Book Shop");
         model.addAttribute("type", "home");
         model.addAttribute("currentConnection", currentConnection);
         model.addAttribute("message", "login-success");
-        return "redirect:/home";
+        return "redirect:/home.htm";
     }
 
     @RequestMapping(value = "user-info", method = RequestMethod.POST)

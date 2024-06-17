@@ -45,7 +45,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         if (currentConnection.getUsername() == null) {
-            response.sendRedirect(contextPath + "/auth/login");
+            response.sendRedirect(contextPath + "/auth/login.htm");
             return false;
         }
         return true;

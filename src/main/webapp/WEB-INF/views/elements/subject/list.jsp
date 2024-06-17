@@ -5,7 +5,7 @@
 	<table class="subject-list table">
 		<div class="filter-wrapper row mb-2">
 			<div class="col-md-6 col-sm-12 col-lg-6">
-				<form role="search" action="manage/category/search">
+				<form role="search" action="manage/category/search.htm">
 					<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 				</form>
 			</div>

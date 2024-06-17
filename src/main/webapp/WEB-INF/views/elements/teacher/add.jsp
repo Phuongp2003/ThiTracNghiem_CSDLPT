@@ -10,7 +10,7 @@
 
 
 <div class="teacher-add container-fluid mt-2" style="width: 50%;border: Black solid 1px; border-radius: 5px;">
-	<form:form method="POST" action="manage/teacher/add-teacher" modelAttribute="teacher" enctype="multipart/form-data">
+	<form:form method="POST" action="manage/teacher/add-teacher.htm" modelAttribute="teacher" enctype="multipart/form-data">
 		<div class="teacher-name d-flex gap-5 mb-2">
 			<form:label path="TENSACH">Tên: </form:label>
 			<form:input path="TENSACH" class="form-control" />

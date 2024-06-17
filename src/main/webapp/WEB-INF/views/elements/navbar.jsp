@@ -35,16 +35,16 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5 gap-3">
 				<li class="nav-item">
-					<a class="nav-link" href="teacher">Giáo viên</a>
+					<a class="nav-link" href="teacher.htm">Giáo viên</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="student">Sinh viên</a>
+					<a class="nav-link" href="student.htm">Sinh viên</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="subject">Môn học</a>
+					<a class="nav-link" href="subject.htm">Môn học</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="department-class">Khoa, lớp</a>
+					<a class="nav-link" href="department-class.htm">Khoa, lớp</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="">Nhập đề</a>
