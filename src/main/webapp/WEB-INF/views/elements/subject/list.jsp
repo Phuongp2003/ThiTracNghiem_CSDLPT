@@ -23,7 +23,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="s" items="${subjects}">
+			<c:forEach var="s" items="${monHocs}">
 				<tr>
 					<td>${s.MAMH}</td>
 					<td>${s.TENMH}</td>

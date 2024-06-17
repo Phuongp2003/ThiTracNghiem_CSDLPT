@@ -100,7 +100,7 @@
 - [ ] ***Chọn câu hỏi từ danh sách đã lọc để tạo đề thi***
 - [ ] Tạo / sửa bảng tạm (local) lưu kết quả thi của sinh viên (theo 2 cách, mỗi 1 khoảng thời gian khi thi, hoặc ngay khi thí sinh chọn/đổi đáp án của 1 câu hỏi)
 - [ ] Lưu kết quả cuối cùng vào BangDiem
-- [ ] Show kết quả bài thi, output: STT, Câu số (trong đề), Nội dung, Các chọn lựa, đáp án (lựa chọn sính xác), Đã chọn (đáp án thí sinh chọn)
-- [ ] Bảng điểm môn học của lớp, output: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
-- [ ] Báo cáo danh sách đăng ký thi
+- [X] Show kết quả bài thi, output: STT, Câu số (trong đề), Nội dung, Các chọn lựa, đáp án (lựa chọn sính xác), Đã chọn (đáp án thí sinh chọn)
+- [X] Bảng điểm môn học của lớp, output: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
+- [X] Báo cáo danh sách đăng ký thi
 </details>

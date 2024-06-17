@@ -27,8 +27,8 @@ public class SubjectController {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
-            model.addAttribute("monhocs", monhocs);
+            List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
+            model.addAttribute("monHocs", monHocs);
         }
         else{
             model.addAttribute("message", "Không có môn học nào!");

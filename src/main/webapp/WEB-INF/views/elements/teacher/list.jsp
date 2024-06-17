@@ -25,7 +25,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="gv" items="${giaoviens}">
+			<c:forEach var="gv" items="${giaoViens}">
 				<tr>
 					<td>${gv.MAGV}</td>
 					<td>${gv.HO}</td>

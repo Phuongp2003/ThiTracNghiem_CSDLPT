@@ -133,7 +133,7 @@ public class GiaoVienJDBCTemplate {
         try {
             res = jdbcTemplate.query(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
                 List<String> list = new ArrayList<String>();
-                list.add(rs.getString("USERNAME"));
+                list.add(rs.getString("MANV"));
                 list.add(rs.getString("HOTEN"));
                 list.add(rs.getString("TENNHOM"));
                 return list;
