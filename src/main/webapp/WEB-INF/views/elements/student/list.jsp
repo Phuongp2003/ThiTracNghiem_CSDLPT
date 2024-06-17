@@ -13,6 +13,7 @@
 	
 	.is-action:hover {
 		cursor: pointer;
+		border: 2px solid rgba(0, 255, 155, 0.2);
 	}
 	
 	tr.selected {
@@ -87,9 +88,11 @@
 					sách sinh viên</button></a>
 		</div>
 	</div>
-	<jsp:include page="./student_list.jsp" />
+	<div class="student-list">
+		<jsp:include page="./student_list.jsp" />
+	</div>
 	<div class="class-list mt-4">
-		<table class="table">
+		<table class="table lop-table">
 			<thead>
 				<tr>
 					<th scope="col">Mã lớp</th>
@@ -99,7 +102,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="l" items="${lops}">
-					<tr class="is-action" onclick="toggleAndLoad('${l.MALOP}')">
+					<tr class="is-action sl-${l.MALOP}" onclick="toggleAndLoad('${l.MALOP}')">
 						<td>${l.MALOP}</td>
 						<td>${l.TENLOP}</td>
 						<td>${l.MAKH}</td>
@@ -128,6 +131,18 @@
 				
 				const selectElement = document.querySelector('.chon-lop');
 				if (selectElement.value != value) selectElement.value = value;
+				
+				const rows = document.querySelectorAll('.is-action');
+				
+				rows.forEach(row => {
+					row.classList.remove('selected');
+				});
+				
+				const selectTableElement = document.querySelector('.sl-' + value);
+				if (selectTableElement && !selectTableElement.classList.contains('selected')) {
+					selectTableElement.classList.add('selected');
+				}
+				
 			})
 			.catch(error => {
 				console.error('Error:', error);
