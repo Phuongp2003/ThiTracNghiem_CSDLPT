@@ -14,6 +14,10 @@
 	.is-action:hover {
 		cursor: pointer;
 	}
+	
+	tr.selected {
+		border: 2px solid green;
+	}
 </style>
 <div class="student container-fluid" style="width:85%;">
 	<div class="filter-wrapper d-flex justify-content-between mb-2">
@@ -30,7 +34,7 @@
 		</div>
 		<div class="col-md-2">
 			<form id="lopForm" action="student.htm">
-				<select class="form-select" id="lop" name="malop" onchange="loadStudents(this.value)">
+				<select class="form-select chon-lop" id="lop" name="malop" onchange="loadStudents(this.value)">
 					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
 						<option value="${l.MALOP}" ${l.MALOP==malop ? 'selected' : '' }>
@@ -95,7 +99,7 @@
 			</thead>
 			<tbody>
 				<c:forEach var="l" items="${lops}">
-					<tr class="is-action" onclick="loadStudents('${l.MALOP}')">
+					<tr class="is-action" onclick="toggleAndLoad('${l.MALOP}')">
 						<td>${l.MALOP}</td>
 						<td>${l.TENLOP}</td>
 						<td>${l.MAKH}</td>
@@ -121,9 +125,35 @@
 			.then(data => {
 				const userBar = document.querySelector('.student-list');
 				userBar.innerHTML = data;
+				
+				const selectElement = document.querySelector('.chon-lop');
+				if (selectElement.value != value) selectElement.value = value;
 			})
 			.catch(error => {
 				console.error('Error:', error);
 			});
+	}
+	
+	function toggleAndLoad(value) {
+		const element = event.target.closest('.is-action');
+		element.classList.toggle('selected');
+		const rows = document.querySelectorAll('.is-action');
+		
+		// Remove 'selected' class from other elements
+		rows.forEach(row => {
+			if (row !== element) {
+				row.classList.remove('selected');
+			}
+		});
+		
+		// Load slected value, if no, load all
+		if (element.classList.contains('selected')) {
+			loadStudents(value);
+		} else {
+			const selectedRows = document.querySelectorAll('.is-action.selected');
+			if (selectedRows.length === 0) {
+				loadStudents('all');
+			}
+		}
 	}
 </script>
