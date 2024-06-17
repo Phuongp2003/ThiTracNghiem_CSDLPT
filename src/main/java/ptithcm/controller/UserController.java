@@ -1,9 +1,6 @@
 package ptithcm.controller;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.service.GiaoVienService;
 import ptithcm.service.SinhVienService;
@@ -168,11 +164,5 @@ public class UserController {
         model.addAttribute("fullname", currentConnection.getCurrentUser().getFullname());
         model.addAttribute("role", currentConnection.getCurrentUser().getRole());
         return "elements/user_info_bar";
-    }
-
-    @RequestMapping(value = "test", method = RequestMethod.POST)
-    public String test(Model model, HttpSession session) {
-
-        return "pages/home";
     }
 }
