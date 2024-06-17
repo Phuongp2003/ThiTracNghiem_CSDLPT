@@ -15,12 +15,12 @@
 			</select>
 		</div>
 		<div class="col-md-4 col-sm-12 col-lg-4">
-			<form role="search" action="manage/category/search">
+			<form role="search" action="manage/category/search.htm">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form id="khoaLop" action="department-class">
+			<form id="khoaLop" action="department-class.htm">
 				<select class="form-select" id="khoa" name="makh" onchange="submitForm()">
 					<option value="all" ${mkh=="all" ? 'selected' : '' }>Khoa: Tất cả</option>
 					<c:forEach var="k" items="${khoas}">
@@ -64,7 +64,7 @@
 	<table class="khoa-list table">
 		<div class="filter-wrapper row mt-4 mb-2">
 			<div class="col-md-6 col-sm-12 col-lg-6">
-				<form role="search" action="manage/category/search">
+				<form role="search" action="manage/category/search.htm">
 					<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 				</form>
 			</div>

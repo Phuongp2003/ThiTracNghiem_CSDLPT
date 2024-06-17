@@ -20,12 +20,12 @@
 			</select>
 		</div>
 		<div class="col-md-4">
-			<form role="search" action="manage/category/search">
+			<form role="search" action="manage/category/search.htm">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form id="lopForm" action="student">
+			<form id="lopForm" action="student.htm">
 				<select class="form-select" id="lop" name="malop" onchange="submitForm()">
 					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
