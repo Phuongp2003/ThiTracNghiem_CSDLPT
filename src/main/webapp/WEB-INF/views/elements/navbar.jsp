@@ -61,7 +61,7 @@
 </nav>
 
 <script>
-	fetch('auth/user-info', {
+	fetch('auth/user-info.htm', {
 			method: 'POST'
 		})
 		.then(response => response.text())
