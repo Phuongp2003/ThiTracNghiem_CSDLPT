@@ -20,7 +20,7 @@
 				<th scope="col">Họ</th>
 				<th scope="col">Tên</th>
 				<th scope="col">Địa chỉ</th>
-				<th scope="col">Mã khoa</th>
+				<th scope="col">Khoa</th>
 				<th scope="col">Thao tác</th>
 			</tr>
 		</thead>
@@ -31,7 +31,7 @@
 					<td>${gv.HO}</td>
 					<td>${gv.TEN}</td>
 					<td>${gv.DIACHI}</td>
-					<td>${gv.MAKH}</td>
+					<td>${khoa.get(idFix.fix(gv.MAKH, 8))}</td>
 					<td>
 						<a href="manage/category/${category.MATL}/delete" onclick="return confirm('Bạn có chắc muốn xóa thể loại ${category.TENTL}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
 						<a href="manage/category/${category.MATL}/update"><button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button></a>
