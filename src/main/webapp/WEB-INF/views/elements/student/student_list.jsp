@@ -26,8 +26,44 @@
                     <td>${sv.MALOP}</td>
                     <td>${sv.MATKHAU}</td>
                     <td>
-                        <a href="manage/category/${category.MATL}/delete" onclick="return confirm('Bạn có chắc muốn xóa thể loại ${category.TENTL}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
-                        <a href="manage/category/${category.MATL}/update"><button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button></a>
+                        <a href="student/delete-student/${sv.MASV.trim()}.htm" onclick="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
+
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-student-${sv.MASV.trim()}">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <div class="modal fade" id="edit-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="POST" action="student/edit-student/${sv.MASV.trim()}.htm" class="form-control">
+                                        <div class="mb-3">
+                                            <label>Mã sinh viên: </label>
+                                            <input name="masv" value="${sv.MASV}" class="form-control" disabled />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Họ: </label>
+                                            <input name="ho" value="${sv.HO}" class="form-control"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Tên: </label>
+                                            <input name="ten" value="${sv.TEN}" class="form-control"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Ngày sinh: </label>
+                                            <input name="ngaysinh" value="${sv.NGAYSINH}" class="form-control" />
+                                        </div>
+                                        <div class="mb-3">
+                                            <label>Địa chỉ: </label>
+                                            <input name="diachi" value="${sv.DIACHI}" class="form-control" />
+                                        </div>
+                                        <select class="form-select" id="lop" name="malop" disabled>
+                                            <option value="${sv.MALOP}">${sv.MALOP}</option>
+                                        </select>
+                                        <button class="btn btn-primary mt-2" type="submit">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </c:forEach>

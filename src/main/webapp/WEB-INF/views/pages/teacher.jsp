@@ -15,5 +15,6 @@
 	</body>
 
 	<jsp:include page="${elements}/theme.jsp" />
+	<jsp:include page="${viewsPath}/partial/script_al.jsp" />
 	
 </html>
