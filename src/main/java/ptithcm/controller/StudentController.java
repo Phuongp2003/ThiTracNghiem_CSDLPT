@@ -22,6 +22,8 @@ import com.google.gson.Gson;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
+import ptithcm.bean.HistoryAction;
+import ptithcm.bean.SinhVienAction;
 import ptithcm.bean.Lop;
 import ptithcm.bean.SinhVien;
 
@@ -40,6 +42,14 @@ public class StudentController {
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+
+            // Initialize HistoryAction in session if not present
+            session.setAttribute("historyAction", new HistoryAction());
+
+            // Pass history actions to the template for potential undo/redo display
+            model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
+            model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
+
             List<SinhVien> sinhViens = sinhVienJDBCTemplate.listSinhVien();
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             model.addAttribute("sinhViens", sinhViens);
@@ -95,7 +105,14 @@ public class StudentController {
             sv.setDIACHI(diachi);
             sv.setMALOP(malop);
             sv.setMATKHAU(masv);
+
             sinhVienJDBCTemplate.create(sv);
+
+            // Save the action in session history
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            historyAction.addAction(new SinhVienAction("create", sv));
+            session.setAttribute("historyAction", historyAction);
+
             model.addAttribute("message", "Thêm sinh viên thành công!");
         } catch (Exception e) {
             model.addAttribute("message", "Thêm sinh viên thất bại!");
@@ -108,7 +125,14 @@ public class StudentController {
     @RequestMapping(value = "delete-student/{id}")
     public String deleteStudent(ModelMap model, @PathVariable("id") String masv, HttpSession session) {
         try {
+            SinhVien sv = sinhVienJDBCTemplate.getStudent(masv);
             sinhVienJDBCTemplate.delete(masv);
+
+            // Save the action in session history
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            historyAction.addAction(new SinhVienAction("delete", sv));
+            session.setAttribute("historyAction", historyAction);
+
             model.addAttribute("message", "Xóa sinh viên thành công!");
         } catch (Exception e) {
             model.addAttribute("message", "Xóa sinh viên thất bại!");
@@ -124,16 +148,61 @@ public class StudentController {
             @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
             @RequestParam("diachi") String diachi, HttpSession session) {
         try {
-            SinhVien sv = sinhVienJDBCTemplate.getStudent(masv);
-            sv.setHO(ho);
-            sv.setTEN(ten);
-            sv.setNGAYSINH(ngaysinh);
-            sv.setDIACHI(diachi);
-            sinhVienJDBCTemplate.update(masv, sv);
+            SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
+            SinhVien newSv = new SinhVien();
+            newSv.setMASV(masv);
+            newSv.setHO(ho);
+            newSv.setTEN(ten);
+            newSv.setNGAYSINH(ngaysinh);
+            newSv.setDIACHI(diachi);
+
+            sinhVienJDBCTemplate.update(masv, newSv);
+
+            // Save the action in session history
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            historyAction.addAction(new SinhVienAction("update", oldSv, newSv));
+            session.setAttribute("historyAction", historyAction);
+
             model.addAttribute("message", "Cập nhật sinh viên thành công!");
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("message", "Cập nhật sinh viên thất bại!");
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
+    }
+
+    @RequestMapping(value = "undo", method = RequestMethod.POST)
+    public String undo(ModelMap model, HttpSession session) {
+        try {
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            if (historyAction != null && historyAction.canUndo()) {
+                historyAction.undo();
+                model.addAttribute("message", "Hoàn tác thành công!");
+            } else {
+                model.addAttribute("message", "Không có hành động nào để hoàn tác!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Hoàn tác thất bại!");
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
+    }
+
+    @RequestMapping(value = "redo", method = RequestMethod.POST)
+    public String redo(ModelMap model, HttpSession session) {
+        try {
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            if (historyAction != null && historyAction.canRedo()) {
+                historyAction.redo();
+                model.addAttribute("message", "Làm lại thành công!");
+            } else {
+                model.addAttribute("message", "Không có hành động nào để làm lại!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Làm lại thất bại!");
             System.out.println(e.getMessage());
         }
         return "elements/message";

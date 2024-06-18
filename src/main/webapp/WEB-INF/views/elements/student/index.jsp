@@ -29,12 +29,12 @@
 			</select>
 		</div>
 		<div class="col-md-4">
-			<form role="search" action="manage/category/search.htm">
+			<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form action="student.htm">
+			<form action="student.htm" target="formSubmitFrame">
 				<select class="form-select chon-lop" id="lop" name="malop" onchange="loadStudents(this.value)">
 					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
@@ -85,7 +85,8 @@
 				</div>
 			</div>
 			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;"></iframe>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
+			<form class="d-inline" action="student/undo.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn hoàn tác hành động?')" target="formSubmitFrame"><button type="button" class="btn btn-outline-primary" ${!canUndo ? 'disabled' : '' }>Undo</button></form>
+			<form class="d-inline" action="student/redo.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn hoàn tác hành động?')" target="formSubmitFrame"><button type="button" class="btn btn-outline-primary" ${!canRedo ? 'disabled' : '' }>Redo</button></form>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
 					sách sinh viên</button></a>
 		</div>
