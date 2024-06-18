@@ -11,7 +11,7 @@
 	<body class="bg-body-tertiary">
 		<jsp:include page="${elements}/navbar.jsp" />
 		<jsp:include page="${elements}/theme.jsp" />
-		<jsp:include page="${elements}/student/list.jsp" />
+		<jsp:include page="${elements}/student/index.jsp" />
 	</body>
 
 	<jsp:include page="${elements}/theme.jsp" />

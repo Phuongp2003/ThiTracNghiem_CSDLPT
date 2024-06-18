@@ -34,10 +34,11 @@
 					<div class="modal fade" id="edit-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
-								<form method="POST" action="student/edit-student/${sv.MASV.trim()}.htm" class="form-control">
+								<form method="POST" action="student/edit-student.htm" class="form-control">
 									<div class="mb-3">
 										<label>Mã sinh viên: </label>
 										<input name="masv" value="${sv.MASV}" class="form-control" disabled />
+										<input type="hidden" name="masv" value="${sv.MASV}" />
 									</div>
 									<div class="mb-3">
 										<label>Họ: </label>
@@ -49,7 +50,7 @@
 									</div>
 									<div class="mb-3">
 										<label>Ngày sinh: </label>
-										<input name="ngaysinh" value="${sv.NGAYSINH}" class="form-control" />
+										<input type="date" name="ngaysinh" value="${sv.NGAYSINH}" class="form-control" />
 									</div>
 									<div class="mb-3">
 										<label>Địa chỉ: </label>

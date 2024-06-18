@@ -34,7 +34,7 @@
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form id="lopForm" action="student.htm">
+			<form action="student.htm">
 				<select class="form-select chon-lop" id="lop" name="malop" onchange="loadStudents(this.value)">
 					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
@@ -66,7 +66,7 @@
 							</div>
 							<div class="mb-3">
 								<label>Ngày sinh: </label>
-								<input name="ngaysinh" class="form-control" />
+								<input type="date" name="ngaysinh" class="form-control" />
 							</div>
 							<div class="mb-3">
 								<label>Địa chỉ: </label>
@@ -113,10 +113,6 @@
 	</div>
 </div>
 <script>
-	function submitForm() {
-		document.getElementById("lopForm").submit();
-	}
-	
 	function loadStudents(value) {
 		fetch('student/get-sv-by-lop.htm', {
 				method: 'POST',

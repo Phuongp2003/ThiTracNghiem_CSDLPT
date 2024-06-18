@@ -18,24 +18,24 @@
   - [ ] sửa
   - [ ] phục hồi
   - [ ] reload?
-- [ ] Form khoa, lớp
-  - [ ] Show song song 2 form
-  - [ ] Khoa
-    - [ ] Thêm
-    - [ ] Xóa
-    - [ ] Sửa
+- [X] Form khoa, lớp
+  - [X] Show song song 2 form
+  - [X] Khoa
+    - [X] Thêm
+    - [X] Xóa
+    - [X] Sửa
     - [ ] Phục hồi
     - [ ] Reload?
-  - [ ] Lớp
-    - [ ] Thêm
-    - [ ] Xóa
-    - [ ] Sửa
+  - [X] Lớp
+    - [X] Thêm
+    - [X] Xóa
+    - [X] Sửa
     - [ ] Phục hồi
     - [ ] Reload?
-- [ ] Form sinh viên (của lớp)
-  - [ ] Thêm
-  - [ ] Xóa
-  - [ ] Sửa
+- [X] Form sinh viên (của lớp)
+  - [X] Thêm
+  - [X] Xóa
+  - [X] Sửa
   - [ ] Phục hồi
   - [ ] reload
 - [ ] Form (subform) giảng viên (của khoa)
