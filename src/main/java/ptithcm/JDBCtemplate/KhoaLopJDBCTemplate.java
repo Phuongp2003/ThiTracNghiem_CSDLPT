@@ -169,7 +169,7 @@ public class KhoaLopJDBCTemplate {
 
     public void updateLop(String malop, Lop lop) {
         try {
-            String SQL = "UPDATE Lop SET TENKH = ? WHERE MALOP = ?";
+            String SQL = "UPDATE Lop SET TENLOP = ? WHERE MALOP = ?";
             jdbcTemplate.update(SQL, lop.getTENLOP(), malop);
             System.out.println("Updated Record with ID = " + malop);
         } catch (Exception e) {

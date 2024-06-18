@@ -5,16 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.swing.text.html.FormSubmitEvent.MethodType;
 
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +22,8 @@ import com.google.gson.Gson;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
-import ptithcm.bean.Khoa;
 import ptithcm.bean.Lop;
 import ptithcm.bean.SinhVien;
-import ptithcm.util.IDFix;
 
 @Controller
 @RequestMapping("student")
@@ -44,22 +38,15 @@ public class StudentController {
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
 
     @RequestMapping("")
-    public String list(ModelMap model,
-            @RequestParam(value = "malop", required = false, defaultValue = "all") String malop, HttpSession session) {
+    public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<SinhVien> sinhViens;
-            if ("all".equals(malop)) {
-                sinhViens = sinhVienJDBCTemplate.listSinhVien();
-            } else {
-                sinhViens = sinhVienJDBCTemplate.findSinhVienByLop(malop);
-            }
+            List<SinhVien> sinhViens = sinhVienJDBCTemplate.listSinhVien();
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             model.addAttribute("sinhViens", sinhViens);
             model.addAttribute("lops", lops);
-            model.addAttribute("malop", malop);
         } else {
             model.addAttribute("message", "Không có sinh viên nào!");
         }
@@ -67,8 +54,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/get-sv-by-lop", method = RequestMethod.POST)
-    public String listByLop(ModelMap model, HttpSession session,
-            @RequestBody String body) {
+    public String listByLop(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
@@ -101,8 +87,9 @@ public class StudentController {
     @RequestMapping(value = "add-student", method = RequestMethod.POST)
     public String addStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
-            @RequestParam("ngaysinh") Date ngaysinh, @RequestParam("diachi") String diachi,
-            @RequestParam("malop") String malop, HttpSession session) {
+            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
+            @RequestParam("diachi") String diachi, @RequestParam("malop") String malop, 
+            HttpSession session) {
         SinhVien sv = new SinhVien();
         sv.setMASV(masv);
         sv.setHO(ho);
@@ -110,6 +97,7 @@ public class StudentController {
         sv.setNGAYSINH(ngaysinh);
         sv.setDIACHI(diachi);
         sv.setMALOP(malop);
+        sv.setMATKHAU(masv);
         sinhVienJDBCTemplate.create(sv);
         return "redirect:/student.htm";
     }
@@ -120,13 +108,16 @@ public class StudentController {
         return "redirect:/student.htm";
     }
 
-    @RequestMapping(value = "edit-student/{id}", method = RequestMethod.POST)
-    public String updateStudent(ModelMap model, @PathVariable("id") String masv,
+    @RequestMapping(value = "edit-student", method = RequestMethod.POST)
+    public String updateStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
-            @RequestParam("ngaysinh") Date ngaysinh, @RequestParam("diachi") String diachi,
-            @RequestParam("malop") String malop, HttpSession session) {
-        SinhVien sv = new SinhVien();
-        sv = sinhVienJDBCTemplate.getStudent(masv);
+            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh, 
+            @RequestParam("diachi") String diachi, HttpSession session) {
+        SinhVien sv = sinhVienJDBCTemplate.getStudent(masv);
+        sv.setHO(ho);
+        sv.setTEN(ten);
+        sv.setNGAYSINH(ngaysinh); 
+        sv.setDIACHI(diachi);
         sinhVienJDBCTemplate.update(masv, sv);
         return "redirect:/student.htm";
     }
