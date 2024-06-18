@@ -37,7 +37,7 @@ public class BoDeJDBCTemplate {
                 bd.setB(rs.getString("B"));
                 bd.setC(rs.getString("C"));
                 bd.setD(rs.getString("D"));
-                bd.setDAPAN(rs.getString("DAPAN"));
+                bd.setDAP_AN(rs.getString("DAP_AN"));
                 bd.setMAGV(rs.getString("MAGV"));
                 return bd;
             });
@@ -50,10 +50,10 @@ public class BoDeJDBCTemplate {
         return res;
     }
 
-    public List<BoDe> listBoDe(String mamh, String magv) {
+    public List<BoDe> listBoDe(String magv) {
         try {
-            String SQL = "SELECT * FROM BoDe WHERE MAMH = mamh AND MAGV = magv";
-            return jdbcTemplate.query(SQL, new BoDeMapper());
+            String SQL = "SELECT * FROM BoDe WHERE MAGV = ?";
+            return jdbcTemplate.query(SQL, new Object[] { magv }, new BoDeMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Bo De - list Error: " + e.getMessage());
@@ -63,8 +63,8 @@ public class BoDeJDBCTemplate {
 
     public List<BoDe> findBoDeByTrinhDo(String name, String mamh, String magv) {
         try {
-            String SQL = "SELECT * FROM BoDe WHERE TRINHDO = name AND MAMH = mamh AND MAGV = magv";
-            return jdbcTemplate.query(SQL, new BoDeMapper());
+            String SQL = "SELECT * FROM BoDe WHERE TRINHDO = ? AND MAMH = ? AND MAGV = ?";
+            return jdbcTemplate.query(SQL, new Object[] { name, mamh, magv }, new BoDeMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Khoa - find Error: " + e.getMessage());
@@ -74,8 +74,8 @@ public class BoDeJDBCTemplate {
 
     public List<BoDe> findBoDeByNoiDung(String name, String mamh, String magv) {
         try {
-            String SQL = "SELECT * FROM BoDe WHERE TRINHDO = ? AND MAMH = mamh AND MAGV = magv";
-            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new BoDeMapper());
+            String SQL = "SELECT * FROM BoDe WHERE NOIDUNG LIKE ? AND MAMH = ? AND MAGV = ?";
+            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%", mamh, magv }, new BoDeMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Khoa - find Error: " + e.getMessage());
@@ -85,10 +85,10 @@ public class BoDeJDBCTemplate {
 
     public void create(BoDe bode) {
         try {
-            String SQL = "INSERT INTO BoDe (CAUHOI, MAMH, TRINHDO, NOIDUNG, A, B, C, D, DAPAN, MAGV) "
+            String SQL = "INSERT INTO BoDe (CAUHOI, MAMH, TRINHDO, NOIDUNG, A, B, C, D, DAP_AN, MAGV) "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             jdbcTemplate.update(SQL, bode.getCAUHOI(), bode.getMAMH(), bode.getTRINHDO(), bode.getNOIDUNG(), 
-                bode.getA(), bode.getB(), bode.getC(), bode.getD(), bode.getDAPAN(), bode.getMAGV());
+                bode.getA(), bode.getB(), bode.getC(), bode.getD(), bode.getDAP_AN(), bode.getMAGV());
             System.out.println("Created Record Name = " + bode.getCAUHOI());
         } catch (Exception e) {
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class BoDeJDBCTemplate {
     public void update(int cauhoi, BoDe bode) {
         try {
             String SQL = "UPDATE BoDe SET TRINHDO = ? AND SET NOIDUNG = ? AND SET A = ? AND SET B = ? "
-                        + "AND SET C = ? AND SET D = ? AND DAPAN = ? WHERE CAUHOI = ?";
+                        + "AND SET C = ? AND SET D = ? AND DAP_AN = ? WHERE CAUHOI = ?";
             jdbcTemplate.update(SQL, bode.getCAUHOI(), cauhoi);
             System.out.println("Updated Record with ID = " + cauhoi);
         } catch (Exception e) {

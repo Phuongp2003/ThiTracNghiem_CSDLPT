@@ -9,14 +9,14 @@ public class BoDe {
 	private String B;
 	private String C;
 	private String D;
-	private String DAPAN;
+	private String DAP_AN;
 	private String MAGV;
 
 	public BoDe() {
 	}
 
 	public BoDe(int CAUHOI, String MAMH, String TRINHDO, String NOIDUNG, String A, String B, String C, String D,
-			String DAPAN, String MAGV) {
+			String DAP_AN, String MAGV) {
 		this.CAUHOI = CAUHOI;
 		this.MAMH = MAMH;
 		this.TRINHDO = TRINHDO;
@@ -25,7 +25,7 @@ public class BoDe {
 		this.B = B;
 		this.C = C;
 		this.D = D;
-		this.DAPAN = DAPAN;
+		this.DAP_AN = DAP_AN;
 		this.MAGV = MAGV;
 	}
 
@@ -93,12 +93,12 @@ public class BoDe {
 		this.D = D;
 	}
 
-	public String getDAPAN() {
-		return DAPAN;
+	public String getDAP_AN() {
+		return DAP_AN;
 	}
 
-	public void setDAPAN(String DAPAN) {
-		this.DAPAN = DAPAN;
+	public void setDAP_AN(String DAP_AN) {
+		this.DAP_AN = DAP_AN;
 	}
 
 	public String getMAGV() {
@@ -120,7 +120,7 @@ public class BoDe {
 				", B='" + B + '\'' +
 				", C='" + C + '\'' +
 				", D='" + D + '\'' +
-				", DAPAN='" + DAPAN + '\'' +
+				", DAP_AN='" + DAP_AN + '\'' +
 				", MAGV='" + MAGV + '\'' +
 				'}';
 	}

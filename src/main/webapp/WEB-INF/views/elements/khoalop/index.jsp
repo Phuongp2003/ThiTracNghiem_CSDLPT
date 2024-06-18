@@ -57,7 +57,7 @@
 							<select class="form-select" id="khoa" name="makh">
 								<c:forEach var="k" items="${khoas}">
 									<option value="${k.MAKH}">
-										Mã khoa: ${k.MAKH} (${k.TENKH})</option>
+										${k.MAKH} (${k.TENKH})</option>
 								</c:forEach>
 							</select>
 							<button class="btn btn-primary mt-2" type="submit">Save</button>
