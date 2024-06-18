@@ -47,7 +47,7 @@
 					<a class="nav-link" href="department-class.htm">Khoa, lớp</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">Nhập đề</a>
+					<a class="nav-link" href="bode.htm">Nhập đề</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="">Chuẩn bị thi</a>

@@ -1,12 +1,12 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <style>
-	.student-list {
+	.bode-list {
 		height: 35vh;
 		overflow-y: scroll;
 	}
 	
-	.class-list {
+	.subject-list {
 		height: 100%;
 		overflow-y: scroll;
 	}
@@ -20,7 +20,7 @@
 		border: 2px solid green;
 	}
 </style>
-<div class="student container-fluid" style="width:85%;">
+<div class="bode container-fluid" style="width:85%;">
 	<div class="filter-wrapper d-flex justify-content-between mb-2">
 		<div class="d-flex col-md-2">
 			<select class="form-select" id="site" name="site">
@@ -34,49 +34,60 @@
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form action="student.htm">
-				<select class="form-select chon-lop" id="lop" name="malop" onchange="loadStudents(this.value)">
-					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
-					<c:forEach var="l" items="${lops}">
-						<option value="${l.MALOP}" ${l.MALOP==malop ? 'selected' : '' }>
-							${l.MALOP} (${l.TENLOP})</option>
+			<form action="bode.htm">
+				<select class="form-select chon-monhoc" id="monhoc" name="mamh" onchange="loadBoDes(this.value)">
+					<option value="all" ${mamh=="all" ? 'selected' : '' }>Môn học: Tất cả</option>
+					<c:forEach var="mh" items="${monhocs}">
+						<option value="${mh.MAMH}" ${mh.MAMH==mamh ? 'selected' : '' }>
+							${mh.MAMH} (${mh.TENMH})</option>
 					</c:forEach>
 				</select>
 			</form>
 		</div>
 		<div class="">
-			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
-				Thêm sinh viên
+			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-bode">
+				Thêm bộ đề
 			</button>
-			<div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="add-bode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<form method="POST" action="student/add-student.htm" class="form-control">
-							<div class="mb-3">
-								<label>Mã sinh viên: </label>
-								<input name="masv" class="form-control" required />
-							</div>
-							<div class="mb-3">
-								<label>Họ: </label>
-								<input name="ho" class="form-control" />
-							</div>
-							<div class="mb-3">
-								<label>Tên: </label>
-								<input name="ten" class="form-control" />
-							</div>
-							<div class="mb-3">
-								<label>Ngày sinh: </label>
-								<input type="date" name="ngaysinh" class="form-control" />
-							</div>
-							<div class="mb-3">
-								<label>Địa chỉ: </label>
-								<input name="diachi" class="form-control" />
-							</div>
-							<select class="form-select" id="lop" name="malop">
-								<c:forEach var="l" items="${lops}">
-									<option value="${l.MALOP}">
-										Mã lớp: ${l.MALOP} (${l.TENLOP})</option>
+						<form method="POST" action="bode/add-bode.htm" class="form-control">
+							<select class="form-select" id="monhoc" name="mamh">
+								<c:forEach var="mh" items="${monhocs}">
+									<option value="${mh.MAMH}">
+										${mh.MAMH} (${mh.TENMH})</option>
 								</c:forEach>
+							</select>
+							<select class="form-select" name="trinhdo">
+								<option value="A">Đại học, chuyên ngành</option>
+								<option value="B">Đại học, không chuyên ngành</option>
+								<option value="C">Cao đẳng</option>
+							</select>
+							<div class="mb-3">
+								<label>Nội dung: </label>
+								<textarea name="noidung" class="form-control" placeholder="Nội dung câu hỏi"  style="height: 100px"></textarea>
+							</div>
+							<div class="mb-3">
+								<label>A: </label>
+								<textarea name="A" class="form-control" placeholder="Nội dung đáp án A"  style="height: 100px"></textarea>
+							</div>
+							<div class="mb-3">
+								<label>B: </label>
+								<textarea name="B" class="form-control" placeholder="Nội dung đáp án B"  style="height: 100px"></textarea>
+							</div>
+							<div class="mb-3">
+								<label>C: </label>
+								<textarea name="C" class="form-control" placeholder="Nội dung đáp án C"  style="height: 100px"></textarea>
+							</div>
+							<div class="mb-3">
+								<label>D: </label>
+								<textarea name="D" class="form-control" placeholder="Nội dung đáp án D"  style="height: 100px"></textarea>
+							</div>
+							<select class="form-select" name="dapan">
+								<option value="A">A</option>
+								<option value="B">B</option>
+								<option value="C">C</option>
+								<option value="D">D</option>
 							</select>
 							<button class="btn btn-primary mt-2" type="submit">Save</button>
 						</form>
@@ -85,27 +96,25 @@
 			</div>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
-					sách sinh viên</button></a>
+					sách bộ đề</button></a>
 		</div>
 	</div>
-	<div class="student-list">
-		<jsp:include page="./student_list.jsp" />
+	<div class="bode-list">
+		<jsp:include page="./bode_list.jsp" />
 	</div>
-	<div class="class-list mt-4">
-		<table class="table lop-table">
+	<div class="subject-list mt-4">
+		<table class="table subject-table">
 			<thead>
 				<tr>
-					<th scope="col">Mã lớp</th>
-					<th scope="col">Tên lớp</th>
-					<th scope="col">Mã khoa</th>
+					<th scope="col">Mã môn học</th>
+					<th scope="col">Tên môn học</th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="l" items="${lops}">
-					<tr class="is-action sl-${l.MALOP}" onclick="toggleAndLoad('${l.MALOP}')">
-						<td>${l.MALOP}</td>
-						<td>${l.TENLOP}</td>
-						<td>${l.MAKH}</td>
+				<c:forEach var="mh" items="${monhocs}">
+					<tr class="is-action sl-${mh.MAMH}" onclick="toggleAndLoad('${mh.MAMH}')">
+						<td>${mh.MAMH}</td>
+						<td>${mh.TENMH}</td>
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -113,19 +122,19 @@
 	</div>
 </div>
 <script>
-	function loadStudents(value) {
-		fetch('student/get-sv-by-lop.htm', {
+	function loadBoDes(value) {
+		fetch('bode/get-bode-by-monhoc.htm', {
 				method: 'POST',
 				body: JSON.stringify({
-					malop: value
+					mamh: value
 				})
 			})
 			.then(response => response.text())
 			.then(data => {
-				const userBar = document.querySelector('.student-list');
+				const userBar = document.querySelector('.bode-list');
 				userBar.innerHTML = data;
 				
-				const selectElement = document.querySelector('.chon-lop');
+				const selectElement = document.querySelector('.chon-monhoc');
 				if (selectElement.value != value) selectElement.value = value;
 				
 				const rows = document.querySelectorAll('.is-action');

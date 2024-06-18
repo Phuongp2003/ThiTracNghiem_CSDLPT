@@ -16,8 +16,8 @@ public class BoDeMapper implements RowMapper<BoDe> {
         String B = rs.getString("B");
         String C = rs.getString("C");
         String D = rs.getString("D");
-        String DAPAN = rs.getString("DAPAN");
+        String DAP_AN = rs.getString("DAP_AN");
         String MAGV = rs.getString("MAGV");
-        return new BoDe(CAUHOI, MAMH, TRINHDO, NOIDUNG, A, B, C, D, DAPAN, MAGV);
+        return new BoDe(CAUHOI, MAMH, TRINHDO, NOIDUNG, A, B, C, D, DAP_AN, MAGV);
     }
 }
