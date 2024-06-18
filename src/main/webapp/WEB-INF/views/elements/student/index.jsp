@@ -51,7 +51,7 @@
 			<div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<form method="POST" action="student/add-student.htm" class="form-control">
+						<form method="POST" action="student/add-student.htm" class="form-control" target="formSubmitFrame">
 							<div class="mb-3">
 								<label>Mã sinh viên: </label>
 								<input name="masv" class="form-control" required />
@@ -78,11 +78,13 @@
 										Mã lớp: ${l.MALOP} (${l.TENLOP})</option>
 								</c:forEach>
 							</select>
-							<button class="btn btn-primary mt-2" type="submit">Save</button>
+							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+							<button class="btn btn-secondary mt-2" type="submit" data-bs-dismiss="modal">Close</button>
 						</form>
 					</div>
 				</div>
 			</div>
+			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;"></iframe>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
 					sách sinh viên</button></a>

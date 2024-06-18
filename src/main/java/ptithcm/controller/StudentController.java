@@ -29,9 +29,6 @@ import ptithcm.bean.SinhVien;
 @RequestMapping("student")
 public class StudentController {
     @Autowired
-    private GlobalVariable currentConnection;
-
-    @Autowired
     SinhVienJDBCTemplate sinhVienJDBCTemplate;
 
     @Autowired
@@ -80,7 +77,6 @@ public class StudentController {
         } else {
             model.addAttribute("message", "Không có sinh viên nào!");
         }
-
         return "elements/student/student_list";
     }
 
@@ -88,37 +84,58 @@ public class StudentController {
     public String addStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
             @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
-            @RequestParam("diachi") String diachi, @RequestParam("malop") String malop, 
+            @RequestParam("diachi") String diachi, @RequestParam("malop") String malop,
             HttpSession session) {
-        SinhVien sv = new SinhVien();
-        sv.setMASV(masv);
-        sv.setHO(ho);
-        sv.setTEN(ten);
-        sv.setNGAYSINH(ngaysinh);
-        sv.setDIACHI(diachi);
-        sv.setMALOP(malop);
-        sv.setMATKHAU(masv);
-        sinhVienJDBCTemplate.create(sv);
-        return "redirect:/student.htm";
+        try {
+            SinhVien sv = new SinhVien();
+            sv.setMASV(masv);
+            sv.setHO(ho);
+            sv.setTEN(ten);
+            sv.setNGAYSINH(ngaysinh);
+            sv.setDIACHI(diachi);
+            sv.setMALOP(malop);
+            sv.setMATKHAU(masv);
+            sinhVienJDBCTemplate.create(sv);
+            model.addAttribute("message", "Thêm sinh viên thành công!");
+        } catch (Exception e) {
+            model.addAttribute("message", "Thêm sinh viên thất bại!");
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
     }
 
     @RequestMapping(value = "delete-student/{id}")
     public String deleteStudent(ModelMap model, @PathVariable("id") String masv, HttpSession session) {
-        sinhVienJDBCTemplate.delete(masv);
-        return "redirect:/student.htm";
+        try {
+            sinhVienJDBCTemplate.delete(masv);
+            model.addAttribute("message", "Xóa sinh viên thành công!");
+        } catch (Exception e) {
+            model.addAttribute("message", "Xóa sinh viên thất bại!");
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
     }
 
     @RequestMapping(value = "edit-student", method = RequestMethod.POST)
     public String updateStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
-            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh, 
+            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
             @RequestParam("diachi") String diachi, HttpSession session) {
-        SinhVien sv = sinhVienJDBCTemplate.getStudent(masv);
-        sv.setHO(ho);
-        sv.setTEN(ten);
-        sv.setNGAYSINH(ngaysinh); 
-        sv.setDIACHI(diachi);
-        sinhVienJDBCTemplate.update(masv, sv);
-        return "redirect:/student.htm";
+        try {
+            SinhVien sv = sinhVienJDBCTemplate.getStudent(masv);
+            sv.setHO(ho);
+            sv.setTEN(ten);
+            sv.setNGAYSINH(ngaysinh);
+            sv.setDIACHI(diachi);
+            sinhVienJDBCTemplate.update(masv, sv);
+            model.addAttribute("message", "Cập nhật sinh viên thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Cập nhật sinh viên thất bại!");
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
     }
 }
