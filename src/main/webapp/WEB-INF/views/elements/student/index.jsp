@@ -28,7 +28,7 @@
 				<option value="2">Cơ sở 2</option>
 			</select>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
@@ -44,7 +44,7 @@
 				</select>
 			</form>
 		</div>
-		<div class="">
+		<div class="col-md-5">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
 				Thêm sinh viên
 			</button>
@@ -84,11 +84,13 @@
 					</div>
 				</div>
 			</div>
-			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;"></iframe>
-			<form class="d-inline" action="student/undo.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn hoàn tác hành động?')" target="formSubmitFrame"><button type="button" class="btn btn-outline-primary" ${!canUndo ? 'disabled' : '' }>Undo</button></form>
-			<form class="d-inline" action="student/redo.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn hoàn tác hành động?')" target="formSubmitFrame"><button type="button" class="btn btn-outline-primary" ${!canRedo ? 'disabled' : '' }>Redo</button></form>
+			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
+			<div class="action-btn-group d-inline">
+				<jsp:include page="./button_action_list.jsp" />
+			</div>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
 					sách sinh viên</button></a>
+			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
 	<div class="student-list">
@@ -116,6 +118,8 @@
 	</div>
 </div>
 <script>
+	var currentLop;
+	
 	function loadStudents(value) {
 		fetch('student/get-sv-by-lop.htm', {
 				method: 'POST',
@@ -123,7 +127,12 @@
 					malop: value
 				})
 			})
-			.then(response => response.text())
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
 			.then(data => {
 				const userBar = document.querySelector('.student-list');
 				userBar.innerHTML = data;
@@ -141,11 +150,12 @@
 				if (selectTableElement && !selectTableElement.classList.contains('selected')) {
 					selectTableElement.classList.add('selected');
 				}
-				
 			})
 			.catch(error => {
 				console.error('Error:', error);
 			});
+		currentLop = value;
+		console.log("🚀 ~ loadStudents ~ currentLop:", currentLop)
 	}
 	
 	function toggleAndLoad(value) {
@@ -169,5 +179,32 @@
 				loadStudents('all');
 			}
 		}
+	}
+	
+	
+	
+	function loadActionButton() {
+		fetch('student/refresh-action-buttons.htm', {
+				method: 'POST',
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.action-btn-group');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
+	function refreshData() {
+		if (!currentLop) currentLop = "all";
+		loadActionButton();
+		loadStudents(window.currentLop);
 	}
 </script>

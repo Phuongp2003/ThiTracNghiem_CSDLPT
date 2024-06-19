@@ -110,7 +110,9 @@ public class StudentController {
 
             // Save the action in session history
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
-            historyAction.addAction(new SinhVienAction("create", sv));
+            SinhVienAction svAction = new SinhVienAction("add", sv);
+            svAction.setCmd(sinhVienJDBCTemplate);
+            historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
             model.addAttribute("message", "Thêm sinh viên thành công!");
@@ -130,7 +132,9 @@ public class StudentController {
 
             // Save the action in session history
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
-            historyAction.addAction(new SinhVienAction("delete", sv));
+            SinhVienAction svAction = new SinhVienAction("delete", sv);
+            svAction.setCmd(sinhVienJDBCTemplate);
+            historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
             model.addAttribute("message", "Xóa sinh viên thành công!");
@@ -160,7 +164,9 @@ public class StudentController {
 
             // Save the action in session history
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
-            historyAction.addAction(new SinhVienAction("update", oldSv, newSv));
+            SinhVienAction svAction = new SinhVienAction("edit", newSv, oldSv);
+            svAction.setCmd(sinhVienJDBCTemplate);
+            historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
             model.addAttribute("message", "Cập nhật sinh viên thành công!");
@@ -177,7 +183,9 @@ public class StudentController {
         try {
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             if (historyAction != null && historyAction.canUndo()) {
-                historyAction.undo();
+                if (!historyAction.undo()) {
+                    throw new Exception("HistoryAction.java báo: Hoàn tác thất bại!");
+                }
                 model.addAttribute("message", "Hoàn tác thành công!");
             } else {
                 model.addAttribute("message", "Không có hành động nào để hoàn tác!");
@@ -185,7 +193,7 @@ public class StudentController {
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("message", "Hoàn tác thất bại!");
-            System.out.println(e.getMessage());
+            System.out.println("StudentController.java: Hoàn tác thất bại!" + e.getMessage());
         }
         return "elements/message";
     }
@@ -206,5 +214,13 @@ public class StudentController {
             System.out.println(e.getMessage());
         }
         return "elements/message";
+    }
+
+    @RequestMapping(value = "refresh-action-buttons", method = RequestMethod.POST)
+    public String refreshActionButtons(ModelMap model, HttpSession session) {
+        HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+        model.addAttribute("canUndo", historyAction.canUndo());
+        model.addAttribute("canRedo", historyAction.canRedo());
+        return "elements/student/button_action_list";
     }
 }

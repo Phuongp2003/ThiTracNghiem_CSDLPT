@@ -9,9 +9,10 @@ public class SinhVienAction implements Action<SinhVien> {
     private SinhVien data;
     private SinhVienJDBCTemplate cmd;
 
-    public SinhVienAction() {}
+    public SinhVienAction() {
+    }
 
-    public SinhVienAction(String type,  SinhVien data) {
+    public SinhVienAction(String type, SinhVien data) {
         this.type = type;
         this.data = data;
     }
@@ -59,23 +60,29 @@ public class SinhVienAction implements Action<SinhVien> {
     @Override
     public Action<SinhVien> getRevertAction() {
         String revertType;
+        SinhVienAction rvAction;
         switch (type) {
             case "add":
                 revertType = "delete";
-                return new SinhVienAction(revertType, data);
+                rvAction = new SinhVienAction(revertType, data);
+                break;
             case "delete":
                 revertType = "add";
-                return new SinhVienAction(revertType, data);
+                rvAction = new SinhVienAction(revertType, data);
+                break;
             case "edit":
                 revertType = "edit";
-                return new SinhVienAction(revertType, oldData, data);
+                rvAction = new SinhVienAction(revertType, oldData, data);
+                break;
             default:
                 return null;
         }
+        rvAction.setCmd(cmd);
+        return rvAction;
     }
 
     @Override
-    public int execute() {
+    public Boolean execute() {
         try {
             switch (type) {
                 case "add":
@@ -92,9 +99,10 @@ public class SinhVienAction implements Action<SinhVien> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return 1;
+            System.out.println("SinhVienAction.java: Thực thi lệnh " + type + " thật bại: " + e.getMessage());
+            return false;
         }
-        return 0;
+        return true;
     }
 
     @Override

@@ -17,12 +17,28 @@ public class HistoryAction {
         this.redoStack.clear(); // Clear redo stack on new action
     }
 
-    public void undo() {
-        if (!this.undoStack.isEmpty()) {
-            Action<?> action = this.undoStack.pop();
-            action.execute();
-            this.redoStack.push(action.getRevertAction());
+    public Boolean undo() {
+        Action<?> action = null;
+        try {
+            if (!this.undoStack.isEmpty()) {
+                action = this.undoStack.pop();
+                if (!action.execute()) {
+                    throw new Exception("Action báo: thực thi lệnh thất bại!");
+                }
+                this.redoStack.push(action.getRevertAction());
+            } else {
+                throw new Exception("HistoryAction.java: Không thể hoàn tác!");
+            }
+        } catch (Exception e) {
+            System.out.println(
+                    "HistoryAction.java: Hoàn tác thất bại:\nAction: "
+                            + (action != null ? action : "No action")
+                            + "\nE: "
+                            + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public void redo() {
