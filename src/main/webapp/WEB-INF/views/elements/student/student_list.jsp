@@ -26,7 +26,9 @@
 				<td>${sv.MALOP}</td>
 				<td>${sv.MATKHAU}</td>
 				<td>
-					<a href="student/delete-student/${sv.MASV.trim()}.htm" onclick="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
+					<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
+						<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
+					</form>
 					
 					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-student-${sv.MASV.trim()}">
 						<i class="bi bi-pencil-square"></i>
@@ -34,7 +36,7 @@
 					<div class="modal fade" id="edit-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
-								<form method="POST" action="student/edit-student.htm" class="form-control">
+								<form method="POST" action="student/edit-student.htm" class="form-control" target="formSubmitFrame">
 									<div class="mb-3">
 										<label>Mã sinh viên: </label>
 										<input name="masv" value="${sv.MASV}" class="form-control" disabled />

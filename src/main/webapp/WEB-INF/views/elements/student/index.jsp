@@ -28,13 +28,13 @@
 				<option value="2">Cơ sở 2</option>
 			</select>
 		</div>
-		<div class="col-md-4">
-			<form role="search" action="manage/category/search.htm">
+		<div class="col-md-3">
+			<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form action="student.htm">
+			<form action="student.htm" target="formSubmitFrame">
 				<select class="form-select chon-lop" id="lop" name="malop" onchange="loadStudents(this.value)">
 					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
 					<c:forEach var="l" items="${lops}">
@@ -44,14 +44,14 @@
 				</select>
 			</form>
 		</div>
-		<div class="">
+		<div class="col-md-5">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
 				Thêm sinh viên
 			</button>
 			<div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<form method="POST" action="student/add-student.htm" class="form-control">
+						<form method="POST" action="student/add-student.htm" class="form-control" target="formSubmitFrame">
 							<div class="mb-3">
 								<label>Mã sinh viên: </label>
 								<input name="masv" class="form-control" required />
@@ -78,14 +78,19 @@
 										Mã lớp: ${l.MALOP} (${l.TENLOP})</option>
 								</c:forEach>
 							</select>
-							<button class="btn btn-primary mt-2" type="submit">Save</button>
+							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+							<button class="btn btn-secondary mt-2" type="submit" data-bs-dismiss="modal">Close</button>
 						</form>
 					</div>
 				</div>
 			</div>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
+			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
+			<div class="action-btn-group d-inline">
+				<jsp:include page="./button_action_list.jsp" />
+			</div>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
 					sách sinh viên</button></a>
+			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
 	<div class="student-list">
@@ -113,6 +118,8 @@
 	</div>
 </div>
 <script>
+	var currentLop;
+	
 	function loadStudents(value) {
 		fetch('student/get-sv-by-lop.htm', {
 				method: 'POST',
@@ -120,7 +127,12 @@
 					malop: value
 				})
 			})
-			.then(response => response.text())
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
 			.then(data => {
 				const userBar = document.querySelector('.student-list');
 				userBar.innerHTML = data;
@@ -138,11 +150,12 @@
 				if (selectTableElement && !selectTableElement.classList.contains('selected')) {
 					selectTableElement.classList.add('selected');
 				}
-				
 			})
 			.catch(error => {
 				console.error('Error:', error);
 			});
+		currentLop = value;
+		console.log("🚀 ~ loadStudents ~ currentLop:", currentLop)
 	}
 	
 	function toggleAndLoad(value) {
@@ -166,5 +179,32 @@
 				loadStudents('all');
 			}
 		}
+	}
+	
+	
+	
+	function loadActionButton() {
+		fetch('student/refresh-action-buttons.htm', {
+				method: 'POST',
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.action-btn-group');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
+	function refreshData() {
+		if (!currentLop) currentLop = "all";
+		loadActionButton();
+		loadStudents(window.currentLop);
 	}
 </script>
