@@ -61,13 +61,24 @@ public class BoDeJDBCTemplate {
         }
     }
 
+    public List<BoDe> findBoDeByMonHoc(String mamh, String magv) {
+        try {
+            String SQL = "SELECT * FROM BoDe WHERE MAMH = ? AND MAGV = ?";
+            return jdbcTemplate.query(SQL, new Object[] { mamh, magv }, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<BoDe> findBoDeByTrinhDo(String name, String mamh, String magv) {
         try {
             String SQL = "SELECT * FROM BoDe WHERE TRINHDO = ? AND MAMH = ? AND MAGV = ?";
             return jdbcTemplate.query(SQL, new Object[] { name, mamh, magv }, new BoDeMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
-            System.err.println("Khoa - find Error: " + e.getMessage());
+            System.err.println("Bo De - find Error: " + e.getMessage());
             return null;
         }
     }
@@ -78,7 +89,7 @@ public class BoDeJDBCTemplate {
             return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%", mamh, magv }, new BoDeMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
-            System.err.println("Khoa - find Error: " + e.getMessage());
+            System.err.println("Bo De - find Error: " + e.getMessage());
             return null;
         }
     }

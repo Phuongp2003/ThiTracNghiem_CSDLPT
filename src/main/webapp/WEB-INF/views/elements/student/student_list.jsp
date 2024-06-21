@@ -62,6 +62,7 @@
 										<option value="${sv.MALOP}">${sv.MALOP}</option>
 									</select>
 									<button class="btn btn-primary mt-2" type="submit">Save</button>
+									<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 								</form>
 							</div>
 						</div>

@@ -23,29 +23,29 @@
 				<option value="2">Cơ sở 2</option>
 			</select>
 		</div>
-		<div class="col-md-4 col-sm-12 col-lg-4">
+		<div class="col-md-3 col-sm-12 col-lg-3">
 			<form role="search" action="manage/category/search.htm">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form action="department-class.htm">
+			<form action="department-class.htm" target="formSubmitFrame">
 				<select class="form-select chon-khoa" id="khoa" name="makh" onchange="loadClasses(this.value)">
 					<option value="all" ${makh=="all" ? 'selected' : '' }>Khoa: Tất cả</option>
 					<c:forEach var="k" items="${khoas}">
-						<option value="${k.MAKH}" ${k.MAKH==makh ? 'selected' : '' }>Mã khoa: ${k.MAKH} (${k.TENKH})</option>
+						<option value="${k.MAKH}" ${k.MAKH==makh ? 'selected' : '' }>${k.MAKH} (${k.TENKH})</option>
 					</c:forEach>
 				</select>
 			</form>
 		</div>
-		<div class="">
+		<div class="col-md-5">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-class">
 				Thêm lớp
 			</button>
 			<div class="modal fade" id="add-class" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<form method="POST" action="department-class/add-class.htm" class="form-control">
+						<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control" target="formSubmitFrame">
 							<div class="mb-3">
 								<label>Mã lớp: </label>
 								<input name="malop" class="form-control" required />
@@ -60,95 +60,61 @@
 										${k.MAKH} (${k.TENKH})</option>
 								</c:forEach>
 							</select>
-							<button class="btn btn-primary mt-2" type="submit">Save</button>
+							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+							<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 						</form>
 					</div>
 				</div>
 			</div>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
+			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
+			<div class="action-btn-group d-inline">
+				<jsp:include page="./button_action_list.jsp" />
+			</div>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách lớp</button></a>
+			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
 	<div class="lop-list mb-4">
 		<jsp:include page="./lop_list.jsp" />
 	</div>
-	
-	<table class="khoa-list table">
-		<div class="filter-wrapper d-flex justify-content-between mt-4 mb-2">
-			<div class="col-md-6 col-sm-12 col-lg-6">
-				<form role="search" action="manage/category/search.htm">
-					<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
-				</form>
-			</div>
-			<div class="">
-				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
-					Thêm khoa
-				</button>
-				<div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<form method="POST" action="department-class/add-department.htm" class="form-control">
-								<div class="mb-3">
-									<label>Mã khoa: </label>
-									<input name="makh" class="form-control" required />
-								</div>
-								<div class="mb-3">
-									<label>Tên khoa: </label>
-									<input name="tenkh" class="form-control" />
-								</div>
-								<button class="btn btn-primary mt-2" type="submit">Save</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
-				<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách khoa</button></a>
-			</div>
-		</div>
-		<thead>
-			<tr>
-				<th scope="col">Mã khoa</th>
-				<th scope="col">Tên khoa</th>
-				<th scope="col">Mã cơ sở</th>
-				<th scope="col">Thao tác</th>
-			</tr>
-		</thead>
-		<tbody>
-			<c:forEach var="k" items="${khoas}">
-				<tr class="is-action sl-${k.MAKH}" onclick="toggleAndLoad('${k.MAKH}')">
-					<td>${k.MAKH}</td>
-					<td>${k.TENKH}</td>
-					<td>${k.MACS}</td>
-					<td>
-						<a href="department-class/delete-department/${k.MAKH.trim()}.htm" onclick="return confirm('Bạn có chắc muốn xóa khoa ${k.MAKH}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
-						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-department-${k.MAKH.trim()}">
-							<i class="bi bi-pencil-square"></i>
-						</button>
-						<div class="modal fade" id="edit-department-${k.MAKH.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<form method="POST" action="department-class/edit-department.htm" class="form-control">
-										<div class="mb-3">
-											<label>Mã khoa: </label>
-											<input name="makh" value="${k.MAKH}" class="form-control" disabled />
-											<input type="hidden" name="makh" value="${k.MAKH}" />
-										</div>
-										<div class="mb-3">
-											<label>Tên khoa: </label>
-											<input name="tenkh" value="${k.TENKH}" class="form-control" />
-										</div>
-										<button class="btn btn-primary mt-2" type="submit">Save</button>
-									</form>
-								</div>
-							</div>
-						</div>
-					</td>
-				</tr>
-			</c:forEach>
-		</tbody>
-	</table>
+	<div class="filter-wrapper d-flex justify-content-between mt-4 mb-2">
+        <div class="col-md-6 col-sm-12 col-lg-6">
+            <form role="search" action="manage/category/search.htm">
+                <input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+            </form>
+        </div>
+        <div class="">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
+                Thêm khoa
+            </button>
+            <div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control" target="formSubmitFrame">
+                            <div class="mb-3">
+                                <label>Mã khoa: </label>
+                                <input name="makh" class="form-control" required />
+                            </div>
+                            <div class="mb-3">
+                                <label>Tên khoa: </label>
+                                <input name="tenkh" class="form-control" />
+                            </div>
+                            <button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+                            <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
+            <a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách khoa</button></a>
+        </div>
+    </div>
+	<div class="khoa-list">
+		<jsp:include page="./khoa_list.jsp" />
+	</div>
 </div>
 <script>
+	var currentKhoa;
 	function loadClasses(value) {
 		fetch('department-class/get-lop-by-khoa.htm', {
 				method: 'POST',
@@ -179,6 +145,23 @@
 			.catch(error => {
 				console.error('Error:', error);
 			});
+		currentKhoa = value;
+		console.log("🚀 ~ loadLops ~ currentKhoa:", currentKhoa)
+	}
+
+	function loadDepartments(){
+		fetch('department-class/load-khoa.htm', {
+			method: 'POST',
+			body: JSON.stringify({})
+		})
+		.then(response => response.text())
+		.then(data => {
+			const userBar = document.querySelector('.khoa-list');
+			userBar.innerHTML = data;
+		})
+		.catch(error => {
+			console.error('Error:', error);
+		});
 	}
 	
 	function toggleAndLoad(value) {
@@ -203,4 +186,39 @@
 			}
 		}
 	}
+
+	function loadActionButton() {
+		fetch('department-class/refresh-action-buttons.htm', {
+				method: 'POST',
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.action-btn-group');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
+	function refreshData() {
+		if (!currentKhoa) currentKhoa = "all";
+		loadActionButton();
+		loadClasses(window.currentKhoa);
+		loadDepartments();
+	}
+
+	var addClassModal = document.getElementById('add-class');
+	addClassModal.addEventListener('hidden.bs.modal', function () {
+        document.getElementById('addClassForm').reset();
+    });
+	var addDepartModal = document.getElementById('add-department');
+	addDepartModal.addEventListener('hidden.bs.modal', function () {
+        document.getElementById('addDepartForm').reset();
+    });
 </script>
