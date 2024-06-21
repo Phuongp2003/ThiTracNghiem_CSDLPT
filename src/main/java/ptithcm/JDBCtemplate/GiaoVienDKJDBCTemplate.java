@@ -17,14 +17,14 @@ public class GiaoVienDKJDBCTemplate {
 
     public void create(GiaoVienDangKy gvdk) {
         try {
-            String SQL = "INSERT INTO BoDe (MAGV, MAMH, MALOP, TRINHDO, NGAYTHI, LAN, SOCAUTHI, THOIGIAN) "
+            String SQL = "INSERT INTO GiaoVien_DangKy (MAGV, MAMH, MALOP, TRINHDO, NGAYTHI, LAN, SOCAUTHI, THOIGIAN) "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             jdbcTemplate.update(SQL, gvdk.getMAGV(), gvdk.getMAMH(), gvdk.getMALOP(), gvdk.getTRINHDO(), 
                 gvdk.getNGAYTHI(), gvdk.getLAN(), gvdk.getSOCAUTHI(), gvdk.getTHOIGIAN());
             System.out.println("Created Record Name = " + gvdk.getMAGV());
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Bo De - create error: " + e.getMessage());
+            System.err.println("GVDK - create error: " + e.getMessage());
         }
     }
 }
