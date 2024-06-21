@@ -24,20 +24,20 @@
     - [X] Thêm
     - [X] Xóa
     - [X] Sửa
-    - [ ] Phục hồi
-    - [ ] Reload?
+    - [X] Phục hồi
+    - [X] Reload?
   - [X] Lớp
     - [X] Thêm
     - [X] Xóa
     - [X] Sửa
-    - [ ] Phục hồi
-    - [ ] Reload?
+    - [X] Phục hồi
+    - [X] Reload?
 - [X] Form sinh viên (của lớp)
   - [X] Thêm
   - [X] Xóa
   - [X] Sửa
-  - [ ] Phục hồi
-  - [ ] reload
+  - [X] Phục hồi
+  - [X] reload
 - [ ] Form (subform) giảng viên (của khoa)
   - [ ] Thêm
   - [ ] Xóa
