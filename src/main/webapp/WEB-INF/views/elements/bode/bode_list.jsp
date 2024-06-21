@@ -1,20 +1,24 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-
-
+<style>
+	.bode-table {
+    	table-layout: fixed;
+    	word-wrap: break-word;
+	}
+</style>
 <table class="table bode-table">
 	<thead>
 		<tr>
-			<th scope="col">ID</th>
-			<th scope="col">Mã môn học</th>
-			<th scope="col">Trình độ</th>
-			<th scope="col">Nội dung</th>
-			<th scope="col">A</th>
-			<th scope="col">B</th>
-			<th scope="col">C</th>
-			<th scope="col">D</th>
-            <th scope="col">Đáp án</th>
-            <th scope="col">Thao tác</th>
+			<th style="width: 5%">ID</th>
+			<th style="width: 10%">Môn học</th>
+			<th style="width: 7%">Trình độ</th>
+			<th style="width: 30%">Nội dung</th>
+			<th style="width: 15%">A</th>
+			<th style="width: 15%">B</th>
+			<th style="width: 15%">C</th>
+			<th style="width: 15%">D</th>
+            <th style="width: 5%">Đáp án</th>
+            <th style="width: 12%">Thao tác</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -24,10 +28,10 @@
                 <td>${bd.MAMH}</td>
                 <td>${bd.TRINHDO}</td>
                 <td>${bd.NOIDUNG}</td>
-                <td>${bd.A}</td>
-                <td>${bd.B}</td>
-                <td>${bd.C}</td>
-                <td>${bd.D}</td>
+                <td>${bd.getA()}</td>
+                <td>${bd.getB()}</td>
+                <td>${bd.getC()}</td>
+                <td>${bd.getD()}</td>
                 <td>${bd.DAP_AN}</td>
 				<td>
 					<a href="student/delete-student/${sv.MASV.trim()}.htm" onclick="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>

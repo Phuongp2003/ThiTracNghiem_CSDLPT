@@ -153,7 +153,7 @@ public class StudentController {
             @RequestParam("diachi") String diachi, HttpSession session) {
         try {
             SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
-            SinhVien newSv = new SinhVien();
+            SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
             newSv.setMASV(masv);
             newSv.setHO(ho);
             newSv.setTEN(ten);

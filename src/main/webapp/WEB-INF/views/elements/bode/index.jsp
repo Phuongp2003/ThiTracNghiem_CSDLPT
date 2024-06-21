@@ -52,44 +52,54 @@
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<form method="POST" action="bode/add-bode.htm" class="form-control">
-							<select class="form-select" id="monhoc" name="mamh">
-								<c:forEach var="mh" items="${monhocs}">
-									<option value="${mh.MAMH}">
-										${mh.MAMH} (${mh.TENMH})</option>
-								</c:forEach>
-							</select>
-							<select class="form-select" name="trinhdo">
-								<option value="A">Đại học, chuyên ngành</option>
-								<option value="B">Đại học, không chuyên ngành</option>
-								<option value="C">Cao đẳng</option>
-							</select>
+							<div class="mb-3">
+								<label >Môn học</label>
+								<select class="form-select" id="monhoc" name="mamh">
+									<c:forEach var="mh" items="${monhocs}">
+										<option value="${mh.MAMH}">
+											${mh.MAMH} (${mh.TENMH})</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label>Trình độ</label>
+								<select class="form-select" name="trinhdo">
+									<option value="A">Đại học, chuyên ngành</option>
+									<option value="B">Đại học, không chuyên ngành</option>
+									<option value="C">Cao đẳng</option>
+								</select>
+							</div>
 							<div class="mb-3">
 								<label>Nội dung: </label>
-								<textarea name="noidung" class="form-control" placeholder="Nội dung câu hỏi"  style="height: 100px"></textarea>
+								<textarea name="noidung" class="form-control" placeholder="Nội dung câu hỏi"  style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>A: </label>
-								<textarea name="A" class="form-control" placeholder="Nội dung đáp án A"  style="height: 100px"></textarea>
+								<textarea name="A" class="form-control" placeholder="Nội dung đáp án A"  style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>B: </label>
-								<textarea name="B" class="form-control" placeholder="Nội dung đáp án B"  style="height: 100px"></textarea>
+								<textarea name="B" class="form-control" placeholder="Nội dung đáp án B"  style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>C: </label>
-								<textarea name="C" class="form-control" placeholder="Nội dung đáp án C"  style="height: 100px"></textarea>
+								<textarea name="C" class="form-control" placeholder="Nội dung đáp án C"  style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>D: </label>
-								<textarea name="D" class="form-control" placeholder="Nội dung đáp án D"  style="height: 100px"></textarea>
+								<textarea name="D" class="form-control" placeholder="Nội dung đáp án D"  style="height: 70px"></textarea>
 							</div>
-							<select class="form-select" name="dapan">
-								<option value="A">A</option>
-								<option value="B">B</option>
-								<option value="C">C</option>
-								<option value="D">D</option>
-							</select>
-							<button class="btn btn-primary mt-2" type="submit">Save</button>
+							<div class="mb-3">
+								<label>Đáp án</label>
+								<select class="form-select" name="dapan">
+									<option value="A">A</option>
+									<option value="B">B</option>
+									<option value="C">C</option>
+									<option value="D">D</option>
+								</select>
+							</div>
+							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+							<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 						</form>
 					</div>
 				</div>
@@ -98,6 +108,12 @@
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
 					sách bộ đề</button></a>
 		</div>
+	</div>
+	<div class="note d-flex gap-3">
+		<h6 class="fst-italic" style="margin-top: 0.15rem;">Trình độ:</h6>
+		<p>A: Đại học, chuyên ngành</p>
+		<p>B: Đại học, không chuyên ngành</p>
+		<p>C: Cao đẳng</p>
 	</div>
 	<div class="bode-list">
 		<jsp:include page="./bode_list.jsp" />
