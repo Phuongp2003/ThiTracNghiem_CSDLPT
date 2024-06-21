@@ -78,43 +78,44 @@
 		<jsp:include page="./lop_list.jsp" />
 	</div>
 	<div class="filter-wrapper d-flex justify-content-between mt-4 mb-2">
-        <div class="col-md-6 col-sm-12 col-lg-6">
-            <form role="search" action="manage/category/search.htm">
-                <input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
-            </form>
-        </div>
-        <div class="">
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
-                Thêm khoa
-            </button>
-            <div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control" target="formSubmitFrame">
-                            <div class="mb-3">
-                                <label>Mã khoa: </label>
-                                <input name="makh" class="form-control" required />
-                            </div>
-                            <div class="mb-3">
-                                <label>Tên khoa: </label>
-                                <input name="tenkh" class="form-control" />
-                            </div>
-                            <button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
-                            <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+		<div class="col-md-6 col-sm-12 col-lg-6">
+			<form role="search" action="manage/category/search.htm">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+			</form>
+		</div>
+		<div class="">
+			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
+				Thêm khoa
+			</button>
+			<div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control" target="formSubmitFrame">
+							<div class="mb-3">
+								<label>Mã khoa: </label>
+								<input name="makh" class="form-control" required />
+							</div>
+							<div class="mb-3">
+								<label>Tên khoa: </label>
+								<input name="tenkh" class="form-control" />
+							</div>
+							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+							<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+						</form>
+					</div>
+				</div>
+			</div>
 			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
-            <a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách khoa</button></a>
-        </div>
-    </div>
+			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách khoa</button></a>
+		</div>
+	</div>
 	<div class="khoa-list">
 		<jsp:include page="./khoa_list.jsp" />
 	</div>
 </div>
 <script>
 	var currentKhoa;
+	
 	function loadClasses(value) {
 		fetch('department-class/get-lop-by-khoa.htm', {
 				method: 'POST',
@@ -148,20 +149,20 @@
 		currentKhoa = value;
 		console.log("🚀 ~ loadLops ~ currentKhoa:", currentKhoa)
 	}
-
-	function loadDepartments(){
+	
+	function loadDepartments() {
 		fetch('department-class/load-khoa.htm', {
-			method: 'POST',
-			body: JSON.stringify({})
-		})
-		.then(response => response.text())
-		.then(data => {
-			const userBar = document.querySelector('.khoa-list');
-			userBar.innerHTML = data;
-		})
-		.catch(error => {
-			console.error('Error:', error);
-		});
+				method: 'POST',
+				body: JSON.stringify({})
+			})
+			.then(response => response.text())
+			.then(data => {
+				const userBar = document.querySelector('.khoa-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
 	}
 	
 	function toggleAndLoad(value) {
@@ -178,15 +179,17 @@
 		
 		// Load slected value, if no, load all
 		if (element.classList.contains('selected')) {
-			loadStudents(value);
+			loadClasses(value);
+			loadDepartments();
 		} else {
 			const selectedRows = document.querySelectorAll('.is-action.selected');
 			if (selectedRows.length === 0) {
-				loadStudents('all');
+				loadClasses('all');
+				loadDepartments();
 			}
 		}
 	}
-
+	
 	function loadActionButton() {
 		fetch('department-class/refresh-action-buttons.htm', {
 				method: 'POST',
@@ -212,13 +215,13 @@
 		loadClasses(window.currentKhoa);
 		loadDepartments();
 	}
-
+	
 	var addClassModal = document.getElementById('add-class');
-	addClassModal.addEventListener('hidden.bs.modal', function () {
-        document.getElementById('addClassForm').reset();
-    });
+	addClassModal.addEventListener('hidden.bs.modal', function() {
+		document.getElementById('addClassForm').reset();
+	});
 	var addDepartModal = document.getElementById('add-department');
-	addDepartModal.addEventListener('hidden.bs.modal', function () {
-        document.getElementById('addDepartForm').reset();
-    });
+	addDepartModal.addEventListener('hidden.bs.modal', function() {
+		document.getElementById('addDepartForm').reset();
+	});
 </script>

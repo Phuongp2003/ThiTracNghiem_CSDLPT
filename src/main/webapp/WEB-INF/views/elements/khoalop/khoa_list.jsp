@@ -17,7 +17,7 @@
                 <td>${k.MACS}</td>
                 <td>
                     <form class="d-inline" action="department-class/delete-department/${k.MAKH.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa khoa ${k.MAKH}?')" target="formSubmitFrame">
-                        <button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
+                        <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>
                     </form>
 
                     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-department-${k.MAKH.trim()}">
@@ -36,8 +36,8 @@
                                         <label>Tên khoa: </label>
                                         <input name="tenkh" value="${k.TENKH}" class="form-control" />
                                     </div>
-                                    <button class="btn btn-primary mt-2" type="submit">Save</button>
-                                    <button class="btn btn-secondary mt-2" type="submit" data-bs-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+                                    <button class="btn btn-secondary mt-2" type="button" data-bs-dismiss="modal">Close</button>
                                 </form>
                             </div>
                         </div>
