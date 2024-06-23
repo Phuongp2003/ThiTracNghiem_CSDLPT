@@ -1,6 +1,5 @@
 package ptithcm.controller;
 
-
 import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -18,10 +17,8 @@ import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
 import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.bean.GlobalVariable;
-import ptithcm.bean.HistoryAction;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.Lop;
-import ptithcm.bean.LopAction;
 
 @Controller
 @RequestMapping("dkthi")

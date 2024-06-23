@@ -53,7 +53,7 @@
 					<a class="nav-link" href="dkthi.htm">Chuẩn bị thi</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="">Thi</a>
+					<a class="nav-link" href="thi.htm">Thi</a>
 				</li>
 			</ul>
 		</div>
