@@ -61,12 +61,13 @@ public class DKThiController {
             @RequestParam("thoigianthi") int thoigianthi, HttpSession session) {
         try {
             GiaoVienDangKy gvdk = new GiaoVienDangKy();
-            gvdk.setMALOP(malop);
+            gvdk.setMAGV("TH123");
             gvdk.setMAMH(mamh);
+            gvdk.setMALOP(malop);
             gvdk.setTRINHDO(trinhdo);
+            gvdk.setNGAYTHI(ngaythi);
             gvdk.setLAN(lanthi);
             gvdk.setSOCAUTHI(socauthi);
-            gvdk.setNGAYTHI(ngaythi);
             gvdk.setTHOIGIAN(thoigianthi);
             giaoVienDKJDBCTemplate.create(gvdk);
 

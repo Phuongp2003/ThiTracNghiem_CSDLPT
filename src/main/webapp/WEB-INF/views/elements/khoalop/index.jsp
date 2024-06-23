@@ -28,7 +28,7 @@
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
-		<div class="col-md-2">
+		<div class="khoa-select col-md-2">
 			<form action="department-class.htm" target="formSubmitFrame">
 				<select class="form-select chon-khoa" id="khoa" name="makh" onchange="loadClasses(this.value)">
 					<option value="all" ${makh=="all" ? 'selected' : '' }>Khoa: Tất cả</option>
@@ -164,6 +164,21 @@
 				console.error('Error:', error);
 			});
 	}
+
+	// function loadNameDepartments(){
+	// 	fetch('department-class/load-khoa.htm', {
+	// 			method: 'POST',
+	// 			body: JSON.stringify({})
+	// 		})
+	// 		.then(response => response.text())
+	// 		.then(data => {
+	// 			const userBar = document.querySelector('.khoa-select');
+	// 			userBar.innerHTML = data;
+	// 		})
+	// 		.catch(error => {
+	// 			console.error('Error:', error);
+	// 		});
+	// }
 	
 	function toggleAndLoad(value) {
 		const element = event.target.closest('.is-action');
@@ -214,6 +229,7 @@
 		loadActionButton();
 		loadClasses(window.currentKhoa);
 		loadDepartments();
+		// loadNameDepartments();
 	}
 	
 	var addClassModal = document.getElementById('add-class');
