@@ -134,7 +134,6 @@ public class UserController {
             }
 
             Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUsername());
-
             usernameCookie.setMaxAge(60 * 60 * 1);
             usernameCookie.setPath("/");
             response.addCookie(usernameCookie);

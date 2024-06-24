@@ -39,7 +39,7 @@ public class BangDiemController {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             bangDiemJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<BangDiem> bangdiems = bangDiemJDBCTemplate.listBangDiem(malop, mamh, lanthi);
+            List<List<String>> bangdiems = bangDiemJDBCTemplate.listBangDiem(malop, mamh, lanthi);
             model.addAttribute("bangdiems", bangdiems);
         } else {
             model.addAttribute("message", "Không có bảng điểm nào!");

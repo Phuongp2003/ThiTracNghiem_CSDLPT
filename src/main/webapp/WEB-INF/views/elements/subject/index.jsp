@@ -46,7 +46,7 @@
 	<div class="subject-list">
 		<jsp:include page="./subject_list.jsp" />
 	</div>
-
+	
 	<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#score-subject">
 		Xem bảng điểm môn học
 	</button>
@@ -58,18 +58,18 @@
 						<label>Lớp</label>
 						<select class="form-select" id="lop" name="malop">
 							<c:forEach var="l" items="${lops}">
-							  <option value="${l.MALOP}">
-								${l.MALOP} (${l.TENLOP})</option>
+								<option value="${l.MALOP}">
+									${l.MALOP} (${l.TENLOP})</option>
 							</c:forEach>
 						</select>
 					</div>
 					<div class="mb-3">
 						<label>Môn học</label>
 						<select class="form-select" id="monhoc" name="mamh">
-						  <c:forEach var="mh" items="${monHocs}">
-							<option value="${mh.MAMH}">
-							  ${mh.MAMH} (${mh.TENMH})</option>
-						  </c:forEach>
+							<c:forEach var="mh" items="${monHocs}">
+								<option value="${mh.MAMH}">
+									${mh.MAMH} (${mh.TENMH})</option>
+							</c:forEach>
 						</select>
 					</div>
 					<div class="mb-3">
@@ -98,7 +98,7 @@
 				console.error('Error:', error);
 			});
 	}
-
+	
 	function loadActionButton() {
 		fetch('subject/refresh-action-buttons.htm', {
 				method: 'POST',
@@ -117,7 +117,7 @@
 				console.error('Error:', error);
 			});
 	}
-
+	
 	function refreshData() {
 		loadActionButton();
 		loadSubjects();

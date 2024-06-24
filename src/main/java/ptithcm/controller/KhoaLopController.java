@@ -51,8 +51,7 @@ public class KhoaLopController {
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             model.addAttribute("khoas", khoas);
             model.addAttribute("lops", lops);
-        }
-        else{
+        } else {
             model.addAttribute("message", "Không có khoa nào!");
         }
         return "pages/khoalop";
@@ -105,9 +104,26 @@ public class KhoaLopController {
         return "elements/khoalop/khoa_list";
     }
 
+    @RequestMapping(value = "load-rf-khoa", method = RequestMethod.POST)
+    public String loadRfKhoa(ModelMap model, HttpSession session, @RequestBody String body) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        if (currentConnection != null) {
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            model.addAttribute("khoas", khoas);
+        } else {
+            model.addAttribute("message", "Không có khoa nào!");
+        }
+
+        return "elements/khoalop/khoa_rf_list";
+    }
+
     @RequestMapping(value = "add-class", method = RequestMethod.POST)
-    public String addClass(ModelMap model, @RequestParam("malop") String malop, 
-            @RequestParam("tenlop") String tenlop, @RequestParam("makh") String makh, 
+    public String addClass(ModelMap model, @RequestParam("malop") String malop,
+            @RequestParam("tenlop") String tenlop, @RequestParam("makh") String makh,
             HttpSession session) {
         try {
             Lop lop = new Lop();
@@ -129,13 +145,13 @@ public class KhoaLopController {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        
+
         return "elements/message";
     }
 
     @RequestMapping(value = "delete-class/{id}")
     public String deleteClass(ModelMap model, @PathVariable("id") String malop, HttpSession session) {
-        try{
+        try {
             Lop lop = khoaLopJDBCTemplate.getLop(malop);
             khoaLopJDBCTemplate.deleteLop(malop);
 
@@ -152,14 +168,14 @@ public class KhoaLopController {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        
+
         return "elements/message";
     }
 
     @RequestMapping(value = "edit-class", method = RequestMethod.POST)
-    public String updateClass(ModelMap model, @RequestParam("malop") String malop, 
+    public String updateClass(ModelMap model, @RequestParam("malop") String malop,
             @RequestParam("tenlop") String tenlop, HttpSession session) {
-        try{
+        try {
             Lop oldLop = khoaLopJDBCTemplate.getLop(malop);
             Lop newLop = khoaLopJDBCTemplate.getLop(malop);
             newLop.setTENLOP(tenlop);
@@ -182,10 +198,10 @@ public class KhoaLopController {
     }
 
     @RequestMapping(value = "add-department", method = RequestMethod.POST)
-    public String addDepartment(ModelMap model, @RequestParam("makh") String makh, 
-            @RequestParam("tenkh") String tenkh, 
+    public String addDepartment(ModelMap model, @RequestParam("makh") String makh,
+            @RequestParam("tenkh") String tenkh,
             HttpSession session) {
-        try{
+        try {
             Khoa khoa = new Khoa();
             khoa.setMAKH(makh);
             khoa.setTENKH(tenkh);
@@ -210,7 +226,7 @@ public class KhoaLopController {
 
     @RequestMapping(value = "delete-department/{id}")
     public String deleteDepartment(ModelMap model, @PathVariable("id") String makh, HttpSession session) {
-        try{
+        try {
             Khoa khoa = khoaLopJDBCTemplate.getKhoa(makh);
             khoaLopJDBCTemplate.deleteKhoa(makh);
 
@@ -231,9 +247,9 @@ public class KhoaLopController {
     }
 
     @RequestMapping(value = "edit-department", method = RequestMethod.POST)
-    public String updateDepartment(ModelMap model, @RequestParam("makh") String makh, 
+    public String updateDepartment(ModelMap model, @RequestParam("makh") String makh,
             @RequestParam("tenkh") String tenkh, HttpSession session) {
-        try{
+        try {
             Khoa oldKhoa = khoaLopJDBCTemplate.getKhoa(makh);
             Khoa newKhoa = new Khoa();
             Khoa khoa = khoaLopJDBCTemplate.getKhoa(makh);

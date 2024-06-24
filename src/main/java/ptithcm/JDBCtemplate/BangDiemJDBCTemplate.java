@@ -1,4 +1,7 @@
 package ptithcm.JDBCtemplate;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -18,11 +21,22 @@ public class BangDiemJDBCTemplate {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<BangDiem> listBangDiem(String malop, String mamh, int lan) {
+    public List<List<String>> listBangDiem(String malop, String mamh, int lan) {
         try {
             String SQL = "{call SP_InBangDiem(?, ?, ?)}";
-            return jdbcTemplate.query(SQL, new Object[] { malop, mamh, lan }, new BangDiemMapper());
+            return jdbcTemplate.query(SQL, new Object[] { malop, mamh, lan },
+                    (ResultSet rs, int rowNum) -> {
+                        List<String> list = new ArrayList<>();
+                        list.add(rs.getString("MASV"));
+                        list.add(rs.getString("HOTEN"));
+                        list.add(rs.getString(""));
+                        return list;
+                    });
         } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bang Diem - list Error: " + e.getMessage());
+            return null;
+        } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Bang Diem - list Error: " + e.getMessage());
             return null;

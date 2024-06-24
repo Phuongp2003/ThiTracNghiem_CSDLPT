@@ -38,6 +38,10 @@ public class Khoa {
 		this.MACS = MACS;
 	}
 
+	public String getFullName() {
+		return this.MAKH + " - " + this.TENKH;
+	}
+
 	@Override
 	public String toString() {
 		return "Khoa{" +

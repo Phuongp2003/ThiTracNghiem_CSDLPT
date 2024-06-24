@@ -31,10 +31,7 @@
 		<div class="khoa-select col-md-2">
 			<form action="department-class.htm" target="formSubmitFrame">
 				<select class="form-select chon-khoa" id="khoa" name="makh" onchange="loadClasses(this.value)">
-					<option value="all" ${makh=="all" ? 'selected' : '' }>Khoa: Tất cả</option>
-					<c:forEach var="k" items="${khoas}">
-						<option value="${k.MAKH}" ${k.MAKH==makh ? 'selected' : '' }>${k.MAKH} (${k.TENKH})</option>
-					</c:forEach>
+					<jsp:include page="./khoa_rf_list.jsp" />
 				</select>
 			</form>
 		</div>
@@ -148,6 +145,21 @@
 		console.log("🚀 ~ loadLops ~ currentKhoa:", currentKhoa)
 	}
 	
+	function loadRfDepartments() {
+		fetch('department-class/load-rf-khoa.htm', {
+				method: 'POST',
+				body: JSON.stringify({})
+			})
+			.then(response => response.text())
+			.then(data => {
+				const userBar = document.querySelector('.chon-khoa');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
 	function loadDepartments() {
 		fetch('department-class/load-khoa.htm', {
 				method: 'POST',
@@ -161,6 +173,7 @@
 			.catch(error => {
 				console.error('Error:', error);
 			});
+		loadRfDepartments()
 	}
 	
 	function toggleAndLoad(value) {
