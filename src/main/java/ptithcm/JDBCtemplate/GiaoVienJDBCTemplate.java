@@ -148,4 +148,15 @@ public class GiaoVienJDBCTemplate {
         }
     }
 
+    public List<GiaoVien> getGVByKhoa(String makhoa) {
+        try {
+            String SQL = "SELECT * FROM GiaoVien WHERE MAKH = ?";
+            return jdbcTemplate.query(SQL, new Object[] { makhoa }, new GiaoVienMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Giao Vien - getGVByKhoa Error: " + e.getMessage());
+            return null;
+        }
+    }
+
 }

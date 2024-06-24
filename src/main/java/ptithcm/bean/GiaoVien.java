@@ -58,6 +58,10 @@ public class GiaoVien {
         this.MAKH = MAKH;
     }
 
+    public String getFullName() {
+        return HO + " " + TEN;
+    }
+
     @Override
     public String toString() {
         return "GiaoVien{" +

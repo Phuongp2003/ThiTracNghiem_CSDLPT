@@ -41,12 +41,29 @@ public class HistoryAction {
         return true;
     }
 
-    public void redo() {
-        if (!this.redoStack.isEmpty()) {
-            Action<?> action = this.redoStack.pop();
-            action.execute();
-            this.undoStack.push(action.getRevertAction());
+    public Boolean redo() {
+        Action<?> action = null;
+        try {
+            if (!this.redoStack.isEmpty()) {
+                action = this.redoStack.pop();
+                if (!action.execute()) {
+                    throw new Exception("Action báo: thực thi lệnh thất bại!");
+                }
+                this.undoStack.push(action.getRevertAction());
+            } else {
+                System.out.println("HistoryAction.java: Không thể làm lại!");
+                throw new Exception("HistoryAction.java: Không thể làm lại!");
+            }
+        } catch (Exception e) {
+            System.out.println(
+                    "HistoryAction.java: Làm lại thất bại:\nAction: "
+                            + (action != null ? action : "No action")
+                            + "\nE: "
+                            + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
     public boolean canUndo() {
