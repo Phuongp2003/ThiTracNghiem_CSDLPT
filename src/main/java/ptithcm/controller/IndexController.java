@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.SinhVien;
@@ -16,12 +17,7 @@ import ptithcm.service.SinhVienService;
 @Controller
 public class IndexController {
     @Autowired
-    private GlobalVariable currentConnection;
-
-    @Autowired
     SinhVienService sinhVienService;
-
-    
 
     @RequestMapping({ "/home", "/" })
     public String home(Model model, HttpSession session) {
@@ -30,21 +26,11 @@ public class IndexController {
         return "pages/home";
     }
 
-    @RequestMapping("/test")
+    @RequestMapping(value = "function-filter", method = RequestMethod.POST)
     public String test(Model model, HttpSession session) {
-        List<SinhVien> sinhVienList = sinhVienService.docDanhSachSinhVien();
-        model.addAttribute("students", sinhVienList);
-        return "pages/test_e";
-    }
-
-    @RequestMapping("/test2")
-    public String test2(Model model, HttpSession session) {
-        model.addAttribute("title", "PTITHCM Book Shop");
-        model.addAttribute("type", "home");
-        List<SinhVien> sinhVienList = sinhVienService.docDanhSachSinhVien();
-        sinhVienList = sinhVienList.subList(0, 3);
-        model.addAttribute("students", sinhVienList);
-        return "pages/test";
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        model.addAttribute("role", currentConnection.getCurrentUser().getRoleAlias());
+        return "elements/nav_functions";
     }
 
     @RequestMapping("/error")

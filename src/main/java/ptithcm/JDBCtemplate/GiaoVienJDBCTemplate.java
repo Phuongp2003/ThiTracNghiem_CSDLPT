@@ -2,7 +2,9 @@ package ptithcm.JDBCtemplate;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -127,15 +129,15 @@ public class GiaoVienJDBCTemplate {
     }
 
     // Login GiaoVien by Procedure
-    public List<String> login(String magv) {
+    public Map<String, String> login(String magv) {
         String SQL = "{call SP_DangNhapGiangVien(?)}";
-        List<List<String>> res;
+        List<Map<String, String>> res;
         try {
             res = jdbcTemplate.query(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
-                List<String> list = new ArrayList<String>();
-                list.add(rs.getString("MANV"));
-                list.add(rs.getString("HOTEN"));
-                list.add(rs.getString("TENNHOM"));
+                Map<String, String> list = new HashMap<String, String>();
+                list.put("MANV", rs.getString("MANV"));
+                list.put("HOTEN", rs.getString("HOTEN"));
+                list.put("TENNHOM", rs.getString("TENNHOM"));
                 return list;
             });
             return res.get(0);

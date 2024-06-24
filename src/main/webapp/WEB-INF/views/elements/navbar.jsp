@@ -28,12 +28,12 @@
 </nav>
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top fs-3 bg-body-tertiary">
 	<div class="container-fluid mx-auto w-75">
-		<a class="navbar-brand" href="home"> <img src="resources/imgs/ptitlogo.png" alt="Navbar Brand" srcset=""> </a>
+		<a class="navbar-brand" href="home.htm"> <img src="resources/imgs/ptitlogo.png" alt="Navbar Brand" srcset=""> </a>
 		<button class="navbar-toggler" type="button" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			<ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5 gap-3">
+			<ul class="navbar-nav navbar-functions ms-auto mb-2 mb-lg-0 fs-5 gap-3">
 				<li class="nav-item">
 					<a class="nav-link" href="teacher.htm">Giáo viên</a>
 				</li>
@@ -72,4 +72,14 @@
 		.catch(error => {
 			console.error('Error:', error);
 		});
+	
+	fetch('function-filter.htm', {
+			method: 'POST'
+		})
+		.then(response => response.text())
+		.then(data => {
+			const functionbar = document.querySelector('.navbar-functions');
+			functionbar.innerHTML = data;
+		})
+		.catch(error => console.log('Error: ', error))
 </script>

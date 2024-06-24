@@ -1,6 +1,7 @@
 package ptithcm.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -38,7 +39,7 @@ public class GiaoVienService {
         giaoVienJDBCTemplate.delete(maGiaoVien);
     }
 
-    public List<String> dangNhap(String username) {
+    public Map<String, String> dangNhap(String username) {
         return giaoVienJDBCTemplate.login(username);
     }
 

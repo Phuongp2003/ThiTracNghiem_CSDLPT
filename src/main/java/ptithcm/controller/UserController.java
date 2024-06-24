@@ -2,6 +2,7 @@ package ptithcm.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -89,6 +90,7 @@ public class UserController {
             HttpServletResponse response) {
         String svUsername = username;
         String svPassword = password;
+        String roleAlias = null;
         GlobalVariable currentConnection = new GlobalVariable();
         try {
             // Check site
@@ -111,6 +113,7 @@ public class UserController {
                 currentConnection.setUsername("SV");
                 username = "SV";
                 password = "SV";
+                roleAlias = "SV";
             }
 
             // Login to sql
@@ -125,14 +128,28 @@ public class UserController {
                 sinhVienService.setDataSource(currentConnection.getSite());
                 List<String> sinhVienInfo = sinhVienService.dangNhap(svUsername, svPassword);
                 System.out.println(sinhVienInfo);
-                currentConnection.setCurrentUser(username, sinhVienInfo.get(0), "Sinh Viên");
+                currentConnection.setCurrentUser(username, sinhVienInfo.get(0), "Sinh Viên", roleAlias);
             } else {
                 giaoVienService.setDataSource(currentConnection.getSite());
-                List<String> giaoVienInfo = giaoVienService.dangNhap(username);
+                Map<String, String> giaoVienInfo = giaoVienService.dangNhap(username);
                 System.out.println(giaoVienInfo);
-                currentConnection.setCurrentUser(username, giaoVienInfo.get(1), "GV");
+                String role = null;
+                roleAlias = giaoVienInfo.get("TENNHOM");
+                switch (roleAlias) {
+                    case "GIANGVIEN":
+                        role = "Giáo viên";
+                        break;
+                    case "TRUONG":
+                        role = "Trường";
+                        break;
+                    case "COSO":
+                        role = "Cơ sở";
+                        break;
+                    default:
+                        throw new NullPointerException("Vai trò người dùng không hợp lệ!");
+                }
+                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role, roleAlias);
             }
-
             Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUsername());
             usernameCookie.setMaxAge(60 * 60 * 1);
             usernameCookie.setPath("/");
@@ -142,6 +159,11 @@ public class UserController {
             System.out.println("LOGIN FAIL" + e);
             model.addAttribute("type", "login");
             model.addAttribute("message", "Thông tin đăng nhập không chính xác!");
+            return "redirect:/auth/login.htm";
+        } catch (NullPointerException e) {
+            System.out.println("LOGIN FAIL" + e);
+            model.addAttribute("type", "login");
+            model.addAttribute("message", e);
             return "redirect:/auth/login.htm";
         } catch (Exception e) {
             System.out.println("LOGIN FAIL" + e);

@@ -24,6 +24,7 @@ public class GlobalVariable {
         private String username;
         private String fullname;
         private String role;
+        private String roleAlias;
 
         public CurrentUser() {
         }
@@ -38,6 +39,13 @@ public class GlobalVariable {
             this.username = username;
             this.fullname = fullname;
             this.role = role;
+        }
+
+        public void setCurrentUser(String username, String fullname, String role, String roleAlias) {
+            this.username = username;
+            this.fullname = fullname;
+            this.role = role;
+            this.roleAlias = roleAlias;
         }
 
         public String getUsername() {
@@ -62,6 +70,14 @@ public class GlobalVariable {
 
         public void setRole(String role) {
             this.role = role;
+        }
+
+        public String getRoleAlias() {
+            return roleAlias;
+        }
+
+        public void setRoleAlias(String roleAlias) {
+            this.roleAlias = roleAlias;
         }
     }
 
@@ -119,5 +135,9 @@ public class GlobalVariable {
 
     public void setCurrentUser(String username, String fullname, String role) {
         this.currentUser.setCurrentUser(username, fullname, role);
+    }
+
+    public void setCurrentUser(String username, String fullname, String role, String roleAlias) {
+        this.currentUser.setCurrentUser(username, fullname, role, roleAlias);
     }
 }
