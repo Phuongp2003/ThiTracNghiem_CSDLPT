@@ -38,7 +38,7 @@
 				</select>
 			</form>
 		</div>
-		<div class="col-md-5">
+		<div class="">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-class">
 				Thêm lớp
 			</button>
@@ -70,7 +70,6 @@
 			<div class="action-btn-group d-inline">
 				<jsp:include page="./button_action_list.jsp" />
 			</div>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách lớp</button></a>
 			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
@@ -106,7 +105,6 @@
 				</div>
 			</div>
 			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách khoa</button></a>
 		</div>
 	</div>
 	<div class="khoa-list">
@@ -164,21 +162,6 @@
 				console.error('Error:', error);
 			});
 	}
-
-	// function loadNameDepartments(){
-	// 	fetch('department-class/load-khoa.htm', {
-	// 			method: 'POST',
-	// 			body: JSON.stringify({})
-	// 		})
-	// 		.then(response => response.text())
-	// 		.then(data => {
-	// 			const userBar = document.querySelector('.khoa-select');
-	// 			userBar.innerHTML = data;
-	// 		})
-	// 		.catch(error => {
-	// 			console.error('Error:', error);
-	// 		});
-	// }
 	
 	function toggleAndLoad(value) {
 		const element = event.target.closest('.is-action');

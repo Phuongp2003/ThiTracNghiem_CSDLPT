@@ -11,10 +11,10 @@
     </thead>
     <tbody>
         <c:forEach var="k" items="${khoas}">
-            <tr class="is-action sl-${k.MAKH}" onclick="toggleAndLoad('${k.MAKH}')">
-                <td>${k.MAKH}</td>
-                <td>${k.TENKH}</td>
-                <td>${k.MACS}</td>
+            <tr class="is-action sl-${k.MAKH}">
+                <td onclick="toggleAndLoad('${k.MAKH}')">${k.MAKH}</td>
+                <td onclick="toggleAndLoad('${k.MAKH}')">${k.TENKH}</td>
+                <td onclick="toggleAndLoad('${k.MAKH}')">${k.MACS}</td>
                 <td>
                     <form class="d-inline" action="department-class/delete-department/${k.MAKH.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa khoa ${k.MAKH}?')" target="formSubmitFrame">
                         <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>
@@ -44,6 +44,7 @@
                     </div>
                 </td>
             </tr>
+                    
         </c:forEach>
     </tbody>
 </table>

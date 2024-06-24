@@ -11,7 +11,6 @@
 			<div class="col-md-6 col-sm-6 col-lg-6">
 				<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Thêm giáo viên</button></a>
 				<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
-				<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh sách giáo viên</button></a>
 			</div>
 		</div>
 		<thead>

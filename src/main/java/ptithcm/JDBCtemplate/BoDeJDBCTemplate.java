@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import ptithcm.bean.BoDe;
 import ptithcm.mapper.BoDeMapper;
-import ptithcm.util.IDFix;
 
 @Service
 public class BoDeJDBCTemplate {

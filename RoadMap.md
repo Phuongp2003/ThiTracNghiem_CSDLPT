@@ -12,12 +12,12 @@
 - [ ] Chỉnh các connection thành global
 - [ ] Login: chỉnh role thành check box
 - [ ] Login: chỉnh danh sách phân mảnh lấy bằng cách dùng SP
-- [ ] Form môn học: 
-  - [ ] thêm
-  - [ ] xóa
-  - [ ] sửa
-  - [ ] phục hồi
-  - [ ] reload?
+- [X] Form môn học: 
+  - [X] thêm
+  - [X] xóa
+  - [X] sửa
+  - [X] phục hồi
+  - [X] reload?
 - [X] Form khoa, lớp
   - [X] Show song song 2 form
   - [X] Khoa
@@ -51,7 +51,7 @@
   - [ ] Phục hồi
   - [ ] reload
 - [ ] Chuẩn bị thi
-  - [ ] Nhân viên nhập tên lớp, môn sẽ thi, trình độ, lần thi, số câu thi, ngày thì, thời gian thi(phút), ghi vào GiangVien_DangKy
+  - [X] Nhân viên nhập tên lớp, môn sẽ thi, trình độ, lần thi, số câu thi, ngày thì, thời gian thi(phút), ghi vào GiangVien_DangKy
   - [ ] Khi đăng ký thi cần kiểm tra ràng buộc
 - [ ] Thi
   - [ ] Phần thông tin thí sinh: Mã lớp, tên lớp, họ tên
