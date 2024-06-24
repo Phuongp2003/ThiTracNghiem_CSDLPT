@@ -18,11 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
+import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
-import ptithcm.bean.Khoa;
 import ptithcm.bean.Lop;
-import ptithcm.bean.LopAction;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.MonHocAction;
 
@@ -34,6 +33,9 @@ public class SubjectController {
 
     @Autowired
     MonHocJDBCTemplate monHocJDBCTemplate;
+
+    @Autowired
+    KhoaLopJDBCTemplate khoaLopJDBCTemplate;
 
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
@@ -49,7 +51,9 @@ public class SubjectController {
             model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
             List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
             model.addAttribute("monHocs", monHocs);
+            model.addAttribute("lops", lops);
         }
         else{
             model.addAttribute("message", "Không có môn học nào!");
@@ -191,5 +195,22 @@ public class SubjectController {
         model.addAttribute("canUndo", historyAction.canUndo());
         model.addAttribute("canRedo", historyAction.canRedo());
         return "elements/subject/button_action_list";
+    }
+
+    @RequestMapping(value = "score-subject", method = RequestMethod.POST)
+    public String scoreSubject(ModelMap model, HttpSession session) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        if (currentConnection != null) {
+            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            model.addAttribute("monhocs", monhocs);
+            model.addAttribute("lops", lops);
+        }
+        else{
+            model.addAttribute("message", "Không có môn học nào!");
+        }
+        return "pages/subject";
     }
 }

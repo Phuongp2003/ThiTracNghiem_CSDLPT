@@ -44,7 +44,7 @@
 				</select>
 			</form>
 		</div>
-		<div class="col-md-5">
+		<div class="">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
 				Thêm sinh viên
 			</button>
@@ -88,8 +88,6 @@
 			<div class="action-btn-group d-inline">
 				<jsp:include page="./button_action_list.jsp" />
 			</div>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
-					sách sinh viên</button></a>
 			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>

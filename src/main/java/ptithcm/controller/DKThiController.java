@@ -36,16 +36,21 @@ public class DKThiController {
     MonHocJDBCTemplate monHocJDBCTemplate;
 
     @RequestMapping("")
-    public String list(ModelMap model, HttpSession session) {
+    public String list(ModelMap model,
+            // @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate, 
+            // @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate,
+            HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             giaoVienDKJDBCTemplate.setDataSource(currentConnection.getSite());
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+            // List<GiaoVienDangKy> gvdks = giaoVienDKJDBCTemplate.listGiaoVienDK(startdate, enddate);
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
             model.addAttribute("lops", lops);
             model.addAttribute("monhocs", monhocs);
+            // model.addAttribute("gvdks", gvdks);
         }
         return "pages/dkthi";
     }
@@ -75,6 +80,6 @@ public class DKThiController {
             System.out.println(e.getMessage());
         }
         
-        return "elements/message";
+        return "pages/dkthi";
     }
 }

@@ -105,8 +105,6 @@
 				</div>
 			</div>
 			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">In danh
-					sách bộ đề</button></a>
 		</div>
 	</div>
 	<div class="note d-flex gap-3">

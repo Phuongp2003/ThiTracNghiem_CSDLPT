@@ -14,7 +14,7 @@
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
-		<div class="col-md-5">
+		<div class="">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-subject">
 				Thêm môn học
 			</button>
@@ -45,6 +45,41 @@
 	</div>
 	<div class="subject-list">
 		<jsp:include page="./subject_list.jsp" />
+	</div>
+
+	<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#score-subject">
+		Xem bảng điểm môn học
+	</button>
+	<div class="modal fade" id="score-subject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<form method="POST" action="score-list.htm" class="form-control">
+					<div class="mb-3">
+						<label>Lớp</label>
+						<select class="form-select" id="lop" name="malop">
+							<c:forEach var="l" items="${lops}">
+							  <option value="${l.MALOP}">
+								${l.MALOP} (${l.TENLOP})</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label>Môn học</label>
+						<select class="form-select" id="monhoc" name="mamh">
+						  <c:forEach var="mh" items="${monHocs}">
+							<option value="${mh.MAMH}">
+							  ${mh.MAMH} (${mh.TENMH})</option>
+						  </c:forEach>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label>Lần thi</label>
+						<input type="number" name="lanthi" class="form-control" max="2" min="1">
+					</div>
+					<button type="submit" class="btn btn-primary">In bảng điểm</button>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 
