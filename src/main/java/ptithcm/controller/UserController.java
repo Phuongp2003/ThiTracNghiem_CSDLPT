@@ -110,14 +110,14 @@ public class UserController {
 
             // Check role
             if (usertype.equals("SV")) {
-                currentConnection.setUsername("SV");
+                currentConnection.setLoginName("SV");
                 username = "SV";
                 password = "SV";
                 roleAlias = "SV";
             }
 
             // Login to sql
-            currentConnection.setUsername(username);
+            currentConnection.setLoginName(username);
             currentConnection.setPassword(password);
 
             // Check login - Server
@@ -128,7 +128,8 @@ public class UserController {
                 sinhVienService.setDataSource(currentConnection.getSite());
                 List<String> sinhVienInfo = sinhVienService.dangNhap(svUsername, svPassword);
                 System.out.println(sinhVienInfo);
-                currentConnection.setCurrentUser(username, sinhVienInfo.get(0), "Sinh Viên", roleAlias);
+                currentConnection.setCurrentUser(username, sinhVienInfo.get(0), "Sinh Viên", svUsername, roleAlias,
+                        false);
             } else {
                 giaoVienService.setDataSource(currentConnection.getSite());
                 Map<String, String> giaoVienInfo = giaoVienService.dangNhap(username);
@@ -148,9 +149,10 @@ public class UserController {
                     default:
                         throw new NullPointerException("Vai trò người dùng không hợp lệ!");
                 }
-                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role, roleAlias);
+                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role, giaoVienInfo.get("MANV"),
+                        roleAlias, true);
             }
-            Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUsername());
+            Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUserName());
             usernameCookie.setMaxAge(60 * 60 * 1);
             usernameCookie.setPath("/");
             response.addCookie(usernameCookie);

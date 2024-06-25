@@ -10,50 +10,88 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class GlobalVariable {
-    @Autowired
-    private DriverManagerDataSource mainSite;
-
     private DriverManagerDataSource site;
     private JdbcTemplate root_cmd;
     private JdbcTemplate cmd;
-    private String username;
-    private String password;
     private CurrentUser currentUser;
 
     public class CurrentUser {
-        private String username;
+        private String loginName;
         private String fullname;
+        private String password;
         private String role;
         private String roleAlias;
+        private String userName;
+
+        // Employee ID
+        private String e_id;
 
         public CurrentUser() {
         }
 
-        public CurrentUser(String username, String fullname, String role) {
-            this.username = username;
+        public CurrentUser(String loginName, String fullname, String role) {
+            this.loginName = loginName;
             this.fullname = fullname;
             this.role = role;
+            this.userName = loginName;
         }
 
-        public void setCurrentUser(String username, String fullname, String role) {
-            this.username = username;
-            this.fullname = fullname;
-            this.role = role;
-        }
-
-        public void setCurrentUser(String username, String fullname, String role, String roleAlias) {
-            this.username = username;
+        public CurrentUser(String loginName, String fullname, String role, String roleAlias) {
+            this.loginName = loginName;
             this.fullname = fullname;
             this.role = role;
             this.roleAlias = roleAlias;
+            this.userName = loginName;
         }
 
-        public String getUsername() {
-            return username;
+        public CurrentUser(String loginName, String fullname, String role, String uid, String roleAlias, boolean is_e) {
+            this.loginName = loginName;
+            this.fullname = fullname;
+            this.role = role;
+            this.roleAlias = roleAlias;
+            if (is_e) {
+                this.e_id = uid;
+                this.userName = loginName;
+            } else {
+                this.userName = uid;
+            }
         }
 
-        public void setUsername(String username) {
-            this.username = username;
+        public void setCurrentUser(String loginName, String fullname, String role) {
+            this.loginName = loginName;
+            this.fullname = fullname;
+            this.role = role;
+            this.userName = loginName;
+        }
+
+        public void setCurrentUser(String loginName, String fullname, String role, String roleAlias) {
+            this.loginName = loginName;
+            this.fullname = fullname;
+            this.role = role;
+            this.roleAlias = roleAlias;
+            this.userName = loginName;
+        }
+
+        public void setCurrentUser(String loginName, String fullname, String role, String uid, String roleAlias,
+                boolean is_e) {
+            this.loginName = loginName;
+            this.fullname = fullname;
+            this.role = role;
+            if (is_e) {
+                this.e_id = uid;
+                this.userName = loginName;
+            } else {
+                this.userName = uid;
+            }
+            this.roleAlias = roleAlias;
+        }
+
+        public String getLoginName() {
+            return loginName;
+        }
+
+        public void setLoginName(String loginName) {
+            this.loginName = loginName;
         }
 
         public String getFullname() {
@@ -62,6 +100,14 @@ public class GlobalVariable {
 
         public void setFullname(String fullname) {
             this.fullname = fullname;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
         }
 
         public String getRole() {
@@ -79,16 +125,24 @@ public class GlobalVariable {
         public void setRoleAlias(String roleAlias) {
             this.roleAlias = roleAlias;
         }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
     }
 
     public GlobalVariable() {
         this.currentUser = new CurrentUser();
     }
 
-    public GlobalVariable(DriverManagerDataSource site, String username, String password) {
+    public GlobalVariable(DriverManagerDataSource site, String loginName, String password) {
         this.site = site;
-        this.username = username;
-        this.password = password;
+        this.currentUser.loginName = loginName;
+        this.currentUser.password = password;
     }
 
     public DriverManagerDataSource getSite() {
@@ -111,33 +165,78 @@ public class GlobalVariable {
         this.cmd = cmd;
     }
 
-    public String getUsername() {
-        return username;
+    public String getLoginName() {
+        return currentUser.getLoginName();
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-        site.setUsername(username);
+    public void setLoginName(String loginName) {
+        this.currentUser.setLoginName(loginName);
+        site.setUsername(loginName);
     }
 
     public String getPassword() {
-        return password;
+        return currentUser.getPassword();
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.currentUser.setPassword(password);
         site.setPassword(password);
+    }
+
+    public String getFullname() {
+        return currentUser.getFullname();
+    }
+
+    public void setFullname(String fullname) {
+        this.currentUser.setFullname(fullname);
+    }
+
+    public String getRole() {
+        return currentUser.getRole();
+    }
+
+    public void setRole(String role) {
+        this.currentUser.setRole(role);
+    }
+
+    public String getRoleAlias() {
+        return currentUser.getRoleAlias();
+    }
+
+    public void setRoleAlias(String roleAlias) {
+        this.currentUser.setRoleAlias(roleAlias);
+    }
+
+    public String getUserName() {
+        return currentUser.getUserName();
+    }
+
+    public void setUserName(String userName) {
+        this.currentUser.setUserName(userName);
+    }
+
+    public String getEmployeeID() {
+        return currentUser.e_id;
+    }
+
+    public void setEmployeeID(String e_id) {
+        this.currentUser.e_id = e_id;
     }
 
     public CurrentUser getCurrentUser() {
         return currentUser;
     }
 
-    public void setCurrentUser(String username, String fullname, String role) {
-        this.currentUser.setCurrentUser(username, fullname, role);
+    public void setCurrentUser(String loginName, String fullname, String role) {
+        this.currentUser.setCurrentUser(loginName, fullname, role);
     }
 
-    public void setCurrentUser(String username, String fullname, String role, String roleAlias) {
-        this.currentUser.setCurrentUser(username, fullname, role, roleAlias);
+    public void setCurrentUser(String loginName, String fullname, String role, String roleAlias) {
+        this.currentUser.setCurrentUser(loginName, fullname, role, roleAlias);
+    }
+
+    public void setCurrentUser(String loginName, String fullname, String role, String uid, String roleAlias,
+            boolean is_e) {
+        this.currentUser.setCurrentUser(loginName, fullname, role, uid, roleAlias, is_e);
     }
 }

@@ -44,7 +44,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             session.setAttribute("currentConnection", currentConnection);
         }
 
-        if (currentConnection.getUsername() == null) {
+        if (currentConnection.getLoginName() == null) {
             response.sendRedirect(contextPath + "/auth/login.htm");
             return false;
         }

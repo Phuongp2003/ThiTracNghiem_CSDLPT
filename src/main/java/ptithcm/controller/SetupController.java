@@ -43,7 +43,7 @@ public class SetupController {
         currentConnection.setSite(firstSite);
         firstSite.setUsername(username);
         firstSite.setPassword(password);
-        currentConnection.setUsername(firstSite.getUsername());
+        currentConnection.setLoginName(firstSite.getUsername());
         currentConnection.setPassword(firstSite.getPassword());
         session.setAttribute("currentConnection", currentConnection);
         return "redirect:/home.htm";
