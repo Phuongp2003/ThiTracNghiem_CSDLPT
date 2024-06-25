@@ -30,7 +30,7 @@
 		</div>
 		<div class="col-md-3">
 			<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm" aria-label="Search" style="width: 50%;">
 			</form>
 		</div>
 		<div class="col-md-2">
@@ -51,10 +51,16 @@
 			<div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<form id="addStudentForm" method="POST" action="student/add-student.htm" class="form-control" target="formSubmitFrame">
+						<form id="addStudentForm" method="POST" action="student/add-student.htm" class="form-control needs-validation" target="formSubmitFrame">
 							<div class="mb-3">
 								<label>Mã sinh viên: </label>
-								<input name="masv" class="form-control" required />
+								<input name="masv" class="form-control" required onblur="checkMasvExist(this)" />
+								<div class="valid-feedback">
+									Mã sinh viên hợp lệ!
+								</div>
+								<div class="invalid-feedback">
+									Mã sinh viên bị trùng!
+								</div>
 							</div>
 							<div class="mb-3">
 								<label>Họ: </label>
@@ -78,7 +84,7 @@
 										${l.MALOP} (${l.TENLOP})</option>
 								</c:forEach>
 							</select>
-							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal" id="submit-form">Save</button>
 							<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 						</form>
 					</div>
@@ -203,9 +209,78 @@
 		loadActionButton();
 		loadStudents(window.currentLop);
 	}
-
+	
 	var addStudentModal = document.getElementById('add-student');
-	addStudentModal.addEventListener('hidden.bs.modal', function () {
-        document.getElementById('addStudentForm').reset();
-    });
+	addStudentModal.addEventListener('hidden.bs.modal', function() {
+		document.getElementById('addStudentForm').reset();
+	});
+	
+	function parseSinhVienList(listStr) {
+		const trimmedListStr = listStr.substring(1, listStr.length - 1); // Remove leading and trailing square brackets
+		const sinhVienStrs = trimmedListStr.split('}, ');
+		const sinhVienObjects = sinhVienStrs.map(sinhVienStr => {
+			const propertiesStr = sinhVienStr.replace('SinhVien{', '').replace('}', '');
+			const properties = propertiesStr.split(', ');
+			const sinhVienObj = {};
+			properties.forEach(property => {
+				const [key, value] = property.split('=');
+				sinhVienObj[key.trim()] = value.trim().replace(/'/g, ''); // Remove single quotes from values
+			});
+			return sinhVienObj;
+		});
+		return sinhVienObjects;
+	}
+	
+	function checkMasvExist(element) {
+		const masv = element.value;
+		const list = parseSinhVienList(`${sinhViens}`)
+		var submitForm = document.getElementById('submit-form');
+		// Convert the string representation of list to an actual array of objects
+		try {
+			// Check if the provided masv exists in the sinhVienArray by MASV
+			const masvExists = list.some(sinhVien => sinhVien.MASV.trim() === masv.trim());
+			if (!masvExists) {
+				element.classList.remove('is-invalid')
+				element.classList.add('is-valid')
+				if (submitForm !== null) {
+					submitForm.disabled = false;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			} else {
+				element.classList.remove('is-valid')
+				element.classList.add('is-invalid')
+				if (submitForm !== null) {
+					submitForm.disabled = true;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			}
+		} catch (error) {
+			window.alert("Lỗi: ", error)
+		}
+	}
+	
+	
+	// Fetch all the forms we want to apply custom Bootstrap validation styles to
+	var forms = document.querySelectorAll('.needs-validation')
+	
+	// Loop over them and prevent submission
+	Array.prototype.slice.call(forms)
+		.forEach(function(form) {
+			form.addEventListener('submit', function(event) {
+				// Loop over them and prevent submission
+				event.preventDefault(); // Prevent form submission
+				
+				const invalidElements = form.querySelectorAll('.is-invalid');
+				
+				if (invalidElements.length === 0) {
+					form.submit();
+				} else {
+					alert('Please fix the errors in the form before submitting.');
+				}
+			}, false)
+		})
 </script>

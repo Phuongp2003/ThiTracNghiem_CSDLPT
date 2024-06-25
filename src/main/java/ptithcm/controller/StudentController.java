@@ -185,7 +185,7 @@ public class StudentController {
             SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
             SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
             newSv.setMASV(masv);
-            newSv.setMALOP(malop);;
+            newSv.setMALOP(malop);
 
             sinhVienJDBCTemplate.move(malop, masv, newSv);
 

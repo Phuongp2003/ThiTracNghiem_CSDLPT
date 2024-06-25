@@ -128,10 +128,10 @@ public class SinhVienJDBCTemplate {
         }
     }
 
-    public void move(String malop, String masv, SinhVien sinhVien){
+    public void move(String malop, String masv, SinhVien sinhVien) {
         try {
             String SQL = "{call SP_ChuyenLop(?, ?)}";
-            jdbcTemplate.update(SQL, sinhVien.getMALOP(), masv);
+            jdbcTemplate.update(SQL, new Object[] { sinhVien.getMALOP().trim(), masv });
             System.out.println("Move Record with ID = " + masv);
         } catch (Exception e) {
             e.printStackTrace();

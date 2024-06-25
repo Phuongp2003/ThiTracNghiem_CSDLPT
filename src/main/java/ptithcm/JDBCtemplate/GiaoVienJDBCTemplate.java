@@ -135,7 +135,7 @@ public class GiaoVienJDBCTemplate {
         try {
             res = jdbcTemplate.query(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
                 Map<String, String> list = new HashMap<String, String>();
-                list.put("MANV", rs.getString("MANV"));
+                list.put("USERNAME", rs.getString("USERNAME"));
                 list.put("HOTEN", rs.getString("HOTEN"));
                 list.put("TENNHOM", rs.getString("TENNHOM"));
                 return list;
