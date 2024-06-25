@@ -51,7 +51,7 @@
 			<div class="modal fade" id="add-bode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
-						<form method="POST" action="bode/add-bode.htm" class="form-control">
+						<form id="addBodeForm" method="POST" action="bode/add-bode.htm" class="form-control" target="formSubmitFrame">
 							<div class="mb-3">
 								<label >Môn học</label>
 								<select class="form-select" id="monhoc" name="mamh">
@@ -104,7 +104,11 @@
 					</div>
 				</div>
 			</div>
-			<a href="manage/category/add-category"><button type="button" class="btn btn-outline-primary">Undo</button></a>
+			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
+			<div class="action-btn-group d-inline">
+				<jsp:include page="./button_action_list.jsp" />
+			</div>
+			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
 	<div class="note d-flex gap-3">
@@ -136,6 +140,7 @@
 	</div>
 </div>
 <script>
+	var currentMon;
 	function loadBoDes(value) {
 		fetch('bode/get-bode-by-monhoc.htm', {
 				method: 'POST',
@@ -166,6 +171,8 @@
 			.catch(error => {
 				console.error('Error:', error);
 			});
+		currentMon = value;
+		console.log("🚀 ~ loadMons ~ currentMon:", currentMon)
 	}
 	
 	function toggleAndLoad(value) {
@@ -182,12 +189,42 @@
 		
 		// Load slected value, if no, load all
 		if (element.classList.contains('selected')) {
-			loadStudents(value);
+			loadBoDes(value);
 		} else {
 			const selectedRows = document.querySelectorAll('.is-action.selected');
 			if (selectedRows.length === 0) {
-				loadStudents('all');
+				loadBoDes('all');
 			}
 		}
 	}
+
+	function loadActionButton() {
+		fetch('bode/refresh-action-buttons.htm', {
+				method: 'POST',
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.action-btn-group');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
+	function refreshData() {
+		if (!currentMon) currentMon = "all";
+		loadActionButton();
+		loadBoDes(window.currentMon);
+	}
+
+	var addBodeModal = document.getElementById('add-bode');
+	addBodeModal.addEventListener('hidden.bs.modal', function () {
+        document.getElementById('addBodeForm').reset();
+    });
 </script>

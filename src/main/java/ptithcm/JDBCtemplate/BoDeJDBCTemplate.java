@@ -128,4 +128,21 @@ public class BoDeJDBCTemplate {
             System.err.println("Bo De - delete Error: " + e.getMessage());
         }
     }
+
+    public int getMaxCauHoi() {
+        try {
+            String SQL = "SELECT ISNULL(MAX(CAUHOI), 0) AS MAXCAUHOI FROM BoDe";
+            return jdbcTemplate.query(SQL, new Object[]{}, (ResultSet rs) -> {
+                if (rs.next()) {
+                    return rs.getInt("MAXCAUHOI");
+                } else {
+                    return 0;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Bo De - Max cau hoi Error: " + e.getMessage());
+            return 0;
+        }
+    }
 }
