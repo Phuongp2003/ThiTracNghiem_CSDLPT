@@ -58,11 +58,38 @@
 										<label>Địa chỉ: </label>
 										<input name="diachi" value="${sv.DIACHI}" class="form-control" />
 									</div>
-									<select class="form-select" id="lop" name="malop" disabled>
-										<option value="${sv.MALOP}">${sv.MALOP}</option>
-									</select>
+									<div class="mb-3">
+										<label>Lớp</label>
+										<select class="form-select" id="lop" name="malop" disabled>
+											<option value="${sv.MALOP}">${sv.MALOP}</option>
+										</select>
+									</div>
 									<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
-									<button type=" button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+								</form>
+							</div>
+						</div>
+					</div>
+
+					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-student-${sv.MASV.trim()}">
+						Chuyển lớp
+					</button>
+					<div class="modal fade" id="move-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<form method="POST" action="student/move-student.htm" class="form-control" target="formSubmitFrame">
+									<input type="hidden" name="masv" value="${sv.MASV}" />
+									<div class="mb-3">
+										<label>Lớp</label>
+										<select class="form-select" id="lop" name="malop">
+											<c:forEach var="l" items="${lops}">
+												<option value="${l.MALOP}">
+													${l.MALOP} (${l.TENLOP})</option>
+											</c:forEach>
+										</select>
+									</div>
+									<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+									<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 								</form>
 							</div>
 						</div>

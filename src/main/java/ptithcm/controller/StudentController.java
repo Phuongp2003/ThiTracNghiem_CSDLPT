@@ -178,6 +178,33 @@ public class StudentController {
         return "elements/message";
     }
 
+    @RequestMapping(value = "move-student", method = RequestMethod.POST)
+    public String moveStudent(ModelMap model, @RequestParam("masv") String masv,
+            @RequestParam("malop") String malop, HttpSession session) {
+        try {
+            SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
+            SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
+            newSv.setMASV(masv);
+            newSv.setMALOP(malop);;
+
+            sinhVienJDBCTemplate.move(malop, masv, newSv);
+
+            // Save the action in session history
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            SinhVienAction svAction = new SinhVienAction("move", newSv, oldSv);
+            svAction.setCmd(sinhVienJDBCTemplate);
+            historyAction.addAction(svAction);
+            session.setAttribute("historyAction", historyAction);
+
+            model.addAttribute("message", "Chuyển lớp thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Chuyển lớp thất bại!");
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
+    }
+
     @RequestMapping(value = "undo", method = RequestMethod.POST)
     public String undo(ModelMap model, HttpSession session) {
         try {

@@ -128,6 +128,17 @@ public class SinhVienJDBCTemplate {
         }
     }
 
+    public void move(String malop, String masv, SinhVien sinhVien){
+        try {
+            String SQL = "{call SP_ChuyenLop(?, ?)}";
+            jdbcTemplate.update(SQL, sinhVien.getMALOP(), masv);
+            System.out.println("Move Record with ID = " + masv);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - delete Error: " + e.getMessage());
+        }
+    }
+
     // Find SinhVien by Name
     public List<SinhVien> findSinhVien(String name) {
         try {

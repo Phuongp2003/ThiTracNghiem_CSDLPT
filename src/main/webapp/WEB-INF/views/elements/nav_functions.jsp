@@ -1,6 +1,6 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<c:if test="${role == 'GIANGVIEN'}">
+<c:if test="${role == 'COSO' || role == 'GIANGVIEN'}">
 	<li class="nav-item">
 		<a class="nav-link" href="teacher.htm">Giáo viên</a>
 	</li>

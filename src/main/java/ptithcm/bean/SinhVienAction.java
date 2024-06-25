@@ -73,6 +73,9 @@ public class SinhVienAction implements Action<SinhVien> {
             case "edit":
                 revertType = "edit";
                 rvAction = new SinhVienAction(revertType, oldData, data);
+            case "move":
+                revertType = "move";
+                rvAction = new SinhVienAction(revertType, oldData, data);
                 break;
             default:
                 return null;
@@ -93,6 +96,8 @@ public class SinhVienAction implements Action<SinhVien> {
                     break;
                 case "edit":
                     cmd.update(data.getMASV(), data);
+                case "move":
+                    cmd.move(data.getMALOP(), data.getMASV(), data);
                     break;
                 default:
                     break;

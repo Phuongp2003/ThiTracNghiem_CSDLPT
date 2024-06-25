@@ -75,7 +75,7 @@
 							<select class="form-select" id="lop" name="malop">
 								<c:forEach var="l" items="${lops}">
 									<option value="${l.MALOP}">
-										Mã lớp: ${l.MALOP} (${l.TENLOP})</option>
+										${l.MALOP} (${l.TENLOP})</option>
 								</c:forEach>
 							</select>
 							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
