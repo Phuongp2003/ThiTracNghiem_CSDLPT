@@ -37,7 +37,7 @@
 		<button type="button" class="btn btn-danger">Thoát</button>
 		<h5>Sinh viên: ${sv.HO} ${sv.TEN} - MSSV: ${sv.MASV}</h5>
 		<div class="d-flex gap-3">
-			<div class="time mt-1"><i class="bi bi-clock h5"></i><span class="fs-5"> 40:00</span></div>
+			<div class="time mt-1"><i class="bi bi-clock h5"></i><span class="fs-5" id="examTimer"> 40:00</span></div>
 			<button type="button" class="btn btn-primary">Nộp bài</button>
 		</div>
 	</div>
@@ -72,6 +72,23 @@
 </div>
 
 <script>
+	function getCookieValue(cookieName) {
+		let name = cookieName + "=";
+		let decodedCookie = decodeURIComponent(document.cookie);
+		let ca = decodedCookie.split(';');
+		for (let i = 0; i < ca.length; i++) {
+			let c = ca[i];
+			while (c.charAt(0) === ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) === 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+	
+	// deny chinh sua trang web
 	// document.addEventListener('contextmenu', function(event) {
 	// 	event.preventDefault();
 	// });
@@ -81,7 +98,42 @@
 	// 	}
 	// });
 	
-	// Select the elements by ID
+	// Thoi gian thi
+	fetch("thi/time-exam.htm", {
+			method: 'POST',
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+		})
+		.catch(error => {
+			console.error('Error:', error);
+			alert('Có lỗi xảy ra!');
+		});
+	
+	var giobatdauthi = new Date(getCookieValue("ngaythi") + 'T' + getCookieValue("giothi"));
+	var thoigianthi = parseInt(getCookieValue("thoigian"));
+	var giohientai = new Date();
+	var ketthucthi = new Date(giobatdauthi.getTime() + thoigianthi * 60000);
+	
+	function updateTimer() {
+		var now = new Date();
+		var remainingTime = ketthucthi - now;
+		if (remainingTime >= 0) {
+			var minutes = Math.floor((remainingTime % (1000 * 60 * 300)) / (1000 * 60));
+			var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+			
+			document.getElementById("examTimer").textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+		} else {
+			document.getElementById("examTimer").textContent = "Hết giờ!";
+			// submit here
+		}
+	}
+	
+	setInterval(updateTimer, 500);
+	
+	// handle chon dap an
 	const qnElements = document.getElementsByClassName('question-wrap');
 	const qncElements = document.getElementsByClassName('question-select');
 	
@@ -109,7 +161,6 @@
 		const listA = document.getElementById('qnsl-' + index);
 		const question = document.getElementById('qn-' + index);
 		const questionControl = document.getElementById('qnc-' + index);
-		console.log("🚀 ~ handleQuestionSelected ~ element.checked:", element.checked)
 		if (element.checked)
 			submitSingle(q, a)
 		else

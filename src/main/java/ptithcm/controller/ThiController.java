@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -30,6 +31,7 @@ import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.SinhVien;
 import ptithcm.bean.temp.CauHoiDeThi;
+import ptithcm.bean.temp.ThoiGianThi;
 import ptithcm.bean.Lop;
 
 @Controller
@@ -130,6 +132,40 @@ public class ThiController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return "elements/message";
+    }
+
+    @RequestMapping(value = "time-exam", method = RequestMethod.POST)
+    public String timeExam(ModelMap model, HttpSession session,
+            HttpServletResponse response) {
+        try {
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+            if (currentConnection != null) {
+                thiJDBCTemplate.setDataSource(currentConnection.getSite());
+                SinhVien sv = (SinhVien) session.getAttribute("sv");
+                String mamh = (String) session.getAttribute("mamh");
+                int lanthi = (int) session.getAttribute("lanthi");
+                ThoiGianThi thoiGianThi = thiJDBCTemplate.getThoiGianThi(sv.getMASV(), mamh, lanthi);
+                Cookie cookie = new Cookie("ngaythi", String.valueOf(thoiGianThi.getNgayThi()));
+                cookie.setMaxAge(60 * 60);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+                Cookie cookie2 = new Cookie("giothi", String.valueOf(thoiGianThi.getGioThi()));
+                cookie2.setMaxAge(60 * 60);
+                cookie2.setPath("/");
+                response.addCookie(cookie2);
+                Cookie cookie3 = new Cookie("thoigian", String.valueOf(thoiGianThi.getThoiGian()));
+                cookie3.setMaxAge(60 * 60);
+                cookie3.setPath("/");
+                response.addCookie(cookie3);
+
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Time Exam - select Error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         return "elements/message";

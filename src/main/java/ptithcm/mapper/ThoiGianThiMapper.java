@@ -2,6 +2,7 @@ package ptithcm.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -11,7 +12,7 @@ public class ThoiGianThiMapper implements RowMapper<ThoiGianThi> {
     public ThoiGianThi mapRow(ResultSet rs, int rowNum) throws SQLException {
         ThoiGianThi thoiGianThi = new ThoiGianThi();
         thoiGianThi.setThoiGian(rs.getInt("THOIGIAN"));
-        thoiGianThi.setThoiDiem(rs.getDate("THOIDIEM"));
+        thoiGianThi.setThoiDiem(rs.getTimestamp("NGAYTHI"));
         return thoiGianThi;
     }
 }
