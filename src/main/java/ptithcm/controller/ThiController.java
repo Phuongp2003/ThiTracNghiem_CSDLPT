@@ -19,6 +19,8 @@ import ptithcm.JDBCtemplate.GiaoVienDKJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
+import ptithcm.JDBCtemplate.ThiJDBCTemplate;
+import ptithcm.bean.CauHoiDeThi;
 import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.Khoa;
@@ -42,12 +44,18 @@ public class ThiController {
     @Autowired
     MonHocJDBCTemplate monHocJDBCTemplate;
 
+    @Autowired
+    ThiJDBCTemplate thiJDBCTemplate;
+
     @RequestMapping("")
     public String infoStudent(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getCurrentUser().getUserName());
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+            thiJDBCTemplate.setDataSource(currentConnection.getSite());
+            SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
             Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
             model.addAttribute("sv", sv);
@@ -58,12 +66,31 @@ public class ThiController {
     }
 
     @RequestMapping(value = "start-exam", method = RequestMethod.POST)
-    public String startExam(ModelMap model, HttpSession session){
+    public String startExam(ModelMap model, HttpSession session, @RequestParam("mamh") String mamh,
+            @RequestParam("lanthi") int lanthi,
+            @RequestParam("ngaythi") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaythi) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            SinhVien sv = sinhVienJDBCTemplate.getStudent("002");
+            SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
+            List<CauHoiDeThi> deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(),
+                    new java.sql.Date(ngaythi.getTime()),
+                    50, "A", mamh, lanthi);
+            session.setAttribute("deThi", deThi);
+            session.setAttribute("sv", sv);
+        }
+        return "redirect:/thi/exam.htm";
+    }
+
+    @RequestMapping(value = "exam", method = RequestMethod.GET)
+    public String doExam(ModelMap model, HttpSession session) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        if (currentConnection != null) {
+            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
+            SinhVien sv = (SinhVien) session.getAttribute("sv");
             Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
+            List<CauHoiDeThi> deThi = (List<CauHoiDeThi>) session.getAttribute("deThi");
+            model.addAttribute("deThi", deThi);
             model.addAttribute("sv", sv);
             model.addAttribute("lop", lop);
         }
