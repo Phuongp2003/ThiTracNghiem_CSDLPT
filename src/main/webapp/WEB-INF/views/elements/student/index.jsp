@@ -59,7 +59,7 @@
 									Mã sinh viên hợp lệ!
 								</div>
 								<div class="invalid-feedback">
-									Mã sinh viên bị trùng!
+									Mã sinh viên không hợp lệ!
 								</div>
 							</div>
 							<div class="mb-3">
@@ -159,7 +159,6 @@
 				console.error('Error:', error);
 			});
 		currentLop = value;
-		console.log("🚀 ~ loadStudents ~ currentLop:", currentLop)
 	}
 	
 	function toggleAndLoad(value) {
@@ -239,7 +238,7 @@
 		try {
 			// Check if the provided masv exists in the sinhVienArray by MASV
 			const masvExists = list.some(sinhVien => sinhVien.MASV.trim() === masv.trim());
-			if (!masvExists) {
+			if (!masvExists && masv != "" && masv) {
 				element.classList.remove('is-invalid')
 				element.classList.add('is-valid')
 				if (submitForm !== null) {
