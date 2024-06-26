@@ -43,7 +43,7 @@
 	</div>
 	<div class="exam-controller">
 		<c:forEach var="cauhoi" items="${deThi}" varStatus="status">
-			<button type="button" class="btn btn-secondary question-select" id="qnc-${status.index + 1}" onclick="selectQuestion(`${status.index + 1}`)">${status.index + 1}</button>
+			<button type="button" class="btn btn-secondary question-select ${(cauhoi.getDAPAN() != null && cauhoi.getDAPAN() != '') ? 'done' : ''}" id="qnc-${status.index + 1}" onclick="selectQuestion(`${status.index + 1}`)">${status.index + 1}</button>
 		</c:forEach>
 	</div>
 	<div class="bg-body-secondary mt-4 p-2 grid">
@@ -56,14 +56,14 @@
 					<p><span class="fw-bold">C. </span>${cauhoi.getC()}</p>
 					<p><span class="fw-bold">D. </span>${cauhoi.getD()}</p>
 				</div>
-				<div class="answer d-flex gap-3" id="qnsl-${status.index + 1}">
-					<input type="checkbox" class="btn-check" id="answer-a-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`)">
+				<div class="answer d-flex gap-3 ${(cauhoi.getDAPAN() != null && cauhoi.getDAPAN() != '') ? 'done' : ''}" id="qnsl-${status.index + 1}">
+					<input type="checkbox" class="btn-check" id="answer-a-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`, `${cauhoi.getCAUHOI()}`, `A`, this)" ${cauhoi.getDAPAN()=='A' ? 'checked' : '' }>
 					<label class="btn btn-outline-primary" for="answer-a-${status.index + 1}">A</label>
-					<input type="checkbox" class="btn-check" id="answer-b-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`)">
+					<input type="checkbox" class="btn-check" id="answer-b-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`, `${cauhoi.getCAUHOI()}`, `B`, this)" ${cauhoi.getDAPAN()=='B' ? 'checked' : '' }>
 					<label class="btn btn-outline-primary" for="answer-b-${status.index + 1}">B</label>
-					<input type="checkbox" class="btn-check" id="answer-c-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`)">
+					<input type="checkbox" class="btn-check" id="answer-c-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`, `${cauhoi.getCAUHOI()}`, `C`, this)" ${cauhoi.getDAPAN()=='C' ? 'checked' : '' }>
 					<label class="btn btn-outline-primary" for="answer-c-${status.index + 1}">C</label>
-					<input type="checkbox" class="btn-check" id="answer-d-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`)">
+					<input type="checkbox" class="btn-check" id="answer-d-${status.index + 1}" autocomplete="off" onchange="handleQuestionSelected(`${status.index + 1}`, `${cauhoi.getCAUHOI()}`, `D`, this)" ${cauhoi.getDAPAN()=='D' ? 'checked' : '' }>
 					<label class="btn btn-outline-primary" for="answer-d-${status.index + 1}">D</label>
 				</div>
 			</div>
@@ -105,10 +105,16 @@
 	
 	selectQuestion(1)
 	
-	function handleQuestionSelected(index) {
+	function handleQuestionSelected(index, q, a, element) {
 		const listA = document.getElementById('qnsl-' + index);
 		const question = document.getElementById('qn-' + index);
 		const questionControl = document.getElementById('qnc-' + index);
+		console.log("🚀 ~ handleQuestionSelected ~ element.checked:", element.checked)
+		if (element.checked)
+			submitSingle(q, a)
+		else
+			submitSingle(q, '')
+		
 		
 		if (listA) {
 			listA.addEventListener('change', function(event) {
@@ -132,5 +138,24 @@
 				}
 			});
 		}
+	}
+	
+	function submitSingle(q, a) {
+		fetch("thi/submit-question.htm", {
+				method: 'POST',
+				body: JSON.stringify({
+					cauhoi: q,
+					dapan: a
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				alert('Có lỗi xảy ra!');
+			});
 	}
 </script>

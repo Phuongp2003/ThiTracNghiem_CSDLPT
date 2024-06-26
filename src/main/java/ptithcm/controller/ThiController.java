@@ -5,35 +5,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.GiaoVienDKJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.JDBCtemplate.ThiJDBCTemplate;
-import ptithcm.bean.CauHoiDeThi;
-import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.bean.GlobalVariable;
-import ptithcm.bean.Khoa;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.SinhVien;
-import ptithcm.util.IDFix;
+import ptithcm.bean.temp.CauHoiDeThi;
 import ptithcm.bean.Lop;
 
 @Controller
 @RequestMapping("thi")
 public class ThiController {
-    @Autowired
-    private GlobalVariable currentConnection;
 
     @Autowired
     SinhVienJDBCTemplate sinhVienJDBCTemplate;
@@ -78,6 +79,8 @@ public class ThiController {
                     50, "A", mamh, lanthi);
             session.setAttribute("deThi", deThi);
             session.setAttribute("sv", sv);
+            session.setAttribute("mamh", mamh);
+            session.setAttribute("lanthi", lanthi);
         }
         return "redirect:/thi/exam.htm";
     }
@@ -95,5 +98,40 @@ public class ThiController {
             model.addAttribute("lop", lop);
         }
         return "pages/start_exam";
+    }
+
+    @RequestMapping(value = "submit-question", method = RequestMethod.POST)
+    public String submitQuesttion(ModelMap model, HttpSession session, @RequestBody String body,
+            HttpServletResponse response) {
+        try {
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+            if (currentConnection != null) {
+                thiJDBCTemplate.setDataSource(currentConnection.getSite());
+                SinhVien sv = (SinhVien) session.getAttribute("sv");
+                String mamh = (String) session.getAttribute("mamh");
+                int lanthi = (int) session.getAttribute("lanthi");
+
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<>();
+                map = gson.fromJson(body, map.getClass());
+                int cauhoi = Integer.parseInt(map.get("cauhoi"));
+                String dapan = map.get("dapan");
+                thiJDBCTemplate.updateBaiThi(sv.getMASV(), mamh, lanthi, cauhoi, dapan);
+                List<CauHoiDeThi> dethi = (List<CauHoiDeThi>) session.getAttribute("deThi");
+                for (CauHoiDeThi cauHoiDeThi : dethi) {
+                    if (cauHoiDeThi.getCAUHOI() == cauhoi) {
+                        cauHoiDeThi.setDAPAN(dapan);
+                        break;
+                    }
+                }
+                session.setAttribute("deThi", dethi);
+
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return "elements/message";
     }
 }

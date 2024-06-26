@@ -1,17 +1,20 @@
-package ptithcm.bean;
+package ptithcm.bean.temp;
 
 public class CauHoiDeThi {
 	private String NOIDUNG;
+	private int CAUHOI;
 	private String A;
 	private String B;
 	private String C;
 	private String D;
+	private String DAPAN;
 
 	public CauHoiDeThi() {
 	}
 
-	public CauHoiDeThi(String NOIDUNG, String A, String B, String C, String D) {
+	public CauHoiDeThi(String NOIDUNG, int CAUHOI ,String A, String B, String C, String D) {
 		this.NOIDUNG = NOIDUNG;
+		this.CAUHOI = CAUHOI;
 		this.A = A;
 		this.B = B;
 		this.C = C;
@@ -24,6 +27,14 @@ public class CauHoiDeThi {
 
 	public void setNOIDUNG(String NOIDUNG) {
 		this.NOIDUNG = NOIDUNG;
+	}
+
+	public int getCAUHOI() {
+		return CAUHOI;
+	}
+
+	public void setCAUHOI(int CAUHOI) {
+		this.CAUHOI = CAUHOI;
 	}
 
 	public String getA() {
@@ -58,6 +69,13 @@ public class CauHoiDeThi {
 		this.D = D;
 	}
 
+	public String getDAPAN() {
+		return DAPAN;
+	}
+
+	public void setDAPAN(String DAPAN) {
+		this.DAPAN = DAPAN;
+	}
 
 	@Override
 	public String toString() {
