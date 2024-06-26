@@ -10,7 +10,7 @@
 			<th scope="col">Tên</th>
 			<th scope="col">Ngày sinh</th>
 			<th scope="col">Địa chỉ</th>
-			<th scope="col">Mã lớp</th>
+			<th scope="col">Lớp</th>
 			<th scope="col">Mật khẩu</th>
 			<th scope="col">Thao tác</th>
 		</tr>

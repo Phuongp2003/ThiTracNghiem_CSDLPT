@@ -20,7 +20,7 @@
 		border: 2px solid green;
 	}
 </style>
-<div class="bode container-fluid" style="width:85%;">
+<div class="bode container-fluid" style="width:92%;">
 	<div class="filter-wrapper d-flex justify-content-between mb-2">
 		<div class="d-flex col-md-2">
 			<select class="form-select" id="site" name="site">
@@ -57,16 +57,16 @@
 								<select class="form-select" id="monhoc" name="mamh">
 									<c:forEach var="mh" items="${monhocs}">
 										<option value="${mh.MAMH}">
-											${mh.MAMH} (${mh.TENMH})</option>
+											${mh.TENMH}</option>
 									</c:forEach>
 								</select>
 							</div>
 							<div class="mb-3">
 								<label>Trình độ</label>
 								<select class="form-select" name="trinhdo">
-									<option value="A">Đại học, chuyên ngành</option>
-									<option value="B">Đại học, không chuyên ngành</option>
-									<option value="C">Cao đẳng</option>
+									<option value="A">A (Đại học, chuyên ngành)</option>
+									<option value="B">B (Đại học, không chuyên ngành)</option>
+									<option value="C">C (Cao đẳng)</option>
 								</select>
 							</div>
 							<div class="mb-3">
@@ -111,8 +111,8 @@
 			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
-	<div class="note d-flex gap-3">
-		<h6 class="fst-italic" style="margin-top: 0.15rem;">Trình độ:</h6>
+	<div class="note d-flex gap-3 fw-bold fst-italic">
+		<h6 style="margin-top: 0.15rem;">Trình độ:</h6>
 		<p>A: Đại học, chuyên ngành</p>
 		<p>B: Đại học, không chuyên ngành</p>
 		<p>C: Cao đẳng</p>

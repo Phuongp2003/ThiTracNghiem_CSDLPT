@@ -105,18 +105,9 @@ public class BoDeController {
             @RequestParam("C") String C, @RequestParam("D") String D,
             @RequestParam("dapan") String dapan, HttpSession session) {
         try {
-            BoDe bode = new BoDe();
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
             int maxcauhoi = boDeJDBCTemplate.getMaxCauHoi();
-            System.out.println(maxcauhoi);
-            bode.setCAUHOI(maxcauhoi+1);
-            bode.setMAMH(mamh);
-            bode.setTRINHDO(trinhdo);
-            bode.setNOIDUNG(noidung);
-            bode.setA(A);
-            bode.setB(B);
-            bode.setC(C);
-            bode.setD(D);
-            bode.setDAP_AN(dapan);
+            BoDe bode = new BoDe(maxcauhoi+1, mamh, trinhdo, noidung, A, B, C, D, dapan, currentConnection.getEmployeeID());
             boDeJDBCTemplate.create(bode);
 
             // Save the action in session history

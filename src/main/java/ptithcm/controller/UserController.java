@@ -149,7 +149,7 @@ public class UserController {
                     default:
                         throw new NullPointerException("Vai trò người dùng không hợp lệ!");
                 }
-                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role, giaoVienInfo.get("MANV"),
+                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role, giaoVienInfo.get("USERNAME"),
                         roleAlias, true);
             }
             Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUserName());

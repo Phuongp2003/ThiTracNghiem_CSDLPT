@@ -5,7 +5,7 @@
         <tr>
             <th scope="col">Mã lớp</th>
             <th scope="col">Tên lớp</th>
-            <th scope="col">Mã khoa</th>
+            <th scope="col">Khoa</th>
             <th scope="col">Thao tác</th>
         </tr>
     </thead>

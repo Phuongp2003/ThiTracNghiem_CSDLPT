@@ -17,9 +17,18 @@
 		<a class="nav-link" href="bode.htm">Nhập đề</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" href="dkthi.htm">Chuẩn bị thi</a>
+		<a class="nav-link" href="dkthi.htm">Đăng ký thi</a>
 	</li>
 </c:if>
-<li class="nav-item">
-	<a class="nav-link" href="thi.htm">Thi</a>
-</li>
+<c:choose>
+	<c:when test="${role == 'COSO' || role == 'GIANGVIEN'}">
+		<li class="nav-item">
+			<a class="nav-link" href="thithu.htm">Thi thử</a>
+		</li>
+	</c:when>
+	<c:when test="${role == 'SV'}">
+		<li class="nav-item">
+			<a class="nav-link" href="thi.htm">Thi</a>
+		</li>
+	</c:when>
+</c:choose>

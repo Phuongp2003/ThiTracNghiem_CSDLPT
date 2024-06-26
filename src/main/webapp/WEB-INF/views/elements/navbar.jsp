@@ -50,7 +50,7 @@
 					<a class="nav-link" href="bode.htm">Nhập đề</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="dkthi.htm">Chuẩn bị thi</a>
+					<a class="nav-link" href="dkthi.htm">Đăng ký thi</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="thi.htm">Thi</a>

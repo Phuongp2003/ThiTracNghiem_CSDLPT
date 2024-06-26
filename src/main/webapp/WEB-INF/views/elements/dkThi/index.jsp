@@ -31,16 +31,16 @@
           <select class="form-select" id="monhoc" name="mamh">
             <c:forEach var="mh" items="${monhocs}">
               <option value="${mh.MAMH}">
-                ${mh.MAMH} (${mh.TENMH})</option>
+                ${mh.TENMH}</option>
             </c:forEach>
           </select>
         </div>
         <div class="mb-3">
           <label>Trình độ</label>
           <select class="form-select" name="trinhdo">
-            <option value="A">Đại học, chuyên ngành</option>
-            <option value="B">Đại học, không chuyên ngành</option>
-            <option value="C">Cao đẳng</option>
+            <option value="A">A (Đại học, chuyên ngành)</option>
+            <option value="B">B (Đại học, không chuyên ngành)</option>
+            <option value="C">C (Cao đẳng)</option>
           </select>
         </div>
         <div class="mb-3">

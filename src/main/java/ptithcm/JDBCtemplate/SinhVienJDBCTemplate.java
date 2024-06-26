@@ -90,7 +90,7 @@ public class SinhVienJDBCTemplate {
     public List<SinhVien> listSinhVien() {
         tryGetSources();
         try {
-            String SQL = "SELECT * FROM SinhVien";
+            String SQL = "{call SP_DanhSachSinhVien}";
             return jdbcTemplate.query(SQL, new SinhVienMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
