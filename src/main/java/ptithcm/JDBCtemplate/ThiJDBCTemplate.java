@@ -41,7 +41,7 @@ public class ThiJDBCTemplate {
     }
 
     public List<MonThi> getListMonThi(String masv) {
-        String SQL = "{call SP_LayDanhSachMonThi(?)}";
+        String SQL = "{call SP_DanhSachCacMonThi(?)}";
         List<MonThi> res;
         try {
             res = jdbcTemplate.query(SQL, new Object[] { masv }, new MonThiMapper());

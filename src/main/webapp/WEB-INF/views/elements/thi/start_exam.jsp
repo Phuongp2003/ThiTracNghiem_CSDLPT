@@ -2,6 +2,27 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 
 <style>
+	.block-exam {
+		z-index: 1005;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		background-color: inherit;
+		display: block;
+	}
+	
+	.block-exam .title {
+		position: absolute;
+		font-size: 30px;
+		font-weight: bold;
+		z-index: 1006;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+	
 	.exam-controller {
 		display: flex;
 		flex-direction: row;
@@ -31,14 +52,19 @@
 		color: black;
 	}
 </style>
-
+<div class="block-exam">
+	<div class="title">
+		Hãy chờ đến thời gian làm bài!
+	</div>
+</div>
 <div class="start-exam container-fluid mt-4" style="width: 75%;">
 	<div class="navbar bg-body-tertiary d-flex justify-content-between sticky-top">
-		<button type="button" class="btn btn-danger">Thoát</button>
+		<a href="thi.htm">
+			<button type="button" class="btn btn-danger">Thoát</button></a>
 		<h5>Sinh viên: ${sv.HO} ${sv.TEN} - MSSV: ${sv.MASV}</h5>
 		<div class="d-flex gap-3">
-			<div class="time mt-1"><i class="bi bi-clock h5"></i><span class="fs-5" id="examTimer"> 40:00</span></div>
-			<button type="button" class="btn btn-primary">Nộp bài</button>
+			<div class="time mt-1"><i class="bi bi-clock h5"></i><span class="fs-5" id="examTimer"> 40:00 </span></div>
+			<button type="button" class="btn btn-primary button-nopbai">Nộp bài</button>
 		</div>
 	</div>
 	<div class="exam-controller">
@@ -89,14 +115,14 @@
 	}
 	
 	// deny chinh sua trang web
-	// document.addEventListener('contextmenu', function(event) {
-	// 	event.preventDefault();
-	// });
-	// document.addEventListener('keydown', function(event) {
-	// 	if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C'))) {
-	// 		event.preventDefault();
-	// 	}
-	// });
+	document.addEventListener('contextmenu', function(event) {
+		event.preventDefault();
+	});
+	document.addEventListener('keydown', function(event) {
+		if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'J' || event.key === 'C'))) {
+			event.preventDefault();
+		}
+	});
 	
 	// Thoi gian thi
 	fetch("thi/time-exam.htm", {
@@ -116,10 +142,20 @@
 	var thoigianthi = parseInt(getCookieValue("thoigian"));
 	var giohientai = new Date();
 	var ketthucthi = new Date(giobatdauthi.getTime() + thoigianthi * 60000);
+	const blockE = document.querySelector('.block-exam');
+	const btnNopBai = document.querySelector('.button-nopbai');
 	
 	function updateTimer() {
 		var now = new Date();
 		var remainingTime = ketthucthi - now;
+		if (remainingTime > thoigianthi * 60000) {
+			remainingTime = remainingTime - thoigianthi * 60000;
+			blockE.style.display = 'block';
+			btnNopBai.disabled = true;
+		} else {
+			btnNopBai.disabled = false;
+			blockE.style.display = 'none';
+		}
 		if (remainingTime >= 0) {
 			var minutes = Math.floor((remainingTime % (1000 * 60 * 300)) / (1000 * 60));
 			var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);

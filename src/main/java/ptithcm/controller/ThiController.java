@@ -28,7 +28,7 @@ import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.JDBCtemplate.ThiJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
-import ptithcm.bean.MonHoc;
+import ptithcm.bean.temp.MonThi;
 import ptithcm.bean.SinhVien;
 import ptithcm.bean.temp.CauHoiDeThi;
 import ptithcm.bean.temp.ThoiGianThi;
@@ -60,10 +60,11 @@ public class ThiController {
             thiJDBCTemplate.setDataSource(currentConnection.getSite());
             SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
             Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
-            List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+            List<MonThi> monthi = thiJDBCTemplate.getListMonThi(sv.getMASV());
             model.addAttribute("sv", sv);
             model.addAttribute("lop", lop);
-            model.addAttribute("monhocs", monhocs);
+            model.addAttribute("monthi", monthi);
+            model.addAttribute("jdbc", monHocJDBCTemplate);
         }
         return "pages/thi";
     }
