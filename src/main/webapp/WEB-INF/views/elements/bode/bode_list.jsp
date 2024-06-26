@@ -10,14 +10,14 @@
 	<thead>
 		<tr>
 			<th style="width: 5%">ID</th>
-			<th style="width: 10%">Môn học</th>
+			<th style="width: 15%">Môn học</th>
 			<th style="width: 7%">Trình độ</th>
-			<th style="width: 30%">Nội dung</th>
+			<th style="width: 28%">Nội dung</th>
 			<th style="width: 15%">A</th>
 			<th style="width: 15%">B</th>
 			<th style="width: 15%">C</th>
 			<th style="width: 15%">D</th>
-            <th style="width: 5%">Đáp án</th>
+            <th style="width: 7%">Đáp án</th>
             <th style="width: 12%">Thao tác</th>
 		</tr>
 	</thead>
@@ -25,7 +25,7 @@
 		<c:forEach var="bd" items="${bodes}">
 			<tr>
 				<td>${bd.CAUHOI}</td>
-                <td>${bd.MAMH}</td>
+                <td>${monhocMap.get(bd.MAMH)}</td>
                 <td>${bd.TRINHDO}</td>
                 <td>${bd.NOIDUNG}</td>
                 <td>${bd.getA()}</td>
@@ -47,10 +47,10 @@
 									<div class="mb-3">
 										<label >Môn học</label>
 										<select class="form-select" id="monhoc" name="mamh">
-											<option value="${bd.MAMH}" ${mamh=='${bd.MAMH}' ? 'selected' : '' }>${bd.MAMH} (${monhocMap.get(bd.MAMH)})</option>
+											<option value="${bd.MAMH}" ${mamh=='${bd.MAMH}' ? 'selected' : '' }>${monhocMap.get(bd.MAMH)}</option>
 											<c:forEach var="mh" items="${monhocs}">
 												<c:if test="${mh.MAMH != bd.MAMH}">
-													<option value="${mh.MAMH}" ${mh.MAMH == '${bd.MAMH}' ? 'hidden' : '' }>${mh.MAMH} (${mh.TENMH})</option>
+													<option value="${mh.MAMH}" ${mh.MAMH == '${bd.MAMH}' ? 'hidden' : '' }>${mh.TENMH}</option>
 												</c:if>
 											</c:forEach>
 										</select>

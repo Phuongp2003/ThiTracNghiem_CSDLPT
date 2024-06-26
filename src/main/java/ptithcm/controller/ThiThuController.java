@@ -28,13 +28,13 @@ import ptithcm.util.IDFix;
 import ptithcm.bean.Lop;
 
 @Controller
-@RequestMapping("thi")
-public class ThiController {
+@RequestMapping("thithu")
+public class ThiThuController {
     @Autowired
     private GlobalVariable currentConnection;
 
     @Autowired
-    SinhVienJDBCTemplate sinhVienJDBCTemplate;
+    GiaoVienDKJDBCTemplate giaoVienDKJDBCTemplate;
 
     @Autowired
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
@@ -43,30 +43,17 @@ public class ThiController {
     MonHocJDBCTemplate monHocJDBCTemplate;
 
     @RequestMapping("")
-    public String infoStudent(ModelMap model, HttpSession session) {
+    public String thithu(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
-            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getCurrentUser().getUserName());
-            Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
+            giaoVienDKJDBCTemplate.setDataSource(currentConnection.getSite());
+            GiaoVienDangKy gvdk = giaoVienDKJDBCTemplate.getGVDK(currentConnection.getCurrentUser().getUserName());
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
-            model.addAttribute("sv", sv);
-            model.addAttribute("lop", lop);
+            model.addAttribute("gvdk", gvdk);
+            model.addAttribute("lops", lops);
             model.addAttribute("monhocs", monhocs);
         }
-        return "pages/thi";
-    }
-
-    @RequestMapping(value = "start-exam", method = RequestMethod.POST)
-    public String startExam(ModelMap model, HttpSession session){
-        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            SinhVien sv = sinhVienJDBCTemplate.getStudent("002");
-            Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
-            model.addAttribute("sv", sv);
-            model.addAttribute("lop", lop);
-        }
-        return "pages/start_exam";
+        return "pages/thithu";
     }
 }
