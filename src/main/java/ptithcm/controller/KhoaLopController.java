@@ -49,8 +49,13 @@ public class KhoaLopController {
 
             List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            Map<String, String> khoaMap = new HashMap();
+            for (Khoa i : khoas) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
             model.addAttribute("khoas", khoas);
             model.addAttribute("lops", lops);
+            model.addAttribute("khoaMap", khoaMap);
         } else {
             model.addAttribute("message", "Không có khoa nào!");
         }
@@ -77,9 +82,14 @@ public class KhoaLopController {
                 throw new NullPointerException("Mã khoa không được để trống!");
             }
             List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            Map<String, String> khoaMap = new HashMap();
+            for (Khoa i : khoas) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
             model.addAttribute("lops", lops);
             model.addAttribute("khoas", khoas);
             model.addAttribute("makh", makh);
+            model.addAttribute("khoaMap", khoaMap);
         } else {
             model.addAttribute("message", "Không có khoa nào!");
         }

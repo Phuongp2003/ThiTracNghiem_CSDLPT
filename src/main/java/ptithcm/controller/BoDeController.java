@@ -89,9 +89,14 @@ public class BoDeController {
                 throw new NullPointerException("Mã môn học không được để trống!");
             }
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+            Map<String, String> monhocMap = new HashMap();
+            for (MonHoc i : monhocs) {
+                monhocMap.put(i.getMAMH(), i.getTENMH());
+            }
             model.addAttribute("bodes", bodes);
             model.addAttribute("monhocs", monhocs);
             model.addAttribute("mamh", mamh);
+            model.addAttribute("monhocMap", monhocMap);
         } else {
             model.addAttribute("message", "Không có môn học nào!");
         }

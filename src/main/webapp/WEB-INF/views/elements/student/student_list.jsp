@@ -23,7 +23,7 @@
 				<td>${sv.TEN}</td>
 				<td>${sv.NGAYSINH}</td>
 				<td>${sv.DIACHI}</td>
-				<td>${sv.MALOP}</td>
+				<td>${lopMap.get(sv.MALOP)}</td>
 				<td>${sv.MATKHAU}</td>
 				<td>
 					<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">

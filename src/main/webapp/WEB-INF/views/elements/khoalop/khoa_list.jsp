@@ -5,7 +5,7 @@
         <tr>
             <th scope="col">Mã khoa</th>
             <th scope="col">Tên khoa</th>
-            <th scope="col">Mã cơ sở</th>
+            <th scope="col">Cơ sở</th>
             <th scope="col">Thao tác</th>
         </tr>
     </thead>

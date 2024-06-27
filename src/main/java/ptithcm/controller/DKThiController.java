@@ -1,22 +1,30 @@
 package ptithcm.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.GiaoVienDKJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
 import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.bean.GlobalVariable;
+import ptithcm.bean.Khoa;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.Lop;
 
@@ -36,21 +44,16 @@ public class DKThiController {
     MonHocJDBCTemplate monHocJDBCTemplate;
 
     @RequestMapping("")
-    public String list(ModelMap model,
-            // @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate, 
-            // @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate,
-            HttpSession session) {
+    public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             giaoVienDKJDBCTemplate.setDataSource(currentConnection.getSite());
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
-            // List<GiaoVienDangKy> gvdks = giaoVienDKJDBCTemplate.listGiaoVienDK(startdate, enddate);
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
             model.addAttribute("lops", lops);
             model.addAttribute("monhocs", monhocs);
-            // model.addAttribute("gvdks", gvdks);
         }
         return "pages/dkthi";
     }
@@ -81,5 +84,18 @@ public class DKThiController {
         }
         
         return "pages/dkthi";
+    }
+
+    @RequestMapping(value = "dsdkthi", method = RequestMethod.POST)
+    public String listDKThi(ModelMap model,
+            @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate, 
+            @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate,
+            HttpSession session) {
+        List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(startdate, enddate);
+        model.addAttribute("dsdk", dsdk);
+        model.addAttribute("total", dsdk.size());
+        model.addAttribute("startdate", startdate);
+        model.addAttribute("enddate", enddate);
+        return "pages/dsdkthi";
     }
 }

@@ -14,7 +14,7 @@
             <tr>
                 <td>${l.MALOP}</td>
                 <td>${l.TENLOP}</td>
-                <td>${l.MAKH}</td>
+                <td>${khoaMap.get(l.MAKH)}</td>
                 <td>
                     <form class="d-inline" action="department-class/delete-class/${l.MALOP.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa lớp ${l.MALOP}?')" target="formSubmitFrame">
 						<button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>

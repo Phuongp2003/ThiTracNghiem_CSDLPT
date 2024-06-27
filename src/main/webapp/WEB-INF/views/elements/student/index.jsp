@@ -114,7 +114,7 @@
 					<tr class="is-action sl-${l.MALOP}" onclick="toggleAndLoad('${l.MALOP}')">
 						<td>${l.MALOP}</td>
 						<td>${l.TENLOP}</td>
-						<td>${l.MAKH}</td>
+						<td>${khoaMap.get(l.MAKH)}</td>
 					</tr>
 				</c:forEach>
 			</tbody>

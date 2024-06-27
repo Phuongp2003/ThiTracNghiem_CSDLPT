@@ -23,6 +23,7 @@ import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
+import ptithcm.bean.Khoa;
 import ptithcm.bean.SinhVienAction;
 import ptithcm.bean.Lop;
 import ptithcm.bean.SinhVien;
@@ -52,8 +53,19 @@ public class StudentController {
 
             List<SinhVien> sinhViens = sinhVienJDBCTemplate.listSinhVien();
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            Map<String, String> khoaMap = new HashMap();
+            for (Khoa i : khoas) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
+            Map<String, String> lopMap = new HashMap();
+            for (Lop i : lops) {
+                lopMap.put(i.getMALOP(), i.getTENLOP());
+            }
             model.addAttribute("sinhViens", sinhViens);
             model.addAttribute("lops", lops);
+            model.addAttribute("lopMap", lopMap);
+            model.addAttribute("khoaMap", khoaMap);
         } else {
             model.addAttribute("message", "Không có sinh viên nào!");
         }
@@ -81,9 +93,14 @@ public class StudentController {
                 throw new NullPointerException("Mã lớp không được để trống!");
             }
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            Map<String, String> lopMap = new HashMap();
+            for (Lop i : lops) {
+                lopMap.put(i.getMALOP(), i.getTENLOP());
+            }
             model.addAttribute("sinhViens", sinhViens);
             model.addAttribute("lops", lops);
             model.addAttribute("malop", malop);
+            model.addAttribute("lopMap", lopMap);
         } else {
             model.addAttribute("message", "Không có sinh viên nào!");
         }

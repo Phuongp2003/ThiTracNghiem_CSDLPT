@@ -1,18 +1,14 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
-<style>
-  #list-dkthi{
-    display: none;
-  }
-  .dkthi .active{
-    font-weight: bold;
-    text-decoration: underline !important;
-  }
-</style>
+
 <div class="dkthi container-fluid d-flex gap-1" style="width:75%;">
   <div class="col-md-3 d-flex flex-column gap-2 fs-5">
-    <a href="#" id="create-dkthi-taga" class="active">Tạo lịch thi</a>
-    <a href="#" id="list-dkthi-taga">Danh sách đăng ký thi</a>
+    <a href="dkthi.htm">Tạo lịch thi</a>
+    <form method="POST" action="dkthi/dsdkthi.htm">
+      <input type="hidden" id="startdate" name="startdate"/>
+      <input type="hidden" id="enddate" name="enddate"/>
+      <button type="submit" class="btn btn-primary">Danh sách đăng ký thi</button>
+    </form>
   </div>
   <div class="col-md-6">
     <div id="create-dkthi">
@@ -62,68 +58,16 @@
         <button type="submit" class="btn btn-primary">Đăng ký</button>
       </form>
     </div>
-    <div id="list-dkthi" style="width: 148%;">
-      <div class="filter">
-        <form method="POST" action="" class="d-flex gap-2">
-          <div class="mb-3">
-            <label>Từ ngày</label>
-            <input type="date" name="startdate" value="23-06-2024" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label>Đến ngày</label>
-            <input type="date" name="enddate" value="24-06-2024" class="form-control">
-          </div>
-          <div class="mt-4"><button type="submit" class="btn btn-primary">Lọc</button></div>
-        </form>
-      </div>
-      <div class="list mt-2" style="margin-left: -18.5rem;">
-        <h5 class="fw-bold text-center">DANH SÁCH ĐĂNG KÝ THI TRẮC NGHIỆM CƠ SỞ 1 TỪ NGÀY dd/mm/yyyy  ĐẾN NGÀY dd/mm/yyyy</h5>
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">STT</th>
-              <th scope="col">TÊN LỚP</th>
-              <th scope="col">TÊN MÔN HỌC</th>
-              <th scope="col">GIẢNG VIÊN ĐĂNG KÝ</th>
-              <th scope="col">SỐ CÂU THI</th>
-              <th scope="col">NGÀY THI</th>
-              <th scope="col">ĐÃ THI</th>
-              <th scope="col">GHI CHÚ</th>
-            </tr>
-          </thead>
-          <tbody>
-            <c:forEach var="gvdk" items="${gvdks}">
-              <tr>
-                <th></th>
-                <td>${gvdk.TENLOP}</td>
-                <td>${gvdk.TENMH}</td>
-                <td>${gvdk.HOTEN}</td>
-                <td>${gvdk.SOCAUTHI}</td>
-                <td>${gvdk.NGAYTHI}</td>
-                <td>${gvdk.DATHI}</td>
-                <td></td>
-              </tr>
-            </c:forEach>
-        </table>
-      </div>
-    </div>
   </div>
 </div>
-
 <script>
-  document.getElementById('create-dkthi-taga').addEventListener('click', function(event) {
-      event.preventDefault();
-      document.getElementById('create-dkthi').style.display = 'block';
-      document.getElementById('list-dkthi').style.display = 'none';
-      document.getElementById('create-dkthi-taga').classList.add('active');
-      document.getElementById('list-dkthi-taga').classList.remove('active');
-  });
-
-  document.getElementById('list-dkthi-taga').addEventListener('click', function(event) {
-      event.preventDefault();
-      document.getElementById('create-dkthi').style.display = 'none';
-      document.getElementById('list-dkthi').style.display = 'block';
-      document.getElementById('create-dkthi-taga').classList.remove('active');
-      document.getElementById('list-dkthi-taga').classList.add('active');
+  document.addEventListener("DOMContentLoaded", function() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = yyyy + '-' + mm + '-' + dd;
+    document.getElementById('startdate').value = today;
+    document.getElementById('enddate').value = today;
   });
 </script>

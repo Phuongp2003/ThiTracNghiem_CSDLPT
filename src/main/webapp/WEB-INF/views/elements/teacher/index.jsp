@@ -1,11 +1,41 @@
 <%@ page pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
+<style>
+	.is-action:hover {
+		cursor: pointer;
+		border: 2px solid rgba(0, 255, 155, 0.2);
+	}
+	
+	tr.selected {
+		border: 2px solid green;
+	}
+</style>
 <div class="teacher container-fluid" style="width:85%;">
 	<div class="teach-filter row mb-2">
 		<jsp:include page="./filter.jsp" />
 	</div>
 	<div class="teach-list">
 		<jsp:include page="./list.jsp" />
+	</div>
+	<div class="khoa-list mt-4">
+		<table class="table khoa-table">
+			<thead>
+				<tr>
+					<th scope="col">Mã khoa</th>
+            		<th scope="col">Tên khoa</th>
+            		<th scope="col">Cơ sở</th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="k" items="${khoas}">
+					<tr class="is-action sl-${k.MAKH}" onclick="toggleAndLoad('${k.MAKH}')">
+						<td>${k.MAKH}</td>
+						<td>${k.TENKH}</td>
+						<td>${k.MACS}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
 	</div>
 </div>
 
@@ -73,6 +103,29 @@
 				console.error('Error:', error);
 			});
 		currentKhoa = value;
+	}
+
+	function toggleAndLoad(value) {
+		const element = event.target.closest('.is-action');
+		element.classList.toggle('selected');
+		const rows = document.querySelectorAll('.is-action');
+		
+		// Remove 'selected' class from other elements
+		rows.forEach(row => {
+			if (row !== element) {
+				row.classList.remove('selected');
+			}
+		});
+		
+		// Load slected value, if no, load all
+		if (element.classList.contains('selected')) {
+			loadTeachers(value);
+		} else {
+			const selectedRows = document.querySelectorAll('.is-action.selected');
+			if (selectedRows.length === 0) {
+				loadTeachers('all');
+			}
+		}
 	}
 	
 	function loadActionButton() {
