@@ -92,7 +92,7 @@ public class KhoaLopJDBCTemplate {
 
     public List<Lop> listLop() {
         try {
-            String SQL = "{call SP_DanhSachLop}";
+            String SQL = "SELECT * FROM Lop";
             return jdbcTemplate.query(SQL, new LopMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();

@@ -19,7 +19,16 @@
 				<td>${gv.HO}</td>
 				<td>${gv.TEN}</td>
 				<td>${gv.DIACHI}</td>
-				<td>${khoa.get(idFix.fix(gv.MAKH, 8))}</td>
+				<td> 
+					<c:choose>
+						<c:when test="${not empty khoa.get(idFix.fix(gv.MAKH, 8))}">
+							${khoa.get(idFix.fix(gv.MAKH, 8))}
+						</c:when>
+						<c:otherwise>
+							${gv.MAKH}
+						</c:otherwise>
+					</c:choose>
+				</td>
 				<td>
 					<form class="d-inline" action="teacher/delete/${gv.MAGV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
 						<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>

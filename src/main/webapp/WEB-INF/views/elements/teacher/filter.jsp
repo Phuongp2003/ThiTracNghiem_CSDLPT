@@ -18,7 +18,7 @@
 </div>
 <div class="col-md-2">
 	<select class="form-select chon-khoa" id="khoa" name="makhoa" onchange="loadTeachers(this.value)">
-		<option value="all" ${makhoa=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
+		<option value="all" ${makhoa=="all" ? 'selected' : '' }>Khoa: Tất cả</option>
 		<c:forEach var="k" items="${khoas}">
 			<option value="${k.MAKH}" ${k.MAKH==makhoa ? 'selected' : '' }>
 				${k.getFullName()}
