@@ -40,6 +40,43 @@ public class ThiJDBCTemplate {
         return res;
     }
 
+    public List<CauHoiDeThi> reGetDeThi(String masv, String mamh,
+            int lanthi) {
+        String SQL = "{call SP_DeThi(?, ?, ?)}";
+        List<CauHoiDeThi> res;
+        try {
+            res = jdbcTemplate.query(SQL, new Object[] { masv, mamh, lanthi },
+                    new DeThiMapper());
+            String maBangDiem = masv.trim() + mamh.trim();
+            for (CauHoiDeThi cauHoiDeThi : res) {
+                String traloi = jdbcTemplate.queryForObject(
+                        "SELECT DAPANSV FROM CTBAITHI WHERE MABANGDIEM = ? AND CAUHOI = ?",
+                        new Object[] { maBangDiem, cauHoiDeThi.getCAUHOI() }, String.class);
+                cauHoiDeThi.setDAPAN(traloi);
+            }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("REGET - De Thi - select Error: " + e.getMessage());
+            res = null;
+        }
+
+        return res;
+    }
+
+    public String getTrangThaiThi(String masv, String mamh,
+            int lanthi) {
+        String SQL = "{call SP_KiemTraTrangThaiThi(?, ?, ?)}";
+        String res;
+        try {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, mamh, lanthi }, String.class);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Trang Thai Thi - select Error: " + e.getMessage());
+            res = null;
+        }
+        return res;
+    }
+
     public List<MonThi> getListMonThi(String masv) {
         String SQL = "{call SP_DanhSachCacMonThi(?)}";
         List<MonThi> res;

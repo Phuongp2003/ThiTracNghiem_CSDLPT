@@ -64,7 +64,7 @@
 		<h5>Sinh viên: ${sv.HO} ${sv.TEN} - MSSV: ${sv.MASV}</h5>
 		<div class="d-flex gap-3">
 			<div class="time mt-1"><i class="bi bi-clock h5"></i><span class="fs-5" id="examTimer"> 40:00 </span></div>
-			<button type="button" class="btn btn-primary button-nopbai">Nộp bài</button>
+			<button type="button" class="btn btn-primary button-nopbai" onclick="submitExam()">Nộp bài</button>
 		</div>
 	</div>
 	<div class="exam-controller">
@@ -98,6 +98,9 @@
 </div>
 
 <script>
+	var isDone = false;
+	if (`${trangthaithi}` === 'DATHI') isDone = true;
+	
 	function getCookieValue(cookieName) {
 		let name = cookieName + "=";
 		let decodedCookie = decodeURIComponent(document.cookie);
@@ -114,6 +117,30 @@
 		return "";
 	}
 	
+	async function layKetQua() {
+		isDone = true;
+		return await fetch('thi/submit-exam.htm', {
+				method: 'POST',
+				body: 'thong tin bai thi'
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
+	function submitExam() {
+		if (confirm("Bạn có chắc là muốn nộp bài?")) {
+			if (confirm("Bạn sẽ không thể hoàn tác bài thi!")) {
+				isDone = true;
+			}
+		}
+	}
 	// deny chinh sua trang web
 	document.addEventListener('contextmenu', function(event) {
 		event.preventDefault();
@@ -176,11 +203,26 @@
 			document.getElementById("examTimer").textContent = minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
 		} else {
 			document.getElementById("examTimer").textContent = "Hết giờ!";
-			// submit here
+			blockE.style.display = 'block';
+			blockE.innerHTML = await layKetQua();
+			btnNopBai.disabled = true;
+			isDone = true;
 		}
 	}
 	
-	setInterval(updateTimer, 500);
+	async function showResult() {
+		const blockE = document.querySelector('.block-exam');
+		blockE.style.display = 'block';
+		blockE.innerHTML = await layKetQua();
+		const btnNopBai = document.querySelector('.button-nopbai');
+		btnNopBai.disabled = true;
+		isDone = true;
+	}
+	if (!isDone)
+		setInterval(updateTimer, 500);
+	else {
+		showResult();
+	}
 	
 	// handle chon dap an
 	const qnElements = document.getElementsByClassName('question-wrap');

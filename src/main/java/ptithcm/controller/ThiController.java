@@ -61,9 +61,15 @@ public class ThiController {
             SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
             Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
             List<MonThi> monthi = thiJDBCTemplate.getListMonThi(sv.getMASV());
+            Map<String, String> trangthai = new HashMap<>();
+            for (MonThi item : monthi) {
+                trangthai.put(item.getMaMon().trim(),
+                        thiJDBCTemplate.getTrangThaiThi(sv.getMASV(), item.getMaMon(), item.getLanThi()));
+            }
             model.addAttribute("sv", sv);
             model.addAttribute("lop", lop);
             model.addAttribute("monthi", monthi);
+            model.addAttribute("trangthai", trangthai);
             model.addAttribute("jdbc", monHocJDBCTemplate);
         }
         return "pages/thi";
@@ -76,11 +82,24 @@ public class ThiController {
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
             SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
-            List<CauHoiDeThi> deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(), mamh, lanthi);
-            session.setAttribute("deThi", deThi);
+            List<CauHoiDeThi> deThi = null;
             session.setAttribute("sv", sv);
             session.setAttribute("mamh", mamh);
             session.setAttribute("lanthi", lanthi);
+            String trangthai = thiJDBCTemplate.getTrangThaiThi(sv.getMASV(), mamh, lanthi);
+
+            switch (trangthai) {
+                case "CHUATHI":
+                    deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(), mamh, lanthi);
+                    break;
+                case "DATHI":
+                    break;
+                case "DANGTHI":
+                    deThi = thiJDBCTemplate.reGetDeThi(sv.getMASV(), mamh, lanthi);
+                    break;
+            }
+            session.setAttribute("trangthaithi", trangthai);
+            session.setAttribute("deThi", deThi);
         }
         return "redirect:/thi/exam.htm";
     }
@@ -96,8 +115,29 @@ public class ThiController {
             model.addAttribute("deThi", deThi);
             model.addAttribute("sv", sv);
             model.addAttribute("lop", lop);
+            model.addAttribute("trangthaithi", (String) session.getAttribute("trangthaithi"));
         }
         return "pages/start_exam";
+    }
+
+    @RequestMapping(value = "submit-exam", method = RequestMethod.POST)
+    public String submitExam(ModelMap model, HttpSession session, HttpServletResponse response,
+            @RequestBody String body) {
+        try {
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+            if (currentConnection != null) {
+                thiJDBCTemplate.setDataSource(currentConnection.getSite());
+                SinhVien sv = (SinhVien) session.getAttribute("sv");
+                String mamh = (String) session.getAttribute("mamh");
+                int lanthi = (int) session.getAttribute("lanthi");
+                model.addAttribute("annoucement", "Đã nộp bài thi");
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return "elements/thi/ketqua";
     }
 
     @RequestMapping(value = "submit-question", method = RequestMethod.POST)

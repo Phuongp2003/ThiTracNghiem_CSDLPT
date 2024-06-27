@@ -41,7 +41,15 @@
 					<label>Lần thi</label>
 					<input type="number" name="lanthi" class="form-control" max="2" min="1" value="${mh.lanThi}" readonly>
 				</div>
-				<button type="submit" class="btn btn-primary submit-form">Bắt đầu thi</button>
+				<c:if test="${trangthai.get(mh.maMon.trim()) == 'CHUATHI'}">
+					<button type="submit" class="btn btn-primary submit-form">Bắt đầu thi</button>
+				</c:if>
+				<c:if test="${trangthai.get(mh.maMon.trim()) == 'DANGTHI'}">
+					<button type="submit" class="btn btn-primary submit-form">Tiếp tục thi</button>
+				</c:if>
+				<c:if test="${trangthai.get(mh.maMon.trim()) == 'DATHI'}">
+					<button type="submit" class="btn btn-primary submit-form">Xem kết quả</button>
+				</c:if>
 			</form>
 		</c:forEach>
 	</div>
