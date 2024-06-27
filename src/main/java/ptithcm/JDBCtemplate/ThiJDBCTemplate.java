@@ -24,12 +24,12 @@ public class ThiJDBCTemplate {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<CauHoiDeThi> getDeThi(String masv, String malop, Date ngaythi, int socau, String trinhdo, String mamh,
+    public List<CauHoiDeThi> getDeThi(String masv, String malop, String mamh,
             int lanthi) {
-        String SQL = "{call SP_TaoBaiThi(?, ?, ?, ?, ?, ?, ?)}";
+        String SQL = "{call SP_TaoBaiThi(?, ?, ?, ?)}";
         List<CauHoiDeThi> res;
         try {
-            res = jdbcTemplate.query(SQL, new Object[] { masv, malop, ngaythi, socau, trinhdo, mamh, lanthi },
+            res = jdbcTemplate.query(SQL, new Object[] { masv, malop, mamh, lanthi },
                     new DeThiMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();

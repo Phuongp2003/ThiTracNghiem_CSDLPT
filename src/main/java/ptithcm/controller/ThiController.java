@@ -71,15 +71,12 @@ public class ThiController {
 
     @RequestMapping(value = "start-exam", method = RequestMethod.POST)
     public String startExam(ModelMap model, HttpSession session, @RequestParam("mamh") String mamh,
-            @RequestParam("lanthi") int lanthi,
-            @RequestParam("ngaythi") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaythi) {
+            @RequestParam("lanthi") int lanthi) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
             SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
-            List<CauHoiDeThi> deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(),
-                    new java.sql.Date(ngaythi.getTime()),
-                    50, "A", mamh, lanthi);
+            List<CauHoiDeThi> deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(), mamh, lanthi);
             session.setAttribute("deThi", deThi);
             session.setAttribute("sv", sv);
             session.setAttribute("mamh", mamh);

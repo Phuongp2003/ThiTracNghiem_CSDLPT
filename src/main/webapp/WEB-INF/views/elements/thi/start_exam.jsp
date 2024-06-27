@@ -138,14 +138,27 @@
 			alert('Có lỗi xảy ra!');
 		});
 	
-	var giobatdauthi = new Date(getCookieValue("ngaythi") + 'T' + getCookieValue("giothi"));
-	var thoigianthi = parseInt(getCookieValue("thoigian"));
-	var giohientai = new Date();
-	var ketthucthi = new Date(giobatdauthi.getTime() + thoigianthi * 60000);
-	const blockE = document.querySelector('.block-exam');
-	const btnNopBai = document.querySelector('.button-nopbai');
 	
-	function updateTimer() {
+	async function updateTimer() {
+		await fetch("thi/time-exam.htm", {
+				method: 'POST',
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				alert('Có lỗi xảy ra!');
+			});
+		var giobatdauthi = new Date(getCookieValue("ngaythi") + 'T' + getCookieValue("giothi"));
+		var thoigianthi = parseInt(getCookieValue("thoigian"));
+		var giohientai = new Date();
+		var ketthucthi = new Date(giobatdauthi.getTime() + thoigianthi * 60000);
+		const blockE = document.querySelector('.block-exam');
+		const btnNopBai = document.querySelector('.button-nopbai');
+		
 		var now = new Date();
 		var remainingTime = ketthucthi - now;
 		if (remainingTime > thoigianthi * 60000) {
