@@ -119,6 +119,23 @@
 	
 	async function layKetQua() {
 		isDone = true;
+		return await fetch('thi/get-point.htm', {
+				method: 'POST',
+				body: 'thong tin bai thi'
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
+	async function guiKetQua() {
+		isDone = true;
 		return await fetch('thi/submit-exam.htm', {
 				method: 'POST',
 				body: 'thong tin bai thi'
@@ -134,10 +151,10 @@
 			});
 	}
 	
-	function submitExam() {
+	async function submitExam() {
 		if (confirm("Bạn có chắc là muốn nộp bài?")) {
 			if (confirm("Bạn sẽ không thể hoàn tác bài thi!")) {
-				showResult();
+				await guiKetQua();
 				isDone = true;
 			}
 		}
@@ -151,21 +168,6 @@
 			event.preventDefault();
 		}
 	});
-	
-	// Thoi gian thi
-	fetch("thi/time-exam.htm", {
-			method: 'POST',
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
-			}
-		})
-		.catch(error => {
-			console.error('Error:', error);
-			alert('Có lỗi xảy ra!');
-		});
-	
 	
 	async function updateTimer() {
 		await fetch("thi/time-exam.htm", {
@@ -206,7 +208,7 @@
 		} else {
 			document.getElementById("examTimer").textContent = "Hết giờ!";
 			blockE.style.display = 'block';
-			blockE.innerHTML = await layKetQua();
+			blockE.innerHTML = await guiKetQua();
 			btnNopBai.disabled = true;
 			isDone = true;
 		}
@@ -220,11 +222,13 @@
 		btnNopBai.disabled = true;
 		isDone = true;
 	}
-	setInterval(() => {
+	
+	let intervalID = setInterval(() => {
 		if (!isDone)
 			updateTimer();
 		else {
 			showResult();
+			clearInterval(intervalID);
 		}
 	}, 500);
 	

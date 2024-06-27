@@ -31,6 +31,8 @@ import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.temp.MonThi;
 import ptithcm.bean.SinhVien;
 import ptithcm.bean.temp.CauHoiDeThi;
+import ptithcm.bean.temp.ChiTietDapAn;
+import ptithcm.bean.temp.KetQuaThi;
 import ptithcm.bean.temp.ThoiGianThi;
 import ptithcm.bean.Lop;
 
@@ -120,6 +122,29 @@ public class ThiController {
         return "pages/start_exam";
     }
 
+    @RequestMapping(value = "get-point", method = RequestMethod.POST)
+    public String getPoint(ModelMap model, HttpSession session, HttpServletResponse response) {
+        try {
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+            if (currentConnection != null) {
+                thiJDBCTemplate.setDataSource(currentConnection.getSite());
+                SinhVien sv = (SinhVien) session.getAttribute("sv");
+                String mamh = (String) session.getAttribute("mamh");
+                int lanthi = (int) session.getAttribute("lanthi");
+                KetQuaThi kq = thiJDBCTemplate.nhanKetQuaThi(sv.getMASV(), mamh, lanthi);
+                model.addAttribute("kq", kq);
+                model.addAttribute("annoucement", "Đã nộp bài thi");
+                session.setAttribute("trangthaithi", "DATHI");
+
+                response.setStatus(HttpServletResponse.SC_OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return "elements/thi/ketqua";
+    }
+
     @RequestMapping(value = "submit-exam", method = RequestMethod.POST)
     public String submitExam(ModelMap model, HttpSession session, HttpServletResponse response,
             @RequestBody String body) {
@@ -130,6 +155,9 @@ public class ThiController {
                 SinhVien sv = (SinhVien) session.getAttribute("sv");
                 String mamh = (String) session.getAttribute("mamh");
                 int lanthi = (int) session.getAttribute("lanthi");
+                thiJDBCTemplate.chamBaiThi(sv.getMASV(), mamh, lanthi);
+                KetQuaThi kq = thiJDBCTemplate.nhanKetQuaThi(sv.getMASV(), mamh, lanthi);
+                model.addAttribute("kq", kq);
                 model.addAttribute("annoucement", "Đã nộp bài thi");
                 session.setAttribute("trangthaithi", "DATHI");
 

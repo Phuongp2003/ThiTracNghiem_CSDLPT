@@ -28,6 +28,9 @@
 	</c:when>
 	<c:when test="${role == 'SV'}">
 		<li class="nav-item">
+			<a class="nav-link" href="kqthi.htm">Xem kết quả</a>
+		</li>
+		<li class="nav-item">
 			<a class="nav-link" href="thi.htm">Thi</a>
 		</li>
 	</c:when>

@@ -10,9 +10,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.temp.CauHoiDeThi;
+import ptithcm.bean.temp.ChiTietDapAn;
+import ptithcm.bean.temp.KetQuaThi;
 import ptithcm.bean.temp.MonThi;
 import ptithcm.bean.temp.ThoiGianThi;
+import ptithcm.mapper.ChiTietDapAnMapper;
 import ptithcm.mapper.DeThiMapper;
+import ptithcm.mapper.KetQuaThiMapper;
 import ptithcm.mapper.MonThiMapper;
 import ptithcm.mapper.ThoiGianThiMapper;
 
@@ -47,7 +51,7 @@ public class ThiJDBCTemplate {
         try {
             res = jdbcTemplate.query(SQL, new Object[] { masv, mamh, lanthi },
                     new DeThiMapper());
-            String maBangDiem = masv.trim() + mamh.trim();
+            String maBangDiem = masv.trim() + mamh.trim() + lanthi;
             for (CauHoiDeThi cauHoiDeThi : res) {
                 String traloi = jdbcTemplate.queryForObject(
                         "SELECT DAPANSV FROM CTBAITHI WHERE MABANGDIEM = ? AND CAUHOI = ?",
@@ -111,6 +115,51 @@ public class ThiJDBCTemplate {
             e.printStackTrace();
             System.err.println("Update Bai Thi - update Error: " + e.getMessage());
             throw new Exception("Update Bai Thi - update Error: " + e.getMessage());
+        }
+    }
+
+    public void chamBaiThi(String masv, String mamh, int lanthi) throws Exception {
+        String SQL = "{call SP_ChamDiemBaiThi(?, ?, ?)}";
+        try {
+            jdbcTemplate.update(SQL, masv, mamh, lanthi);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Cham Bai Thi - update Error: " + e.getMessage());
+            throw new Exception("Cham Bai Thi - update Error: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Cham Bai Thi - update Error: " + e.getMessage());
+            throw new Exception("Cham Bai Thi - update Error: " + e.getMessage());
+        }
+    }
+
+    public KetQuaThi nhanKetQuaThi(String masv, String mamh, int lanthi) throws Exception {
+        String SQL = "{call SP_ThiSinhXemKetQua(?, ?, ?)}";
+        KetQuaThi res;
+        try {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, mamh, lanthi }, new KetQuaThiMapper());
+            return res;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Nhan Dap An - select Error: " + e.getMessage());
+            throw new Exception("Nhan Dap An - select Error: " + e.getMessage());
+        }
+    }
+
+    public KetQuaThi nhanDapAn(String masv, String mamh, int lanthi) throws Exception {
+        String SQL = "{call SP_ThiSinhXemKetQua(?, ?, ?)}";
+        KetQuaThi res;
+        try {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, mamh, lanthi }, new KetQuaThiMapper());
+            String SQL2 = "{call SP_XemKetQua(?, ?, ?)}";
+            List<ChiTietDapAn> chiTietDapAn = jdbcTemplate.query(SQL2, new Object[] { masv, mamh, lanthi },
+                    new ChiTietDapAnMapper());
+            res.setChiTietDapAn(chiTietDapAn);
+            return res;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Nhan Dap An - select Error: " + e.getMessage());
+            throw new Exception("Nhan Dap An - select Error: " + e.getMessage());
         }
     }
 }

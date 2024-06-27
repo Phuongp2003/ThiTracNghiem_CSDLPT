@@ -48,7 +48,7 @@
 					<button type="submit" class="btn btn-primary submit-form">Tiếp tục thi</button>
 				</c:if>
 				<c:if test="${trangthai.get(mh.maMon.trim()) == 'DATHI'}">
-					<button type="submit" class="btn btn-primary submit-form">Xem kết quả</button>
+					<button type="submit" class="btn btn-primary submit-form2">Xem kết quả</button>
 				</c:if>
 			</form>
 		</c:forEach>

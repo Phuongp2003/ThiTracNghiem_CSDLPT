@@ -34,27 +34,6 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav navbar-functions ms-auto mb-2 mb-lg-0 fs-5 gap-3">
-				<li class="nav-item">
-					<a class="nav-link" href="teacher.htm">Giáo viên</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="student.htm">Sinh viên</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="subject.htm">Môn học</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="department-class.htm">Khoa, lớp</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="bode.htm">Nhập đề</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="dkthi.htm">Đăng ký thi</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="thi.htm">Thi</a>
-				</li>
 			</ul>
 		</div>
 	</div>
