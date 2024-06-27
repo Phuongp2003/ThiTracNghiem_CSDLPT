@@ -38,14 +38,14 @@
   - [X] Sửa
   - [X] Phục hồi
   - [X] reload
-- [ ] Form (subform) giảng viên (của khoa)
-  - [ ] Thêm
-  - [ ] Xóa
-  - [ ] Sửa
-  - [ ] Phục hồi
-  - [ ] reload
+- [x] Form (subform) giảng viên (của khoa)
+  - [x] Thêm
+  - [x] Xóa
+  - [x] Sửa
+  - [x] Phục hồi
+  - [x] reload
 - [ ] Nhập đề (Giảng viên only), giảng viên chỉ thấy và sửa câu hỏi của mình (bảng BoDe)
-  - [ ] Thêm
+  - [x] Thêm
   - [ ] Xóa
   - [ ] Sửa
   - [ ] Phục hồi
@@ -54,20 +54,20 @@
   - [X] Nhân viên nhập tên lớp, môn sẽ thi, trình độ, lần thi, số câu thi, ngày thì, thời gian thi(phút), ghi vào GiangVien_DangKy
   - [ ] Khi đăng ký thi cần kiểm tra ràng buộc
 - [ ] Thi
-  - [ ] Phần thông tin thí sinh: Mã lớp, tên lớp, họ tên
-  - [ ] Phần bài thi: 
-    - [ ] Môn thi, ngày thi, số lần thi
-    - [ ] Lọc ra số câu thi, thời gian thi, trình độ(giáo viên đăng ký)
-    - [ ] Khi nhấn "bắt đầu thi", lọc các câu từ bước 2 phía trên (ngẫu nhiên, không trùng), sau đó tiến hành cho thí sinh thi ***(giao tác)***
-  - [ ] Tiêu chí đề thi:
-    - [ ] Ngẫu nhiên, không trùng nhau
-    - [ ] Lấy theo trình độ A, B hay C
-    - [ ] Ưu tiên lấy các câu trình độ cao, nếu thiếu thì lấy ở trình độ thấp hơn
-    - [ ] Số câu trình độ cao **bắt buộc lớn hơn 70%**, nếu thiếu có thể lấy ở cơ sở khác
-    - [ ] Ưu tiên lấy ở cơ sở mà lớp đố học
-    - [ ] Điểm cao nhât là 10, số điểm mỗi câu là như nhau (trung bình cộng go brr)
-    - [ ] Cho user chọn câu đã thi ở lần thi trước
-    - [ ] Hết thời gian quy định => buộc kết thúc bài thi
+  - [x] Phần thông tin thí sinh: Mã lớp, tên lớp, họ tên
+  - [x] Phần bài thi: 
+    - [x] Môn thi, ngày thi, số lần thi
+    - [x] Lọc ra số câu thi, thời gian thi, trình độ(giáo viên đăng ký)
+    - [x] Khi nhấn "bắt đầu thi", lọc các câu từ bước 2 phía trên (ngẫu nhiên, không trùng), sau đó tiến hành cho thí sinh thi ***(giao tác)***
+  - [x] Tiêu chí đề thi:
+    - [x] Ngẫu nhiên, không trùng nhau
+    - [x] Lấy theo trình độ A, B hay C
+    - [x] Ưu tiên lấy các câu trình độ cao, nếu thiếu thì lấy ở trình độ thấp hơn
+    - [x] Số câu trình độ cao **bắt buộc lớn hơn 70%**, nếu thiếu có thể lấy ở cơ sở khác
+    - [x] Ưu tiên lấy ở cơ sở mà lớp đố học
+    - [x] Điểm cao nhât là 10, số điểm mỗi câu là như nhau (trung bình cộng go brr)
+    - [x] Cho user chọn câu đã thi ở lần thi trước
+    - [x] Hết thời gian quy định => buộc kết thúc bài thi
     - [ ] Thông báo điểm cho sinh viên và lưu vào BangDiem
 - [ ] Xem kết quả
   - [ ] In ra số câu đã thi dựa trên các thông tin Mã sinh viên, môn học, lần thi
@@ -95,9 +95,9 @@
 - [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) giáo viên
 - [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) đề thi (câu hỏi)
 - [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) GiangVien_DangKy; khi thêm, sửa cần kiểm tra ràng buộc
-- [ ] Xem thông tin thí sinh dự thi
-- [ ] ***Lọc danh sách câu hỏi phù hợp với thí sinh tham gia dự thi***
-- [ ] ***Chọn câu hỏi từ danh sách đã lọc để tạo đề thi***
+- [x] Xem thông tin thí sinh dự thi
+- [x] ***Lọc danh sách câu hỏi phù hợp với thí sinh tham gia dự thi***
+- [x] ***Chọn câu hỏi từ danh sách đã lọc để tạo đề thi***
 - [ ] Tạo / sửa bảng tạm (local) lưu kết quả thi của sinh viên (theo 2 cách, mỗi 1 khoảng thời gian khi thi, hoặc ngay khi thí sinh chọn/đổi đáp án của 1 câu hỏi)
 - [ ] Lưu kết quả cuối cùng vào BangDiem
 - [X] Show kết quả bài thi, output: STT, Câu số (trong đề), Nội dung, Các chọn lựa, đáp án (lựa chọn sính xác), Đã chọn (đáp án thí sinh chọn)
