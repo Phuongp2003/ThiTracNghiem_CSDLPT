@@ -137,6 +137,7 @@
 	function submitExam() {
 		if (confirm("Bạn có chắc là muốn nộp bài?")) {
 			if (confirm("Bạn sẽ không thể hoàn tác bài thi!")) {
+				showResult();
 				isDone = true;
 			}
 		}
@@ -179,6 +180,7 @@
 				console.error('Error:', error);
 				alert('Có lỗi xảy ra!');
 			});
+		
 		var giobatdauthi = new Date(getCookieValue("ngaythi") + 'T' + getCookieValue("giothi"));
 		var thoigianthi = parseInt(getCookieValue("thoigian"));
 		var giohientai = new Date();
@@ -196,7 +198,7 @@
 			btnNopBai.disabled = false;
 			blockE.style.display = 'none';
 		}
-		if (remainingTime >= 0) {
+		if (remainingTime >= 0 && !isDone) {
 			var minutes = Math.floor((remainingTime % (1000 * 60 * 300)) / (1000 * 60));
 			var seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
 			
@@ -218,11 +220,13 @@
 		btnNopBai.disabled = true;
 		isDone = true;
 	}
-	if (!isDone)
-		setInterval(updateTimer, 500);
-	else {
-		showResult();
-	}
+	setInterval(() => {
+		if (!isDone)
+			updateTimer();
+		else {
+			showResult();
+		}
+	}, 500);
 	
 	// handle chon dap an
 	const qnElements = document.getElementsByClassName('question-wrap');

@@ -131,6 +131,8 @@ public class ThiController {
                 String mamh = (String) session.getAttribute("mamh");
                 int lanthi = (int) session.getAttribute("lanthi");
                 model.addAttribute("annoucement", "Đã nộp bài thi");
+                session.setAttribute("trangthaithi", "DATHI");
+
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
