@@ -294,7 +294,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "search", method = RequestMethod.POST)
-    public String searchStudent(ModelMap model, HttpSession session, @RequestParam("searchInput") String searchInput) {
+    public String searchStudent(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<String, String>();
         map = gson.fromJson(searchInput, map.getClass());

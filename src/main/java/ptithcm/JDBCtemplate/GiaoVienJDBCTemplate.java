@@ -9,12 +9,15 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GlobalVariable;
+import ptithcm.bean.SinhVien;
 import ptithcm.mapper.GiaoVienMapper;
+import ptithcm.mapper.SinhVienMapper;
 
 @Service
 public class GiaoVienJDBCTemplate {
@@ -115,15 +118,14 @@ public class GiaoVienJDBCTemplate {
         }
     }
 
-    // Find GiaoVien by Name
-    public List<GiaoVien> findTeacherByName(String name) {
+    public void move(String makh, String magv, GiaoVien giaoVien) {
         try {
-            String SQL = "SELECT * FROM GiaoVien WHERE TEN LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new GiaoVienMapper());
+            String SQL = "{call SP_ChuyenKhoa(?, ?)}";
+            jdbcTemplate.update(SQL, new Object[] { giaoVien.getMAKH().trim(), magv });
+            System.out.println("Move Record with ID = " + magv);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Giao Vien - find by name Error: " + e.getMessage());
-            return null;
+            System.err.println("Giao Vien - move Error: " + e.getMessage());
         }
     }
 
@@ -166,6 +168,28 @@ public class GiaoVienJDBCTemplate {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Giao Vien - login Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<GiaoVien> getGVByKhoa(String makhoa) {
+        try {
+            String SQL = "SELECT * FROM GiaoVien WHERE MAKH = ?";
+            return jdbcTemplate.query(SQL, new Object[] { makhoa }, new GiaoVienMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Giao Vien - getGVByKhoa Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<GiaoVien> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemGiaoVien(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new GiaoVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Giao Vien - find Error: " + e.getMessage());
             return null;
         }
     }

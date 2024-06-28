@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ptithcm.bean.Khoa;
 import ptithcm.bean.Lop;
 import ptithcm.bean.MonHoc;
+import ptithcm.bean.SinhVien;
 import ptithcm.mapper.KhoaMapper;
 import ptithcm.mapper.LopMapper;
 import ptithcm.mapper.SinhVienMapper;
@@ -90,7 +91,7 @@ public class KhoaLopJDBCTemplate {
             return null;
         }
     }
-
+  
     public Lop getLop(String malop) {
         String SQL = "SELECT * FROM Lop WHERE MALOP = ?";
         IDFix.fix(malop, 8);
@@ -262,6 +263,17 @@ public class KhoaLopJDBCTemplate {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Lop - delete Error: " + e.getMessage());
+        }
+    }
+
+    public List<Lop> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemLop(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new LopMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Lop - find Error: " + e.getMessage());
+            return null;
         }
     }
 }

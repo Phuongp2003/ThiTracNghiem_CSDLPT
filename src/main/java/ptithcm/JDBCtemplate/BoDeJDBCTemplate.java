@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.BoDe;
+import ptithcm.bean.SinhVien;
 import ptithcm.mapper.BoDeMapper;
+import ptithcm.mapper.SinhVienMapper;
 
 @Service
 public class BoDeJDBCTemplate {
@@ -192,6 +194,17 @@ public class BoDeJDBCTemplate {
             e.printStackTrace();
             System.err.println("Bo De - Max cau hoi Error: " + e.getMessage());
             return 0;
+        }
+    }
+
+    public List<BoDe> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemBoDe(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - find Error: " + e.getMessage());
+            return null;
         }
     }
 }

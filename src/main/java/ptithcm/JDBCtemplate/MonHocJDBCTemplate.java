@@ -139,4 +139,15 @@ public class MonHocJDBCTemplate {
             System.err.println("Mon Hoc - delete Error: " + e.getMessage());
         }
     }
+
+    public List<MonHoc> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemMonHoc(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new MonHocMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Mon hoc - find Error: " + e.getMessage());
+            return null;
+        }
+    }
 }

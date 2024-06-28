@@ -26,6 +26,9 @@ import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
+import ptithcm.bean.Lop;
+import ptithcm.bean.SinhVien;
+import ptithcm.bean.SinhVienAction;
 import ptithcm.util.IDFix;
 import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GiaoVienAction;
@@ -234,6 +237,32 @@ public class TeacherController {
         return "elements/message";
     }
 
+    @RequestMapping(value = "move-teacher", method = RequestMethod.POST)
+    public String moveStudent(ModelMap model, @RequestParam("magv") String magv,
+            @RequestParam("makh") String makh, HttpSession session) {
+        try {
+            GiaoVien oldGV = giaoVienJDBCTemplate.getTeacher(magv);
+            GiaoVien giaoVien = giaoVienJDBCTemplate.getTeacher(magv);
+            giaoVien.setMAGV(magv);
+            giaoVien.setMAKH(makh);
+
+            giaoVienJDBCTemplate.move(makh, magv, giaoVien);
+
+            HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
+            GiaoVienAction gvAction = new GiaoVienAction("move", giaoVien, oldGV);
+            gvAction.setCmd(giaoVienJDBCTemplate);
+            historyAction.addAction(gvAction);
+            session.setAttribute("historyAction", historyAction);
+
+            model.addAttribute("message", "Chuyển khoa thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Chuyển khoa thất bại!");
+            System.out.println(e.getMessage());
+        }
+        return "elements/message";
+    }
+
     @RequestMapping(value = "undo", method = RequestMethod.POST)
     public String undo(ModelMap model, HttpSession session) {
         try {
@@ -278,5 +307,26 @@ public class TeacherController {
         model.addAttribute("canUndo", historyAction.canUndo());
         model.addAttribute("canRedo", historyAction.canRedo());
         return "elements/teacher/button_action_list";
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public String searchTeacher(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        Gson gson = new Gson();
+        Map<String, String> map = new HashMap<String, String>();
+        map = gson.fromJson(searchInput, map.getClass());
+        searchInput = map.get("searchInput");
+        List<GiaoVien> giaoViens = giaoVienJDBCTemplate.search(searchInput);
+        List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+        Map<String, String> khoaMap = new HashMap();
+        for (Khoa i : khoas) {
+            khoaMap.put(i.getMAKH(), i.getTENKH());
+        }
+        session.setAttribute("historyAction", new HistoryAction());
+        model.addAttribute("idFix", new IDFix());
+        model.addAttribute("giaoViens", giaoViens);
+        model.addAttribute("khoa", khoaMap);
+        model.addAttribute("khoas", khoas);
+
+        return "elements/teacher/list";
     }
 }

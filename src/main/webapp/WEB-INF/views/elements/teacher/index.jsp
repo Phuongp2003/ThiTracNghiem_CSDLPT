@@ -58,6 +58,8 @@
 
 <script>
 	var currentKhoa;
+	var currentSearch;
+
 	var isDiffSite = false;
 	
 	function checkSite(value) {
@@ -93,6 +95,29 @@
 			});
 		currentKhoa = value;
 	}
+  
+  function searchTeachers(value) {
+		fetch('teacher/search.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					searchInput: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.teach-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		currentSearch = value;
+	}
 	
 	function loadKhoa(value) {
 		var isDiff = isDiffSite ? 'true' : 'false';
@@ -111,7 +136,6 @@
 			})
 			.then(data => {
 				const userBar = document.querySelector('.chon-khoa');
-				console.log("🚀 ~ loadKhoa ~ userBar:", userBar)
 				userBar.innerHTML = data;
 			})
 			.catch(error => {
@@ -185,6 +209,7 @@
 		if (!currentKhoa) currentKhoa = "all";
 		loadActionButton();
 		loadTeachers(window.currentKhoa);
+		if(currentSearch) searchTeachers(currentSearch);
 		loadKhoa(window.currentKhoa);
 	}
 	
