@@ -53,11 +53,13 @@ public class KhoaLopController {
             model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
             List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-            List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+            khoasDiff.addAll(khoas);
             Map<String, String> khoaMap = new HashMap();
-            for (Khoa i : khoas) {
+            for (Khoa i : khoasDiff) {
                 khoaMap.put(i.getMAKH(), i.getTENKH());
             }
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
 
             model.addAttribute("currentSite", session.getAttribute("site"));
             utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
@@ -99,12 +101,17 @@ public class KhoaLopController {
                 throw new NullPointerException("Mã khoa không được để trống!");
             }
             List<Khoa> khoas = null;
-            if (diff)
+            List<Khoa> khoasDiff = null;
+            if (diff) {
                 khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
-            else
+                khoasDiff = khoaLopJDBCTemplate.listKhoa();
+            } else {
                 khoas = khoaLopJDBCTemplate.listKhoa();
+                khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+            }
+            khoasDiff.addAll(khoas);
             Map<String, String> khoaMap = new HashMap();
-            for (Khoa i : khoas) {
+            for (Khoa i : khoasDiff) {
                 khoaMap.put(i.getMAKH(), i.getTENKH());
             }
             model.addAttribute("lops", lops);

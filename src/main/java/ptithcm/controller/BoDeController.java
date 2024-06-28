@@ -112,17 +112,17 @@ public class BoDeController {
             } else {
                 bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh, "TH123");
             }
+            model.addAttribute("mamh", mamh);
+            model.addAttribute("bodes", bodes);
         } else {
             throw new NullPointerException("Mã môn học không được để trống!");
         }
         List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+        model.addAttribute("monhocs", monhocs);
         Map<String, String> monhocMap = new HashMap();
         for (MonHoc i : monhocs) {
             monhocMap.put(i.getMAMH(), i.getTENMH());
         }
-        model.addAttribute("bodes", bodes);
-        model.addAttribute("monhocs", monhocs);
-        model.addAttribute("mamh", mamh);
         model.addAttribute("monhocMap", monhocMap);
 
         return "elements/bode/bode_list";

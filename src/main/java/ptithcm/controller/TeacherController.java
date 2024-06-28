@@ -56,8 +56,10 @@ public class TeacherController {
         khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
         List<GiaoVien> giaoViens = giaoVienJDBCTemplate.listGiaoVien();
         List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+        List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+        khoasDiff.addAll(khoas);
         Map<String, String> khoaMap = new HashMap();
-        for (Khoa i : khoas) {
+        for (Khoa i : khoasDiff) {
             khoaMap.put(i.getMAKH(), i.getTENKH());
         }
         session.setAttribute("historyAction", new HistoryAction());
@@ -95,10 +97,12 @@ public class TeacherController {
             throw new NullPointerException("Mã khoa không được để trống!");
         }
 
+        String current = map.get("current");
         List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
         Map<String, String> khoaMap = new HashMap();
-        String current = map.get("current");
-        for (Khoa i : khoas) {
+        List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+        khoasDiff.addAll(khoas);
+        for (Khoa i : khoasDiff) {
             khoaMap.put(i.getMAKH(), i.getTENKH());
         }
         model.addAttribute("idFix", new IDFix());
