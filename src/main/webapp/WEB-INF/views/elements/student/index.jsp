@@ -29,9 +29,9 @@
 			</select>
 		</div>
 		<div class="col-md-3">
-			<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm" aria-label="Search" style="width: 50%;">
-			</form>
+			<form role="search" action="student.htm" target="formSubmitFrame" class="d-flex gap-1">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, lớp..." 
+					aria-label="Search" style="width: 80%;" onchange="searchStudents(this.value)">
 		</div>
 		<div class="col-md-2">
 			<form action="student.htm" target="formSubmitFrame">
@@ -123,6 +123,7 @@
 </div>
 <script>
 	var currentLop;
+	var currentSearch;
 	
 	function loadStudents(value) {
 		fetch('student/get-sv-by-lop.htm', {
@@ -159,6 +160,29 @@
 				console.error('Error:', error);
 			});
 		currentLop = value;
+	}
+
+	function searchStudents(value) {
+		fetch('student/search.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					searchInput: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.student-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		currentSearch = value;
 	}
 	
 	function toggleAndLoad(value) {
@@ -207,6 +231,7 @@
 		if (!currentLop) currentLop = "all";
 		loadActionButton();
 		loadStudents(window.currentLop);
+		if(currentSearch) searchStudents(currentSearch);
 	}
 	
 	var addStudentModal = document.getElementById('add-student');
@@ -238,7 +263,7 @@
 		try {
 			// Check if the provided masv exists in the sinhVienArray by MASV
 			const masvExists = list.some(sinhVien => sinhVien.MASV.trim() === masv.trim());
-			if (!masvExists && masv != "" && masv) {
+			if (!masvExists && masv.trim() != "" && masv) {
 				element.classList.remove('is-invalid')
 				element.classList.add('is-valid')
 				if (submitForm !== null) {
@@ -261,7 +286,6 @@
 			window.alert("Lỗi: ", error)
 		}
 	}
-	
 	
 	// Fetch all the forms we want to apply custom Bootstrap validation styles to
 	var forms = document.querySelectorAll('.needs-validation')

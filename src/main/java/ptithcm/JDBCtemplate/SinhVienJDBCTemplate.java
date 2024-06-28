@@ -139,18 +139,6 @@ public class SinhVienJDBCTemplate {
         }
     }
 
-    // Find SinhVien by Name
-    public List<SinhVien> findSinhVien(String name) {
-        try {
-            String SQL = "SELECT * FROM SinhVien WHERE TEN LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new SinhVienMapper());
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            System.err.println("Sinh Vien - find Error: " + e.getMessage());
-            return null;
-        }
-    }
-
     public List<SinhVien> findSinhVienByLop(String malop) {
         try {
             String SQL = "SELECT * FROM SinhVien WHERE MALOP = ?";
@@ -179,5 +167,27 @@ public class SinhVienJDBCTemplate {
             res = null;
         }
         return res.get(0);
+    }
+
+    public boolean checkMasv(String masv){
+        try {
+            String SQL = "{call SP_KTSinhVienTonTai(?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { masv }, Boolean.class);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<SinhVien> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemSinhVien(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new SinhVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            return null;
+        }
     }
 }

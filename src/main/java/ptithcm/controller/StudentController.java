@@ -10,12 +10,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 
@@ -266,5 +268,29 @@ public class StudentController {
         model.addAttribute("canUndo", historyAction.canUndo());
         model.addAttribute("canRedo", historyAction.canRedo());
         return "elements/student/button_action_list";
+    }
+
+    @RequestMapping(value = "check-masv", method = RequestMethod.POST)
+    public boolean checkMasvExist(@RequestParam("masv") String masv) {
+        return sinhVienJDBCTemplate.checkMasv(masv);
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public String searchStudent(ModelMap model, HttpSession session, @RequestParam("searchInput") String searchInput) {
+        Gson gson = new Gson();
+        Map<String, String> map = new HashMap<String, String>();
+        map = gson.fromJson(searchInput, map.getClass());
+        searchInput = map.get("searchInput");
+        List<SinhVien> sinhViens = sinhVienJDBCTemplate.search(searchInput);
+        List<Lop> lops = khoaLopJDBCTemplate.listLop();
+        Map<String, String> lopMap = new HashMap();
+        for (Lop i : lops) {
+            lopMap.put(i.getMALOP(), i.getTENLOP());
+        }
+        model.addAttribute("sinhViens", sinhViens);
+        model.addAttribute("lops", lops);
+        model.addAttribute("lopMap", lopMap);
+
+        return "elements/student/student_list";
     }
 }
