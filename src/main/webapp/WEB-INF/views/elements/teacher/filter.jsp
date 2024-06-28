@@ -12,8 +12,9 @@
 	</select>
 </div>
 <div class="col-md-3">
-	<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
-		<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+	<form role="search" action="teacher.htm" target="formSubmitFrame">
+		<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, khoa..." 
+			aria-label="Search" style="width: 80%;" onchange="searchTeachers(this.value)">
 	</form>
 </div>
 <div class="col-md-2">

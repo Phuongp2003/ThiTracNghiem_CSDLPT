@@ -24,6 +24,7 @@ import ptithcm.bean.Khoa;
 import ptithcm.bean.KhoaAction;
 import ptithcm.bean.Lop;
 import ptithcm.bean.LopAction;
+import ptithcm.bean.SinhVien;
 
 @Controller
 @RequestMapping("department-class")
@@ -325,5 +326,24 @@ public class KhoaLopController {
         model.addAttribute("canUndo", historyAction.canUndo());
         model.addAttribute("canRedo", historyAction.canRedo());
         return "elements/khoalop/button_action_list";
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public String searchLop(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        Gson gson = new Gson();
+        Map<String, String> map = new HashMap<String, String>();
+        map = gson.fromJson(searchInput, map.getClass());
+        searchInput = map.get("searchInput");
+        List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+        List<Lop> lops = khoaLopJDBCTemplate.search(searchInput);
+        Map<String, String> khoaMap = new HashMap();
+        for (Khoa i : khoas) {
+            khoaMap.put(i.getMAKH(), i.getTENKH());
+        }
+        model.addAttribute("khoas", khoas);
+        model.addAttribute("lops", lops);
+        model.addAttribute("khoaMap", khoaMap);
+
+        return "elements/khoalop/lop_list";
     }
 }

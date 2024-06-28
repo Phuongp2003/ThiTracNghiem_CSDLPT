@@ -78,7 +78,8 @@
 
 <script>
 	var currentKhoa;
-	
+	var currentSearch;
+
 	function loadTeachers(value) {
 		fetch('teacher/get-gv-by-khoa.htm', {
 				method: 'POST',
@@ -103,6 +104,29 @@
 				console.error('Error:', error);
 			});
 		currentKhoa = value;
+	}
+
+	function searchTeachers(value) {
+		fetch('teacher/search.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					searchInput: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.teach-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		currentSearch = value;
 	}
 
 	function toggleAndLoad(value) {
@@ -151,6 +175,7 @@
 		if (!currentKhoa) currentKhoa = "all";
 		loadActionButton();
 		loadTeachers(window.currentKhoa);
+		if(currentSearch) searchTeachers(currentSearch);
 	}
 	
 	var addStudentModal = document.getElementById('add-teacher');

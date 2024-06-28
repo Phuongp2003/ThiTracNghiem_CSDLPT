@@ -9,9 +9,10 @@
 				<option value="2">Cơ sở 2</option>
 			</select>
 		</div>
-		<div class="col-md-6 col-sm-12 col-lg-6">
-			<form role="search" action="manage/category/search.htm">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+		<div class="col-md-4 col-sm-12 col-lg-4">
+			<form role="search" action="subject.htm" target="formSubmitFrame">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên..." 
+					aria-label="Search" style="width: 50%;" onchange="searchSubjects(this.value)">
 			</form>
 		</div>
 		<div class="">
@@ -41,49 +42,51 @@
 				<jsp:include page="./button_action_list.jsp" />
 			</div>
 			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
+
+			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#score-subject">
+				Xem bảng điểm môn học
+			</button>
+			<div class="modal fade" id="score-subject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form method="POST" action="score-list.htm" class="form-control">
+							<div class="mb-3">
+								<label>Lớp</label>
+								<select class="form-select" id="lop" name="malop">
+									<c:forEach var="l" items="${lops}">
+										<option value="${l.MALOP}">
+											${l.MALOP} (${l.TENLOP})</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label>Môn học</label>
+								<select class="form-select" id="monhoc" name="mamh">
+									<c:forEach var="mh" items="${monHocs}">
+										<option value="${mh.MAMH}">
+											${mh.MAMH} (${mh.TENMH})</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label>Lần thi</label>
+								<input type="number" name="lanthi" class="form-control" max="2" min="1">
+							</div>
+							<button type="submit" class="btn btn-primary">In bảng điểm</button>
+						</form>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="subject-list">
 		<jsp:include page="./subject_list.jsp" />
 	</div>
-	
-	<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#score-subject">
-		Xem bảng điểm môn học
-	</button>
-	<div class="modal fade" id="score-subject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<form method="POST" action="score-list.htm" class="form-control">
-					<div class="mb-3">
-						<label>Lớp</label>
-						<select class="form-select" id="lop" name="malop">
-							<c:forEach var="l" items="${lops}">
-								<option value="${l.MALOP}">
-									${l.MALOP} (${l.TENLOP})</option>
-							</c:forEach>
-						</select>
-					</div>
-					<div class="mb-3">
-						<label>Môn học</label>
-						<select class="form-select" id="monhoc" name="mamh">
-							<c:forEach var="mh" items="${monHocs}">
-								<option value="${mh.MAMH}">
-									${mh.MAMH} (${mh.TENMH})</option>
-							</c:forEach>
-						</select>
-					</div>
-					<div class="mb-3">
-						<label>Lần thi</label>
-						<input type="number" name="lanthi" class="form-control" max="2" min="1">
-					</div>
-					<button type="submit" class="btn btn-primary">In bảng điểm</button>
-				</form>
-			</div>
-		</div>
-	</div>
+
 </div>
 
 <script>
+	var currentSearch;
 	function loadSubjects() {
 		fetch('subject/load-subject.htm', {
 				method: 'POST',
@@ -97,6 +100,29 @@
 			.catch(error => {
 				console.error('Error:', error);
 			});
+	}
+
+	function searchSubjects(value) {
+		fetch('subject/search.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					searchInput: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.subject-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		currentSearch = value;
 	}
 	
 	function loadActionButton() {
@@ -121,5 +147,6 @@
 	function refreshData() {
 		loadActionButton();
 		loadSubjects();
+		if(currentSearch) searchSubjects(currentSearch);
 	}
 </script>

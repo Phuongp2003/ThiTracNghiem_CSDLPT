@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ptithcm.bean.Khoa;
 import ptithcm.bean.Lop;
 import ptithcm.bean.MonHoc;
+import ptithcm.bean.SinhVien;
 import ptithcm.mapper.KhoaMapper;
 import ptithcm.mapper.LopMapper;
 import ptithcm.mapper.SinhVienMapper;
@@ -58,17 +59,6 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
-    public List<Khoa> findKhoa(String name) {
-        try {
-            String SQL = "SELECT * FROM Khoa WHERE TENKH LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new KhoaMapper());
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            System.err.println("Khoa - find Error: " + e.getMessage());
-            return null;
-        }
-    }
-
     public Lop getLop(String malop) {
         String SQL = "SELECT * FROM Lop WHERE MALOP = ?";
         IDFix.fix(malop, 8);
@@ -97,17 +87,6 @@ public class KhoaLopJDBCTemplate {
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Lop - list Error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public List<Lop> findLop(String name) {
-        try {
-            String SQL = "SELECT * FROM Lop WHERE TENLOP LIKE ?";
-            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new LopMapper());
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            System.err.println("Lop - find Error: " + e.getMessage());
             return null;
         }
     }
@@ -186,6 +165,17 @@ public class KhoaLopJDBCTemplate {
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Lop - delete Error: " + e.getMessage());
+        }
+    }
+
+    public List<Lop> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemLop(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new LopMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Lop - find Error: " + e.getMessage());
+            return null;
         }
     }
 }

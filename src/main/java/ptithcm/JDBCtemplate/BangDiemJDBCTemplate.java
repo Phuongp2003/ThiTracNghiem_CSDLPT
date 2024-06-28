@@ -29,7 +29,8 @@ public class BangDiemJDBCTemplate {
                         List<String> list = new ArrayList<>();
                         list.add(rs.getString("MASV"));
                         list.add(rs.getString("HOTEN"));
-                        list.add(rs.getString(""));
+                        list.add(rs.getString("DIEM"));
+                        list.add(rs.getString("DIEMCHU"));
                         return list;
                     });
         } catch (DataAccessException e) {

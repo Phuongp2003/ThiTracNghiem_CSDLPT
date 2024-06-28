@@ -71,8 +71,9 @@ public class GiaoVienDKJDBCTemplate {
                         list.add(rs.getString("TENMH"));
                         list.add(rs.getString("HOTEN"));
                         list.add(rs.getString("SOCAUTHI"));
-                        list.add(rs.getString("NGAYTHI"));
+                        list.add(rs.getDate("NGAYTHI").toString());
                         list.add(rs.getString("DATHI"));
+                        list.add(rs.getString("MACS"));
                         return list;
                     });
         } catch (DataAccessException e) {

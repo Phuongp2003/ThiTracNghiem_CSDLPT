@@ -29,20 +29,19 @@
 			</select>
 		</div>
 		<div class="col-md-4">
-			<form role="search" action="manage/category/search.htm">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+			<form role="search" action="bode.htm" target="formSubmitFrame">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm..." 
+					aria-label="Search" style="width: 60%;" onchange="searchBoDes(this.value)">
 			</form>
 		</div>
 		<div class="col-md-2">
-			<form action="bode.htm">
-				<select class="form-select chon-monhoc" id="monhoc" name="mamh" onchange="loadBoDes(this.value)">
-					<option value="all" ${mamh=="all" ? 'selected' : '' }>Môn học: Tất cả</option>
-					<c:forEach var="mh" items="${monhocs}">
-						<option value="${mh.MAMH}" ${mh.MAMH==mamh ? 'selected' : '' }>
-							${mh.MAMH} (${mh.TENMH})</option>
-					</c:forEach>
-				</select>
-			</form>
+			<select class="form-select chon-monhoc" id="monhoc" name="mamh" onchange="loadBoDes(this.value)">
+				<option value="all" ${mamh=="all" ? 'selected' : '' }>Môn học: Tất cả</option>
+				<c:forEach var="mh" items="${monhocs}">
+					<option value="${mh.MAMH}" ${mh.MAMH==mamh ? 'selected' : '' }>
+						${mh.MAMH} (${mh.TENMH})</option>
+				</c:forEach>
+			</select>
 		</div>
 		<div class="">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-bode">
@@ -141,6 +140,7 @@
 </div>
 <script>
 	var currentMon;
+	var currentSearch;
 	function loadBoDes(value) {
 		fetch('bode/get-bode-by-monhoc.htm', {
 				method: 'POST',
@@ -175,6 +175,29 @@
 		console.log("🚀 ~ loadMons ~ currentMon:", currentMon)
 	}
 	
+	function searchBoDes(value) {
+		fetch('bode/search.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					searchInput: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.bode-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		currentSearch = value;
+	}
+
 	function toggleAndLoad(value) {
 		const element = event.target.closest('.is-action');
 		element.classList.toggle('selected');
@@ -221,6 +244,7 @@
 		if (!currentMon) currentMon = "all";
 		loadActionButton();
 		loadBoDes(window.currentMon);
+		if(currentSearch) searchBoDes(currentSearch);
 	}
 
 	var addBodeModal = document.getElementById('add-bode');

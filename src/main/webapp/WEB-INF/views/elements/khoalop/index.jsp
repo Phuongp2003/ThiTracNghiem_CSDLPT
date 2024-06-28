@@ -24,8 +24,9 @@
 			</select>
 		</div>
 		<div class="col-md-3 col-sm-12 col-lg-3">
-			<form role="search" action="manage/category/search.htm">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
+			<form role="search" action="department-class.htm" target="formSubmitFrame">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, khoa..." 
+					aria-label="Search" style="width: 80%;" onchange="searchClasses(this.value)">
 			</form>
 		</div>
 		<div class="khoa-select col-md-2">
@@ -74,11 +75,7 @@
 		<jsp:include page="./lop_list.jsp" />
 	</div>
 	<div class="filter-wrapper d-flex justify-content-between mt-4 mb-2">
-		<div class="col-md-6 col-sm-12 col-lg-6">
-			<form role="search" action="manage/category/search.htm">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
-			</form>
-		</div>
+		<div></div>
 		<div class="">
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
 				Thêm khoa
@@ -110,6 +107,7 @@
 </div>
 <script>
 	var currentKhoa;
+	var currentSearch;
 	
 	function loadClasses(value) {
 		fetch('department-class/get-lop-by-khoa.htm', {
@@ -143,6 +141,29 @@
 			});
 		currentKhoa = value;
 		console.log("🚀 ~ loadLops ~ currentKhoa:", currentKhoa)
+	}
+
+	function searchClasses(value) {
+		fetch('department-class/search.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					searchInput: value
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.lop-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		currentSearch = value;
 	}
 	
 	function loadRfDepartments() {
@@ -225,7 +246,7 @@
 		loadActionButton();
 		loadClasses(window.currentKhoa);
 		loadDepartments();
-		// loadNameDepartments();
+		if(currentSearch) searchClasses(currentSearch);
 	}
 	
 	var addClassModal = document.getElementById('add-class');

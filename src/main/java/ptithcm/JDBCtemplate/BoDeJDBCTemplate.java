@@ -10,7 +10,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.BoDe;
+import ptithcm.bean.SinhVien;
 import ptithcm.mapper.BoDeMapper;
+import ptithcm.mapper.SinhVienMapper;
 
 @Service
 public class BoDeJDBCTemplate {
@@ -71,28 +73,6 @@ public class BoDeJDBCTemplate {
         }
     }
 
-    public List<BoDe> findBoDeByTrinhDo(String name, String mamh, String magv) {
-        try {
-            String SQL = "SELECT * FROM BoDe WHERE TRINHDO = ? AND MAMH = ? AND MAGV = ?";
-            return jdbcTemplate.query(SQL, new Object[] { name, mamh, magv }, new BoDeMapper());
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            System.err.println("Bo De - find Error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public List<BoDe> findBoDeByNoiDung(String name, String mamh, String magv) {
-        try {
-            String SQL = "SELECT * FROM BoDe WHERE NOIDUNG LIKE ? AND MAMH = ? AND MAGV = ?";
-            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%", mamh, magv }, new BoDeMapper());
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            System.err.println("Bo De - find Error: " + e.getMessage());
-            return null;
-        }
-    }
-
     public void create(BoDe bode) {
         try {
             String SQL = "INSERT INTO BoDe (CAUHOI, MAMH, TRINHDO, NOIDUNG, A, B, C, D, DAP_AN, MAGV) "
@@ -143,6 +123,17 @@ public class BoDeJDBCTemplate {
             e.printStackTrace();
             System.err.println("Bo De - Max cau hoi Error: " + e.getMessage());
             return 0;
+        }
+    }
+
+    public List<BoDe> search(String input){
+        try {
+            String SQL = "{call SP_TimKiemBoDe(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - find Error: " + e.getMessage());
+            return null;
         }
     }
 }

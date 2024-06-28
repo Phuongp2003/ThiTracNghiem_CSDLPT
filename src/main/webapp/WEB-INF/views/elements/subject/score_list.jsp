@@ -17,7 +17,7 @@
 					<td>${b[0]}</td>
 					<td>${b[1]}</td>
 					<td>${b[2]}</td>
-					<td></td>
+					<td>${b[3]}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

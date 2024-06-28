@@ -73,6 +73,9 @@ public class GiaoVienAction implements Action<GiaoVien> {
             case "edit":
                 revertType = "edit";
                 rvAction = new GiaoVienAction(revertType, oldData, data);
+            case "move":
+                revertType = "move";
+                rvAction = new GiaoVienAction(revertType, oldData, data);
                 break;
             default:
                 return null;
@@ -93,6 +96,8 @@ public class GiaoVienAction implements Action<GiaoVien> {
                     break;
                 case "edit":
                     cmd.update(data.getMAGV(), data);
+                case "move":
+                    cmd.move(data.getMAKH(), data.getMAGV(), data);
                     break;
                 default:
                     break;

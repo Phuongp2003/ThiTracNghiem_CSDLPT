@@ -67,6 +67,30 @@
 							</div>
 						</div>
 					</div>
+
+					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-teacher-${gv.MAGV.trim()}">
+						Chuyển khoa
+					</button>
+					<div class="modal fade" id="move-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<form method="POST" action="teacher/move-teacher.htm" class="form-control" target="formSubmitFrame">
+									<input type="hidden" name="magv" value="${gv.MAGV}" />
+									<div class="mb-3">
+										<label>Khoa</label>
+										<select class="form-select" name="makh">
+											<c:forEach var="k" items="${khoas}">
+												<option value="${k.MAKH}">
+													${k.MAKH} (${k.TENKH})</option>
+											</c:forEach>
+										</select>
+									</div>
+									<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+									<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+								</form>
+							</div>
+						</div>
+					</div>
 				</td>
 			</tr>
 		</c:forEach>

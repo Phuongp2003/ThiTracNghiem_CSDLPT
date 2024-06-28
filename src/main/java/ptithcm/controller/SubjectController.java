@@ -24,6 +24,7 @@ import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Lop;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.MonHocAction;
+import ptithcm.bean.SinhVien;
 
 @Controller
 @RequestMapping("subject")
@@ -195,6 +196,20 @@ public class SubjectController {
         model.addAttribute("canUndo", historyAction.canUndo());
         model.addAttribute("canRedo", historyAction.canRedo());
         return "elements/subject/button_action_list";
+    }
+
+    @RequestMapping(value = "search", method = RequestMethod.POST)
+    public String searchSubjects(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        Gson gson = new Gson();
+        Map<String, String> map = new HashMap<String, String>();
+        map = gson.fromJson(searchInput, map.getClass());
+        searchInput = map.get("searchInput");
+        List<MonHoc> monHocs = monHocJDBCTemplate.search(searchInput);
+        List<Lop> lops = khoaLopJDBCTemplate.listLop();
+        model.addAttribute("monHocs", monHocs);
+        model.addAttribute("lops", lops);
+
+        return "elements/subject/subject_list";
     }
 
     @RequestMapping(value = "score-subject", method = RequestMethod.POST)
