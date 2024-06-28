@@ -46,8 +46,9 @@
 			<div class="form-floating">
 				<select class="form-select" id="site" name="site" required="true">
 					<option value="">Chọn cơ sở</option>
-					<option value="1">CS1</option>
-					<option value="2">CS2</option>
+					<c:forEach var="cs" items="${sites}">
+						<option value="${cs.tenServer}">${cs.tenCS}</option>
+					</c:forEach>
 				</select>
 				<label for="floatingInput">Cơ sở</label>
 			</div>

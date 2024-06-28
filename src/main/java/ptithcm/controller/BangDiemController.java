@@ -49,6 +49,7 @@ public class BangDiemController {
         } else {
             model.addAttribute("message", "Không có bảng điểm nào!");
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/score_subject";
     }
 }

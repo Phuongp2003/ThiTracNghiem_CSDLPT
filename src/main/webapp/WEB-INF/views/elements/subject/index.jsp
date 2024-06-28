@@ -3,16 +3,19 @@
 
 <div class="subject container-fluid" style="width:85%;">
 	<div class="filter-wrapper d-flex justify-content-between mb-2">
-		<div class="d-flex col-md-2">
-			<select class="form-select" id="site" name="site">
-				<option value="1">Cơ sở 1</option>
-				<option value="2">Cơ sở 2</option>
-			</select>
-		</div>
 		<div class="col-md-4 col-sm-12 col-lg-4">
 			<form role="search" action="subject.htm" target="formSubmitFrame">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên..." 
 					aria-label="Search" style="width: 50%;" onchange="searchSubjects(this.value)">
+		<c:if test="${role_al == 'TRUONG'}">
+			<div class="d-flex col-md-2">
+				<select class="form-select" id="site" name="site" onchange="checkSite(this.value)">
+					<c:forEach var="cs" items="${sites}">
+						<option value="${currentSite==cs.tenServer ? 'current' : 'diff' }" ${currentSite==cs.tenServer ? 'selected' : '' }>${cs.tenCS}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</c:if>
 			</form>
 		</div>
 		<div class="">
@@ -87,10 +90,21 @@
 
 <script>
 	var currentSearch;
+	var isDiffSite = false;
+	
+	function checkSite(value) {
+		if (value == 'diff') isDiffSite = true;
+		else isDiffSite = false;
+		refreshData();
+	}
+	
 	function loadSubjects() {
+		var isDiff = isDiffSite ? 'true' : 'false';
 		fetch('subject/load-subject.htm', {
 				method: 'POST',
-				body: JSON.stringify({})
+				body: JSON.stringify({
+					diff: isDiff
+				})
 			})
 			.then(response => response.text())
 			.then(data => {

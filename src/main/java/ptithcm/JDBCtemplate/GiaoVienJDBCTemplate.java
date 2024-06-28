@@ -82,6 +82,17 @@ public class GiaoVienJDBCTemplate {
         }
     }
 
+    public List<GiaoVien> listGiaoVienDiffSite() {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.GiaoVien";
+            return jdbcTemplate.query(SQL, new GiaoVienMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Giao Vien - list error: " + e.getMessage());
+            return null;
+        }
+    }
+
     // Update GiaoVien (input: Id, GiaoVien)
     public void update(String magv, GiaoVien giaoVien) {
         try {
@@ -122,6 +133,17 @@ public class GiaoVienJDBCTemplate {
     public List<GiaoVien> findTeacherByKhoa(String makhoa) {
         try {
             String SQL = "SELECT * FROM GiaoVien WHERE MAKH = ?";
+            return jdbcTemplate.query(SQL, new Object[] { makhoa }, new GiaoVienMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Giao Vien - find by khoa Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<GiaoVien> findTeacherByKhoaDiffSite(String makhoa) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.GiaoVien WHERE MAKH = ?";
             return jdbcTemplate.query(SQL, new Object[] { makhoa }, new GiaoVienMapper());
         } catch (Exception e) {
             e.printStackTrace();

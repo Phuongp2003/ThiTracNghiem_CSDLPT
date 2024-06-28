@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
+import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
@@ -34,6 +35,9 @@ public class KhoaLopController {
 
     @Autowired
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
+
+    @Autowired
+    UtilJDBCTemplate utilJDBCTemplate;
 
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
@@ -54,12 +58,17 @@ public class KhoaLopController {
             for (Khoa i : khoas) {
                 khoaMap.put(i.getMAKH(), i.getTENKH());
             }
+
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
             model.addAttribute("khoas", khoas);
             model.addAttribute("lops", lops);
             model.addAttribute("khoaMap", khoaMap);
         } else {
             model.addAttribute("message", "Không có khoa nào!");
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/khoalop";
     }
 
@@ -73,16 +82,27 @@ public class KhoaLopController {
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
             String makh = map.get("makh");
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
             if (makh != null) {
                 if ("all".equals(makh)) {
-                    lops = khoaLopJDBCTemplate.listLop();
+                    if (diff)
+                        lops = khoaLopJDBCTemplate.listLopDiffSite();
+                    else
+                        lops = khoaLopJDBCTemplate.listLop();
                 } else {
-                    lops = khoaLopJDBCTemplate.findLopByKhoa(makh);
+                    if (diff)
+                        lops = khoaLopJDBCTemplate.findLopByKhoaDiffSite(makh);
+                    else
+                        lops = khoaLopJDBCTemplate.findLopByKhoa(makh);
                 }
             } else {
                 throw new NullPointerException("Mã khoa không được để trống!");
             }
-            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            List<Khoa> khoas = null;
+            if (diff)
+                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+            else
+                khoas = khoaLopJDBCTemplate.listKhoa();
             Map<String, String> khoaMap = new HashMap();
             for (Khoa i : khoas) {
                 khoaMap.put(i.getMAKH(), i.getTENKH());
@@ -106,7 +126,12 @@ public class KhoaLopController {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
-            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
+            List<Khoa> khoas = null;
+            if (diff)
+                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+            else
+                khoas = khoaLopJDBCTemplate.listKhoa();
             model.addAttribute("khoas", khoas);
         } else {
             model.addAttribute("message", "Không có khoa nào!");
@@ -123,7 +148,12 @@ public class KhoaLopController {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
-            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
+            List<Khoa> khoas = null;
+            if (diff)
+                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+            else
+                khoas = khoaLopJDBCTemplate.listKhoa();
             model.addAttribute("khoas", khoas);
         } else {
             model.addAttribute("message", "Không có khoa nào!");

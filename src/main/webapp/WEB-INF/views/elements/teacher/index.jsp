@@ -18,24 +18,8 @@
 		<jsp:include page="./list.jsp" />
 	</div>
 	<div class="khoa-list mt-4">
-		<table class="table khoa-table">
-			<thead>
-				<tr>
-					<th scope="col">Mã khoa</th>
-            		<th scope="col">Tên khoa</th>
-            		<th scope="col">Cơ sở</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="k" items="${khoas}">
-					<tr class="is-action sl-${k.MAKH}" onclick="toggleAndLoad('${k.MAKH}')">
-						<td>${k.MAKH}</td>
-						<td>${k.TENKH}</td>
-						<td>${k.MACS}</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+		<jsp:include page="./khoa_table.jsp" />
+		
 	</div>
 </div>
 
@@ -61,12 +45,8 @@
 				</div>
 				<div class="mb-3">
 					<label>Khoa: </label>
-					<select class="form-select" id="khoa" name="makhoa">
-						<c:forEach var="k" items="${khoas}">
-							<option value="${k.MAKH}">
-								${k.getFullName()}
-							</option>
-						</c:forEach>
+					<select class="form-select khoa-list-o" id="khoa" name="makhoa">
+						<jsp:include page="./khoa_option.jsp" />
 					</select>
 				</div>
 				<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
@@ -80,11 +60,21 @@
 	var currentKhoa;
 	var currentSearch;
 
+	var isDiffSite = false;
+	
+	function checkSite(value) {
+		if (value == 'diff') isDiffSite = true;
+		else isDiffSite = false;
+		refreshData();
+	}
+	
 	function loadTeachers(value) {
+		var isDiff = isDiffSite ? 'true' : 'false';
 		fetch('teacher/get-gv-by-khoa.htm', {
 				method: 'POST',
 				body: JSON.stringify({
-					makhoa: value
+					makhoa: value,
+					diff: isDiff
 				})
 			})
 			.then(response => {
@@ -105,8 +95,8 @@
 			});
 		currentKhoa = value;
 	}
-
-	function searchTeachers(value) {
+  
+  function searchTeachers(value) {
 		fetch('teacher/search.htm', {
 				method: 'POST',
 				body: JSON.stringify({
@@ -128,7 +118,51 @@
 			});
 		currentSearch = value;
 	}
-
+	
+	function loadKhoa(value) {
+		var isDiff = isDiffSite ? 'true' : 'false';
+		fetch('teacher/load-khoa-o.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					current: value,
+					diff: isDiff
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.chon-khoa');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		fetch('teacher/load-khoa-t.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					current: value,
+					diff: isDiff
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.khoa-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+	}
+	
 	function toggleAndLoad(value) {
 		const element = event.target.closest('.is-action');
 		element.classList.toggle('selected');
@@ -176,6 +210,7 @@
 		loadActionButton();
 		loadTeachers(window.currentKhoa);
 		if(currentSearch) searchTeachers(currentSearch);
+		loadKhoa(window.currentKhoa);
 	}
 	
 	var addStudentModal = document.getElementById('add-teacher');

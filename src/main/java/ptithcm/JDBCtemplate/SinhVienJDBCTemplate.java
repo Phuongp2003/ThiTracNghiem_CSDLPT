@@ -86,6 +86,31 @@ public class SinhVienJDBCTemplate {
         return res;
     }
 
+    public SinhVien getStudentDiffSite(String masv) {
+        String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.SinhVien WHERE MASV = ?";
+        IDFix.fix(masv, 8);
+        SinhVien res;
+        try {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv }, (ResultSet rs, int rowNum) -> {
+                SinhVien sv = new SinhVien();
+                sv.setMASV(rs.getString("MASV"));
+                sv.setHO(rs.getString("HO"));
+                sv.setTEN(rs.getString("TEN"));
+                sv.setNGAYSINH(rs.getDate("NGAYSINH"));
+                sv.setDIACHI(rs.getString("DIACHI"));
+                sv.setMALOP(rs.getString("MALOP"));
+                sv.setMATKHAU(rs.getString("MATKHAU"));
+                return sv;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - select Error: " + e.getMessage());
+            res = null;
+        }
+
+        return res;
+    }
+
     // Get all SinhVien
     public List<SinhVien> listSinhVien() {
         tryGetSources();
@@ -97,6 +122,17 @@ public class SinhVienJDBCTemplate {
             System.err.println("Sinh Vien - list Error: " + e.getMessage());
             return null;
         } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - list Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<SinhVien> listSinhVienDiffSite() {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.SinhVien";
+            return jdbcTemplate.query(SQL, new SinhVienMapper());
+        } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - list Error: " + e.getMessage());
             return null;
@@ -150,6 +186,17 @@ public class SinhVienJDBCTemplate {
         }
     }
 
+    public List<SinhVien> findSinhVienByLopDiffSite(String malop) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.SinhVien WHERE MALOP = ?";
+            return jdbcTemplate.query(SQL, new Object[] { malop }, new SinhVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     // Login SinhVien by Procedure
     public List<String> login(String masv, String matkhau) {
         String SQL = "{call SP_DangNhapSinhVien(?, ?)}";
@@ -169,7 +216,7 @@ public class SinhVienJDBCTemplate {
         return res.get(0);
     }
 
-    public boolean checkMasv(String masv){
+    public boolean checkMasv(String masv) {
         try {
             String SQL = "{call SP_KTSinhVienTonTai(?)}";
             return jdbcTemplate.queryForObject(SQL, new Object[] { masv }, Boolean.class);
@@ -180,9 +227,20 @@ public class SinhVienJDBCTemplate {
         }
     }
 
-    public List<SinhVien> search(String input){
+    public List<SinhVien> search(String input) {
         try {
             String SQL = "{call SP_TimKiemSinhVien(?)}";
+            return jdbcTemplate.query(SQL, new Object[] { input }, new SinhVienMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<SinhVien> searchDiffSite(String input) {
+        try {
+            String SQL = "{call LINK1.TN_CSDLPT.DBO.SP_TimKiemSinhVien(?)}";
             return jdbcTemplate.query(SQL, new Object[] { input }, new SinhVienMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
