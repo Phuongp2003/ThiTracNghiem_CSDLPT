@@ -44,16 +44,16 @@
   - [x] Sửa
   - [x] Phục hồi
   - [x] reload
-- [ ] Nhập đề (Giảng viên only), giảng viên chỉ thấy và sửa câu hỏi của mình (bảng BoDe)
+- [X] Nhập đề (Giảng viên only), giảng viên chỉ thấy và sửa câu hỏi của mình (bảng BoDe)
   - [x] Thêm
-  - [ ] Xóa
-  - [ ] Sửa
-  - [ ] Phục hồi
-  - [ ] reload
-- [ ] Chuẩn bị thi
+  - [X] Xóa
+  - [X] Sửa
+  - [X] Phục hồi
+  - [X] reload
+- [X] Chuẩn bị thi
   - [X] Nhân viên nhập tên lớp, môn sẽ thi, trình độ, lần thi, số câu thi, ngày thì, thời gian thi(phút), ghi vào GiangVien_DangKy
   - [ ] Khi đăng ký thi cần kiểm tra ràng buộc
-- [ ] Thi
+- [X] Thi
   - [x] Phần thông tin thí sinh: Mã lớp, tên lớp, họ tên
   - [x] Phần bài thi: 
     - [x] Môn thi, ngày thi, số lần thi
@@ -68,14 +68,14 @@
     - [x] Điểm cao nhât là 10, số điểm mỗi câu là như nhau (trung bình cộng go brr)
     - [x] Cho user chọn câu đã thi ở lần thi trước
     - [x] Hết thời gian quy định => buộc kết thúc bài thi
-    - [ ] Thông báo điểm cho sinh viên và lưu vào BangDiem
-- [ ] Xem kết quả
-  - [ ] In ra số câu đã thi dựa trên các thông tin Mã sinh viên, môn học, lần thi
-  - [ ] Kết xuất bắt buộc
+    - [X] Thông báo điểm cho sinh viên và lưu vào BangDiem
+- [X] Xem kết quả
+  - [X] In ra số câu đã thi dựa trên các thông tin Mã sinh viên, môn học, lần thi
+  - [X] Kết xuất bắt buộc
   ![alt text](.github/src/imgs/image.png)
-- [ ] Bảng điểm môn học
-  - [ ] Giáo viên chọn tên lớp, tên môn học, lần thi: chương trình in ra bảng điểm hết môn của lớp đã chọn
-  - [ ] Mẫu bảng: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
+- [X] Bảng điểm môn học
+  - [X] Giáo viên chọn tên lớp, tên môn học, lần thi: chương trình in ra bảng điểm hết môn của lớp đã chọn
+  - [X] Mẫu bảng: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
 - [ ] Báo cáo DANH SÁCH ĐĂNG KÝ THI TRẮC NGHIỆM CƠ SỞ X
   - [ ] Xem danh sách đăng ký thi trắc nghiệm của cả 2 cơ sở @tungay đến @denngay; In theo từng cơ sở, in theo thứ tự tăng dần của ngày đăng ký ***(xử lý job)***
   - [ ] Mẫu: 
@@ -98,8 +98,8 @@
 - [x] Xem thông tin thí sinh dự thi
 - [x] ***Lọc danh sách câu hỏi phù hợp với thí sinh tham gia dự thi***
 - [x] ***Chọn câu hỏi từ danh sách đã lọc để tạo đề thi***
-- [ ] Tạo / sửa bảng tạm (local) lưu kết quả thi của sinh viên (theo 2 cách, mỗi 1 khoảng thời gian khi thi, hoặc ngay khi thí sinh chọn/đổi đáp án của 1 câu hỏi)
-- [ ] Lưu kết quả cuối cùng vào BangDiem
+- [X] Tạo / sửa bảng tạm (local) lưu kết quả thi của sinh viên (theo 2 cách, mỗi 1 khoảng thời gian khi thi, hoặc ngay khi thí sinh chọn/đổi đáp án của 1 câu hỏi)
+- [X] Lưu kết quả cuối cùng vào BangDiem
 - [X] Show kết quả bài thi, output: STT, Câu số (trong đề), Nội dung, Các chọn lựa, đáp án (lựa chọn sính xác), Đã chọn (đáp án thí sinh chọn)
 - [X] Bảng điểm môn học của lớp, output: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
 - [X] Báo cáo danh sách đăng ký thi
