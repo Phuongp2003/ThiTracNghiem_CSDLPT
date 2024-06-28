@@ -118,6 +118,7 @@ public class KhoaLopController {
             model.addAttribute("khoas", khoas);
             model.addAttribute("makh", makh);
             model.addAttribute("khoaMap", khoaMap);
+            model.addAttribute("role_al", currentConnection.getRoleAlias());
         } else {
             model.addAttribute("message", "Không có khoa nào!");
         }
@@ -140,6 +141,7 @@ public class KhoaLopController {
             else
                 khoas = khoaLopJDBCTemplate.listKhoa();
             model.addAttribute("khoas", khoas);
+            model.addAttribute("role_al", currentConnection.getRoleAlias());
         } else {
             model.addAttribute("message", "Không có khoa nào!");
         }
@@ -380,6 +382,7 @@ public class KhoaLopController {
         model.addAttribute("khoas", khoas);
         model.addAttribute("lops", lops);
         model.addAttribute("khoaMap", khoaMap);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/khoalop/lop_list";
     }

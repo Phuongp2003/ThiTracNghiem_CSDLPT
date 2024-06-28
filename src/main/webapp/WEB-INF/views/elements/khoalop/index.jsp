@@ -40,37 +40,42 @@
 			</form>
 		</div>
 		<div class="">
-			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-class">
-				Thêm lớp
-			</button>
-			<div class="modal fade" id="add-class" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control" target="formSubmitFrame">
-							<div class="mb-3">
-								<label>Mã lớp: </label>
-								<input name="malop" class="form-control" required />
+			<c:choose>
+				<c:when test="${role_al == 'TRUONG'}"></c:when>
+				<c:otherwise>
+					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-class">
+						Thêm lớp
+					</button>
+					<div class="modal fade" id="add-class" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control" target="formSubmitFrame">
+									<div class="mb-3">
+										<label>Mã lớp: </label>
+										<input name="malop" class="form-control" required />
+									</div>
+									<div class="mb-3">
+										<label>Tên lớp: </label>
+										<input name="tenlop" class="form-control" />
+									</div>
+									<select class="form-select" id="khoa" name="makh">
+										<c:forEach var="k" items="${khoas}">
+											<option value="${k.MAKH}">
+												${k.MAKH} (${k.TENKH})</option>
+										</c:forEach>
+									</select>
+									<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+									<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+								</form>
 							</div>
-							<div class="mb-3">
-								<label>Tên lớp: </label>
-								<input name="tenlop" class="form-control" />
-							</div>
-							<select class="form-select" id="khoa" name="makh">
-								<c:forEach var="k" items="${khoas}">
-									<option value="${k.MAKH}">
-										${k.MAKH} (${k.TENKH})</option>
-								</c:forEach>
-							</select>
-							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
-							<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
-						</form>
+						</div>
 					</div>
-				</div>
-			</div>
+					<div class="action-btn-group d-inline">
+						<jsp:include page="./button_action_list.jsp" />
+					</div>
+				</c:otherwise>
+			</c:choose>
 			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
-			<div class="action-btn-group d-inline">
-				<jsp:include page="./button_action_list.jsp" />
-			</div>
 			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
 		</div>
 	</div>
@@ -80,27 +85,29 @@
 	<div class="filter-wrapper d-flex justify-content-between mt-4 mb-2">
 		<div></div>
 		<div class="">
-			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
-				Thêm khoa
-			</button>
-			<div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control" target="formSubmitFrame">
-							<div class="mb-3">
-								<label>Mã khoa: </label>
-								<input name="makh" class="form-control" required />
-							</div>
-							<div class="mb-3">
-								<label>Tên khoa: </label>
-								<input name="tenkh" class="form-control" />
-							</div>
-							<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
-							<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
-						</form>
+			<c:if test="${role_al != 'TRUONG'}">
+				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
+					Thêm khoa
+				</button>
+				<div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control" target="formSubmitFrame">
+								<div class="mb-3">
+									<label>Mã khoa: </label>
+									<input name="makh" class="form-control" required />
+								</div>
+								<div class="mb-3">
+									<label>Tên khoa: </label>
+									<input name="tenkh" class="form-control" />
+								</div>
+								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+							</form>
+						</div>
 					</div>
 				</div>
-			</div>
+			</c:if>
 			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
 		</div>
 	</div>

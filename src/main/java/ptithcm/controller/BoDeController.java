@@ -57,7 +57,11 @@ public class BoDeController {
             model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
             model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
-            List<BoDe> bodes = boDeJDBCTemplate.listBoDe("TH123");
+            List<BoDe> bodes;
+            if (currentConnection.getRoleAlias().equals("TRUONG"))
+                bodes = boDeJDBCTemplate.listAllBoDe();
+            else
+                bodes = boDeJDBCTemplate.listBoDe("TH123");
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
 
             Map<String, String> monhocMap = new HashMap();
@@ -124,6 +128,7 @@ public class BoDeController {
             monhocMap.put(i.getMAMH(), i.getTENMH());
         }
         model.addAttribute("monhocMap", monhocMap);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/bode/bode_list";
     }
@@ -279,6 +284,7 @@ public class BoDeController {
         model.addAttribute("bodes", bodes);
         model.addAttribute("monhocs", monhocs);
         model.addAttribute("monhocMap", monhocMap);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/bode/bode_list";
     }

@@ -102,13 +102,13 @@ public class UserController {
         try {
             // Check site
             switch (site) {
-                case "NPHUONG\\MSSQLSERVER_TN1":
+                case "DESKTOP-SVEFPRH\\MSSQLSERVER_TN1":
                     currentConnection.setSite(firstSite);
                     break;
-                case "NPHUONG\\MSSQLSERVER_TN2":
+                case "DESKTOP-SVEFPRH\\MSSQLSERVER_TN2":
                     currentConnection.setSite(secondSite);
                     break;
-                case "NPHUONG\\MSSQLSERVER_TN3":
+                case "DESKTOP-SVEFPRH\\MSSQLSERVER_TN3":
                     currentConnection.setSite(reportSite);
                     break;
                 default:

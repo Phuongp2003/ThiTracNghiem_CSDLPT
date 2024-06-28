@@ -35,6 +35,9 @@ import ptithcm.bean.SinhVien;
 @RequestMapping("student")
 public class StudentController {
     @Autowired
+    private GlobalVariable currentConnection;
+    
+    @Autowired
     SinhVienJDBCTemplate sinhVienJDBCTemplate;
 
     @Autowired
@@ -121,6 +124,7 @@ public class StudentController {
             model.addAttribute("lops", lops);
             model.addAttribute("malop", malop);
             model.addAttribute("lopMap", lopMap);
+            model.addAttribute("role_al", currentConnection.getRoleAlias());
         } else {
             model.addAttribute("message", "Không có sinh viên nào!");
         }
@@ -308,6 +312,7 @@ public class StudentController {
         model.addAttribute("sinhViens", sinhViens);
         model.addAttribute("lops", lops);
         model.addAttribute("lopMap", lopMap);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/student/student_list";
     }

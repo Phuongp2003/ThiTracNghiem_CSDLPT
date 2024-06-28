@@ -11,7 +11,7 @@
 	}
 </style>
 <div class="teacher container-fluid" style="width:85%;">
-	<div class="teach-filter row mb-2">
+	<div class="teach-filter d-flex justify-content-between mb-2">
 		<jsp:include page="./filter.jsp" />
 	</div>
 	<div class="teach-list">

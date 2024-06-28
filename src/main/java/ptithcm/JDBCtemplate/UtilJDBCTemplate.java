@@ -40,7 +40,7 @@ public class UtilJDBCTemplate {
                     while (rs.next()) {
                         String tenServer = rs.getString("TENSERVER");
                         String tenCS = rs.getString("TENCS");
-                        if (!tenServer.equals("NPHUONG\\MSSQLSERVER_TN3")) {
+                        if (!tenServer.equals("DESKTOP-SVEFPRH\\MSSQLSERVER_TN3")) {
                             listRet.add(new ServerInfo(tenServer, tenCS));
                         }
                     }

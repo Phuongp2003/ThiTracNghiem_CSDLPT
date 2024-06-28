@@ -9,7 +9,7 @@
 			<th scope="col">Tên</th>
 			<th scope="col">Địa chỉ</th>
 			<th scope="col">Khoa</th>
-			<th scope="col">Thao tác</th>
+			<c:if test="${role_al != 'TRUONG'}"><th scope="col">Thao tác</th></c:if>
 		</tr>
 	</thead>
 	<tbody>
@@ -19,79 +19,72 @@
 				<td>${gv.HO}</td>
 				<td>${gv.TEN}</td>
 				<td>${gv.DIACHI}</td>
-				<td> 
-					<c:choose>
-						<c:when test="${not empty khoa.get(idFix.fix(gv.MAKH, 8))}">
-							${khoa.get(idFix.fix(gv.MAKH, 8))}
-						</c:when>
-						<c:otherwise>
-							${gv.MAKH}
-						</c:otherwise>
-					</c:choose>
-				</td>
-				<td>
-					<form class="d-inline" action="teacher/delete/${gv.MAGV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
-						<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
-					</form>
-					
-					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-teacher-${gv.MAGV.trim()}">
-						<i class="bi bi-pencil-square"></i>
-					</button>
-					<div class="modal fade" id="edit-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<form method="POST" action="teacher/edit.htm" class="form-control" target="formSubmitFrame">
-									<div class="mb-3">
-										<label>Mã nhân viên: </label>
-										<input name="manv" value="${gv.MAGV}" class="form-control" disabled />
-										<input type="hidden" name="manv" value="${gv.MAGV}" />
-									</div>
-									<div class="mb-3">
-										<label>Họ: </label>
-										<input name="ho" value="${gv.HO}" class="form-control" />
-									</div>
-									<div class="mb-3">
-										<label>Tên: </label>
-										<input name="ten" value="${gv.TEN}" class="form-control" />
-									</div>
-									<div class="mb-3">
-										<label>Địa chỉ: </label>
-										<input name="diachi" value="${gv.DIACHI}" class="form-control" />
-									</div>
-									<select class="form-select" id="khoa" name="makhoa" disabled>
-										<option value="${gv.MAKH}">${gv.MAKH}</option>
-									</select>
-									<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
-									<button type=" button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
-								</form>
-							</div>
-						</div>
-					</div>
-
-					<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-teacher-${gv.MAGV.trim()}">
-						Chuyển khoa
-					</button>
-					<div class="modal fade" id="move-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-						<div class="modal-dialog">
-							<div class="modal-content">
-								<form method="POST" action="teacher/move-teacher.htm" class="form-control" target="formSubmitFrame">
-									<input type="hidden" name="magv" value="${gv.MAGV}" />
-									<div class="mb-3">
-										<label>Khoa</label>
-										<select class="form-select" name="makh">
-											<c:forEach var="k" items="${khoas}">
-												<option value="${k.MAKH}">
-													${k.MAKH} (${k.TENKH})</option>
-											</c:forEach>
+				<td>${khoa.get(idFix.fix(gv.MAKH, 8))}</td>
+				<c:if test="${role_al != 'TRUONG'}">
+					<td>
+						<form class="d-inline" action="teacher/delete/${gv.MAGV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
+							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
+						</form>
+						
+						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-teacher-${gv.MAGV.trim()}">
+							<i class="bi bi-pencil-square"></i>
+						</button>
+						<div class="modal fade" id="edit-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<form method="POST" action="teacher/edit.htm" class="form-control" target="formSubmitFrame">
+										<div class="mb-3">
+											<label>Mã nhân viên: </label>
+											<input name="manv" value="${gv.MAGV}" class="form-control" disabled />
+											<input type="hidden" name="manv" value="${gv.MAGV}" />
+										</div>
+										<div class="mb-3">
+											<label>Họ: </label>
+											<input name="ho" value="${gv.HO}" class="form-control" />
+										</div>
+										<div class="mb-3">
+											<label>Tên: </label>
+											<input name="ten" value="${gv.TEN}" class="form-control" />
+										</div>
+										<div class="mb-3">
+											<label>Địa chỉ: </label>
+											<input name="diachi" value="${gv.DIACHI}" class="form-control" />
+										</div>
+										<select class="form-select" id="khoa" name="makhoa" disabled>
+											<option value="${gv.MAKH}">${gv.MAKH}</option>
 										</select>
-									</div>
-									<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
-									<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
-								</form>
+										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+										<button type=" button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+									</form>
+								</div>
 							</div>
 						</div>
-					</div>
-				</td>
+	
+						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-teacher-${gv.MAGV.trim()}">
+							Chuyển khoa
+						</button>
+						<div class="modal fade" id="move-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<form method="POST" action="teacher/move-teacher.htm" class="form-control" target="formSubmitFrame">
+										<input type="hidden" name="magv" value="${gv.MAGV}" />
+										<div class="mb-3">
+											<label>Khoa</label>
+											<select class="form-select" name="makh">
+												<c:forEach var="k" items="${khoas}">
+													<option value="${k.MAKH}">
+														${k.MAKH} (${k.TENKH})</option>
+												</c:forEach>
+											</select>
+										</div>
+										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+										<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</td>
+				</c:if>
 			</tr>
 		</c:forEach>
 	</tbody>

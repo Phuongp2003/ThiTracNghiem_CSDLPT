@@ -37,6 +37,9 @@ import ptithcm.bean.GiaoVienAction;
 @RequestMapping("teacher")
 public class TeacherController {
     @Autowired
+    private GlobalVariable currentConnection;
+
+    @Autowired
     GiaoVienJDBCTemplate giaoVienJDBCTemplate;
 
     @Autowired
@@ -67,7 +70,6 @@ public class TeacherController {
         model.addAttribute("giaoViens", giaoViens);
         model.addAttribute("khoa", khoaMap);
         model.addAttribute("khoas", khoas);
-
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/teacher";
     }
@@ -75,6 +77,7 @@ public class TeacherController {
     @RequestMapping(value = "get-gv-by-khoa", method = RequestMethod.POST)
     public String getGVByKhoa(ModelMap model, HttpSession session,
             @RequestBody String body) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         List<GiaoVien> giaoViens;
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<String, String>();
@@ -110,6 +113,7 @@ public class TeacherController {
         model.addAttribute("giaoViens", giaoViens);
         model.addAttribute("khoa", khoaMap);
         model.addAttribute("khoas", khoas);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "elements/teacher/list";
     }
 
@@ -330,6 +334,7 @@ public class TeacherController {
         model.addAttribute("giaoViens", giaoViens);
         model.addAttribute("khoa", khoaMap);
         model.addAttribute("khoas", khoas);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/teacher/list";
     }

@@ -81,6 +81,7 @@ public class SubjectController {
                 monHocs = monHocJDBCTemplate.listMonHoc();
             }
             model.addAttribute("monHocs", monHocs);
+            model.addAttribute("role_al", currentConnection.getRoleAlias());
         } else {
             model.addAttribute("message", "Không có môn học nào!");
         }
@@ -217,6 +218,7 @@ public class SubjectController {
         List<Lop> lops = khoaLopJDBCTemplate.listLop();
         model.addAttribute("monHocs", monHocs);
         model.addAttribute("lops", lops);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/subject/subject_list";
     }
