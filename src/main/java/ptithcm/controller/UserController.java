@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
+import ptithcm.bean.temp.ServerInfo;
 import ptithcm.service.GiaoVienService;
 import ptithcm.service.SinhVienService;
 
@@ -27,16 +29,13 @@ import ptithcm.service.SinhVienService;
 @RequestMapping("/auth")
 public class UserController {
     @Autowired
-    private GlobalVariable currentConnection;
-
-    @Autowired
-    private JdbcTemplate mainSiteTemplate;
-
-    @Autowired
     private SinhVienService sinhVienService;
 
     @Autowired
     private GiaoVienService giaoVienService;
+
+    @Autowired
+    private DriverManagerDataSource mainSite;
 
     @Autowired
     private DriverManagerDataSource firstSite;
@@ -47,10 +46,17 @@ public class UserController {
     @Autowired
     private DriverManagerDataSource reportSite;
 
+    @Autowired
+    UtilJDBCTemplate utilJDBCTemplate;
+
     @RequestMapping("/login")
     public String login(Model model, HttpSession session,
             @RequestParam(value = "message", required = false) String message,
             RedirectAttributes redirectAttributes) {
+        utilJDBCTemplate = new UtilJDBCTemplate();
+        utilJDBCTemplate.setRootDataSource(mainSite);
+        List<ServerInfo> sites = utilJDBCTemplate.getDSPhanManh();
+        model.addAttribute("sites", sites);
         if (message != null) {
             redirectAttributes.addFlashAttribute("message", message);
             return "redirect:/auth/login.htm";
@@ -82,7 +88,7 @@ public class UserController {
 
     @RequestMapping(value = "check-login", method = RequestMethod.POST)
     public String checkLogin(Model model,
-            @RequestParam("site") int site,
+            @RequestParam("site") String site,
             @RequestParam("username") String username,
             @RequestParam("password") String password,
             @RequestParam("usertype") String usertype,
@@ -92,16 +98,17 @@ public class UserController {
         String svPassword = password;
         String roleAlias = null;
         GlobalVariable currentConnection = new GlobalVariable();
+        currentConnection.setRootSite(mainSite);
         try {
             // Check site
             switch (site) {
-                case 1:
+                case "NPHUONG\\MSSQLSERVER_TN1":
                     currentConnection.setSite(firstSite);
                     break;
-                case 2:
+                case "NPHUONG\\MSSQLSERVER_TN2":
                     currentConnection.setSite(secondSite);
                     break;
-                case 3:
+                case "NPHUONG\\MSSQLSERVER_TN3":
                     currentConnection.setSite(reportSite);
                     break;
                 default:
@@ -149,13 +156,16 @@ public class UserController {
                     default:
                         throw new NullPointerException("Vai trò người dùng không hợp lệ!");
                 }
-                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role, giaoVienInfo.get("USERNAME"),
+                currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role,
+                        giaoVienInfo.get("USERNAME"),
                         roleAlias, true);
             }
             Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUserName());
             usernameCookie.setMaxAge(60 * 60 * 1);
             usernameCookie.setPath("/");
             response.addCookie(usernameCookie);
+
+            session.setAttribute("site", site);
 
         } catch (SQLException e) {
             System.out.println("LOGIN FAIL" + e);

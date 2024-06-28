@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import ptithcm.JDBCtemplate.GiaoVienDKJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
+import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.Khoa;
@@ -43,6 +44,9 @@ public class DKThiController {
     @Autowired
     MonHocJDBCTemplate monHocJDBCTemplate;
 
+    @Autowired
+    UtilJDBCTemplate utilJDBCTemplate;
+
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
@@ -52,9 +56,14 @@ public class DKThiController {
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
             model.addAttribute("lops", lops);
             model.addAttribute("monhocs", monhocs);
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/dkthi";
     }
 

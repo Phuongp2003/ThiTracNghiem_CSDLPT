@@ -14,7 +14,7 @@ import ptithcm.mapper.BoDeMapper;
 
 @Service
 public class BoDeJDBCTemplate {
-    
+
     private JdbcTemplate jdbcTemplate;
 
     public void setDataSource(DataSource dataSource) {
@@ -52,7 +52,12 @@ public class BoDeJDBCTemplate {
     public List<BoDe> listBoDe(String magv) {
         try {
             String SQL = "SELECT * FROM BoDe WHERE MAGV = ?";
-            return jdbcTemplate.query(SQL, new Object[] { magv }, new BoDeMapper());
+            List<BoDe> res = jdbcTemplate.query(SQL, new Object[] { magv }, new BoDeMapper());
+            if (res.size() == 0) {
+                String newSQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.BoDe WHERE MAGV = ?";
+                res = jdbcTemplate.query(newSQL, new Object[] { magv }, new BoDeMapper());
+            }
+            return res;
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Bo De - list Error: " + e.getMessage());
@@ -60,9 +65,53 @@ public class BoDeJDBCTemplate {
         }
     }
 
+    public List<BoDe> listAllBoDe() {
+        try {
+            String SQL = "SELECT * FROM BoDe";
+            return jdbcTemplate.query(SQL, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - list Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<BoDe> listAllBoDeDiffSite() {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.BoDe";
+            return jdbcTemplate.query(SQL, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - list Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<BoDe> findBoDeByMonHoc(String mamh) {
+        try {
+            String SQL = "SELECT * FROM BoDe WHERE MAMH = ?";
+            return jdbcTemplate.query(SQL, new Object[] { mamh }, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<BoDe> findBoDeByMonHoc(String mamh, String magv) {
         try {
             String SQL = "SELECT * FROM BoDe WHERE MAMH = ? AND MAGV = ?";
+            return jdbcTemplate.query(SQL, new Object[] { mamh, magv }, new BoDeMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Bo De - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<BoDe> findBoDeByMonHocDiffSite(String mamh, String magv) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.BoDe WHERE MAMH = ? AND MAGV = ?";
             return jdbcTemplate.query(SQL, new Object[] { mamh, magv }, new BoDeMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
@@ -96,9 +145,9 @@ public class BoDeJDBCTemplate {
     public void create(BoDe bode) {
         try {
             String SQL = "INSERT INTO BoDe (CAUHOI, MAMH, TRINHDO, NOIDUNG, A, B, C, D, DAP_AN, MAGV) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            jdbcTemplate.update(SQL, bode.getCAUHOI(), bode.getMAMH(), bode.getTRINHDO(), bode.getNOIDUNG(), 
-                bode.getA(), bode.getB(), bode.getC(), bode.getD(), bode.getDAP_AN(), bode.getMAGV());
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            jdbcTemplate.update(SQL, bode.getCAUHOI(), bode.getMAMH(), bode.getTRINHDO(), bode.getNOIDUNG(),
+                    bode.getA(), bode.getB(), bode.getC(), bode.getD(), bode.getDAP_AN(), bode.getMAGV());
             System.out.println("Created Record Name = " + bode.getCAUHOI());
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +158,7 @@ public class BoDeJDBCTemplate {
     public void update(int cauhoi, BoDe bode) {
         try {
             String SQL = "UPDATE BoDe SET TRINHDO = ? AND SET NOIDUNG = ? AND SET A = ? AND SET B = ? "
-                        + "AND SET C = ? AND SET D = ? AND DAP_AN = ? WHERE CAUHOI = ?";
+                    + "AND SET C = ? AND SET D = ? AND DAP_AN = ? WHERE CAUHOI = ?";
             jdbcTemplate.update(SQL, bode.getCAUHOI(), cauhoi);
             System.out.println("Updated Record with ID = " + cauhoi);
         } catch (Exception e) {
@@ -132,7 +181,7 @@ public class BoDeJDBCTemplate {
     public int getMaxCauHoi() {
         try {
             String SQL = "SELECT ISNULL(MAX(CAUHOI), 0) AS MAXCAUHOI FROM BoDe";
-            return jdbcTemplate.query(SQL, new Object[]{}, (ResultSet rs) -> {
+            return jdbcTemplate.query(SQL, new Object[] {}, (ResultSet rs) -> {
                 if (rs.next()) {
                     return rs.getInt("MAXCAUHOI");
                 } else {

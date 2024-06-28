@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
+import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
@@ -38,6 +39,9 @@ public class StudentController {
 
     @Autowired
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
+
+    @Autowired
+    UtilJDBCTemplate utilJDBCTemplate;
 
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
@@ -64,6 +68,10 @@ public class StudentController {
             for (Lop i : lops) {
                 lopMap.put(i.getMALOP(), i.getTENLOP());
             }
+
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
             model.addAttribute("sinhViens", sinhViens);
             model.addAttribute("lops", lops);
             model.addAttribute("lopMap", lopMap);
@@ -71,6 +79,7 @@ public class StudentController {
         } else {
             model.addAttribute("message", "Không có sinh viên nào!");
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/student";
     }
 
@@ -85,11 +94,20 @@ public class StudentController {
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
             String malop = map.get("malop");
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
             if (malop != null) {
                 if ("all".equals(malop)) {
-                    sinhViens = sinhVienJDBCTemplate.listSinhVien();
+                    if (diff) {
+                        sinhViens = sinhVienJDBCTemplate.listSinhVienDiffSite();
+                    } else {
+                        sinhViens = sinhVienJDBCTemplate.listSinhVien();
+                    }
                 } else {
-                    sinhViens = sinhVienJDBCTemplate.findSinhVienByLop(malop);
+                    if (diff) {
+                        sinhViens = sinhVienJDBCTemplate.findSinhVienByLopDiffSite(malop);
+                    } else {
+                        sinhViens = sinhVienJDBCTemplate.findSinhVienByLop(malop);
+                    }
                 }
             } else {
                 throw new NullPointerException("Mã lớp không được để trống!");

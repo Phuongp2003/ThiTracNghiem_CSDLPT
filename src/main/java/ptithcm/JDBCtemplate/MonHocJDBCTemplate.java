@@ -43,6 +43,26 @@ public class MonHocJDBCTemplate {
         return res;
     }
 
+    public MonHoc getMonHocDiffSite(String mamh) {
+        String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.MonHoc WHERE MAMH = ?";
+        IDFix.fix(mamh, 8);
+        MonHoc res;
+        try {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] { mamh }, (ResultSet rs, int rowNum) -> {
+                MonHoc mh = new MonHoc();
+                mh.setMAMH(rs.getString("MAMH"));
+                mh.setTENMH(rs.getString("TENMH"));
+                return mh;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Mon Hoc - select Error: " + e.getMessage());
+            res = null;
+        }
+
+        return res;
+    }
+
     public List<MonHoc> listMonHoc() {
         try {
             String SQL = "SELECT * FROM MonHoc";
@@ -54,9 +74,31 @@ public class MonHocJDBCTemplate {
         }
     }
 
+    public List<MonHoc> listMonHocDiffSite() {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.MonHoc";
+            return jdbcTemplate.query(SQL, new MonHocMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Mon Hoc - list Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<MonHoc> findMonHoc(String name) {
         try {
             String SQL = "SELECT * FROM MonHoc WHERE TENMH LIKE ?";
+            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new MonHocMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Mon Hoc - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<MonHoc> findMonHocDiffSite(String name) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.MonHoc WHERE TENMH LIKE ?";
             return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new MonHocMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();

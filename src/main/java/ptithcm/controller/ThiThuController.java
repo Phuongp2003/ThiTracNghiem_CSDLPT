@@ -54,6 +54,7 @@ public class ThiThuController {
             model.addAttribute("lops", lops);
             model.addAttribute("monhocs", monhocs);
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/thithu";
     }
 }

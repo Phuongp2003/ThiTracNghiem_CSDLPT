@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
+import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
@@ -37,27 +38,29 @@ public class SubjectController {
     @Autowired
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
 
+    @Autowired
+    UtilJDBCTemplate utilJDBCTemplate;
+
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+        model.addAttribute("currentSite", session.getAttribute("site"));
+        utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+        model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
+        monHocJDBCTemplate.setDataSource(currentConnection.getSite());
 
-            // Initialize HistoryAction in session if not present
-            session.setAttribute("historyAction", new HistoryAction());
+        // Initialize HistoryAction in session if not present
+        session.setAttribute("historyAction", new HistoryAction());
 
-            // Pass history actions to the template for potential undo/redo display
-            model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
-            model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
+        // Pass history actions to the template for potential undo/redo display
+        model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
+        model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
-            List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
-            List<Lop> lops = khoaLopJDBCTemplate.listLop();
-            model.addAttribute("monHocs", monHocs);
-            model.addAttribute("lops", lops);
-        }
-        else{
-            model.addAttribute("message", "Không có môn học nào!");
-        }
+        List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
+        List<Lop> lops = khoaLopJDBCTemplate.listLop();
+        model.addAttribute("monHocs", monHocs);
+        model.addAttribute("lops", lops);
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/subject";
     }
 
@@ -69,7 +72,13 @@ public class SubjectController {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
-            List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
+            List<MonHoc> monHocs = null;
+            if (diff) {
+                monHocs = monHocJDBCTemplate.listMonHocDiffSite();
+            } else {
+                monHocs = monHocJDBCTemplate.listMonHoc();
+            }
             model.addAttribute("monHocs", monHocs);
         } else {
             model.addAttribute("message", "Không có môn học nào!");
@@ -79,7 +88,7 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "add-subject", method = RequestMethod.POST)
-    public String addSubject(ModelMap model, @RequestParam("mamh") String mamh, 
+    public String addSubject(ModelMap model, @RequestParam("mamh") String mamh,
             @RequestParam("tenmh") String tenmh, HttpSession session) {
         try {
             MonHoc monHoc = new MonHoc();
@@ -100,13 +109,13 @@ public class SubjectController {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        
+
         return "elements/message";
     }
 
     @RequestMapping(value = "delete-subject/{id}")
     public String deleteSubject(ModelMap model, @PathVariable("id") String mamh, HttpSession session) {
-        try{
+        try {
             MonHoc monHoc = monHocJDBCTemplate.getMonHoc(mamh);
             monHocJDBCTemplate.delete(mamh);
 
@@ -123,14 +132,14 @@ public class SubjectController {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        
+
         return "elements/message";
     }
 
     @RequestMapping(value = "edit-subject", method = RequestMethod.POST)
-    public String updateSubject(ModelMap model, @RequestParam("mamh") String mamh, 
+    public String updateSubject(ModelMap model, @RequestParam("mamh") String mamh,
             @RequestParam("tenmh") String tenmh, HttpSession session) {
-        try{
+        try {
             MonHoc oldMonHoc = monHocJDBCTemplate.getMonHoc(mamh);
             MonHoc newMonHoc = monHocJDBCTemplate.getMonHoc(mamh);
             newMonHoc.setTENMH(tenmh);
@@ -207,8 +216,7 @@ public class SubjectController {
             List<Lop> lops = khoaLopJDBCTemplate.listLop();
             model.addAttribute("monhocs", monhocs);
             model.addAttribute("lops", lops);
-        }
-        else{
+        } else {
             model.addAttribute("message", "Không có môn học nào!");
         }
         return "pages/subject";

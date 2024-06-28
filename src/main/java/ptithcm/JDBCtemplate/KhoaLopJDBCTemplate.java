@@ -58,6 +58,17 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
+    public List<Khoa> listKhoaDiffSite() {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.Khoa";
+            return jdbcTemplate.query(SQL, new KhoaMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Khoa - list Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Khoa> findKhoa(String name) {
         try {
             String SQL = "SELECT * FROM Khoa WHERE TENKH LIKE ?";
@@ -69,8 +80,40 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
+    public List<Khoa> findKhoaDiffSite(String name) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.Khoa WHERE TENKH LIKE ?";
+            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new KhoaMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Khoa - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public Lop getLop(String malop) {
         String SQL = "SELECT * FROM Lop WHERE MALOP = ?";
+        IDFix.fix(malop, 8);
+        Lop res;
+        try {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] { malop }, (ResultSet rs, int rowNum) -> {
+                Lop lp = new Lop();
+                lp.setMALOP(rs.getString("MALOP"));
+                lp.setTENLOP(rs.getString("TENLOP"));
+                lp.setMAKH(rs.getString("MAKH"));
+                return lp;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Lop - select Error: " + e.getMessage());
+            res = null;
+        }
+
+        return res;
+    }
+
+    public Lop getLopDiffSite(String malop) {
+        String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.Lop WHERE MALOP = ?";
         IDFix.fix(malop, 8);
         Lop res;
         try {
@@ -101,6 +144,17 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
+    public List<Lop> listLopDiffSite() {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.Lop";
+            return jdbcTemplate.query(SQL, new LopMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Lop - list Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Lop> findLop(String name) {
         try {
             String SQL = "SELECT * FROM Lop WHERE TENLOP LIKE ?";
@@ -112,9 +166,31 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
+    public List<Lop> findLopDiffSite(String name) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.Lop WHERE TENLOP LIKE ?";
+            return jdbcTemplate.query(SQL, new Object[] { "%" + name + "%" }, new LopMapper());
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Lop - find Error: " + e.getMessage());
+            return null;
+        }
+    }
+
     public List<Lop> findLopByKhoa(String makh) {
         try {
             String SQL = "SELECT * FROM Lop WHERE MAKH = ?";
+            return jdbcTemplate.query(SQL, new Object[] { makh }, new LopMapper());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Lop - find by khoa Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public List<Lop> findLopByKhoaDiffSite(String makh) {
+        try {
+            String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.Lop WHERE MAKH = ?";
             return jdbcTemplate.query(SQL, new Object[] { makh }, new LopMapper());
         } catch (Exception e) {
             e.printStackTrace();

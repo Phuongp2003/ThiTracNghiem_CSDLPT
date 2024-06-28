@@ -5,12 +5,14 @@
 
 </style>
 
-<div class="d-flex col-md-2">
-	<select class="form-select" id="site" name="site">
-		<option value="1">Cơ sở 1</option>
-		<option value="2">Cơ sở 2</option>
-	</select>
-</div>
+<c:if test="${role_al == 'TRUONG'}">
+	<div class="d-flex col-md-2">
+		<select class="form-select" id="site" name="site" onchange="checkSite(this.value)">
+			<c:forEach var="cs" items="${sites}">
+				<option value="${currentSite==cs.tenServer ? 'current' : 'diff' }" ${currentSite==cs.tenServer ? 'selected' : '' }>${cs.tenCS}</option>
+			</c:forEach>
+	</div>
+</c:if>
 <div class="col-md-3">
 	<form role="search" action="manage/category/search.htm" target="formSubmitFrame">
 		<input name="searchInput" class="form-control" type="search" placeholder="Tìm " aria-label="Search" style="width: 50%;">
