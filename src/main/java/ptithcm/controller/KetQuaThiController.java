@@ -73,6 +73,7 @@ public class KetQuaThiController {
             model.addAttribute("trangthai", trangthai);
             model.addAttribute("jdbc", monHocJDBCTemplate);
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/xemkq";
     }
 

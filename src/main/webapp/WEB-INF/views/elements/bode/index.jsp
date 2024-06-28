@@ -22,12 +22,14 @@
 </style>
 <div class="bode container-fluid" style="width:92%;">
 	<div class="filter-wrapper d-flex justify-content-between mb-2">
-		<div class="d-flex col-md-2">
-			<select class="form-select" id="site" name="site">
-				<option value="1">Cơ sở 1</option>
-				<option value="2">Cơ sở 2</option>
-			</select>
-		</div>
+		<c:if test="${role_al == 'TRUONG'}">
+			<div class="d-flex col-md-2">
+				<select class="form-select" id="site" name="site" onchange="checkSite(this.value)">
+					<c:forEach var="cs" items="${sites}">
+						<option value="${currentSite==cs.tenServer ? 'current' : 'diff' }" ${currentSite==cs.tenServer ? 'selected' : '' }>${cs.tenCS}</option>
+					</c:forEach>
+			</div>
+		</c:if>
 		<div class="col-md-4">
 			<form role="search" action="bode.htm" target="formSubmitFrame">
 				<input name="searchInput" class="form-control" type="search" placeholder="Tìm..." 
@@ -52,7 +54,7 @@
 					<div class="modal-content">
 						<form id="addBodeForm" method="POST" action="bode/add-bode.htm" class="form-control" target="formSubmitFrame">
 							<div class="mb-3">
-								<label >Môn học</label>
+								<label>Môn học</label>
 								<select class="form-select" id="monhoc" name="mamh">
 									<c:forEach var="mh" items="${monhocs}">
 										<option value="${mh.MAMH}">
@@ -70,23 +72,23 @@
 							</div>
 							<div class="mb-3">
 								<label>Nội dung: </label>
-								<textarea name="noidung" class="form-control" placeholder="Nội dung câu hỏi"  style="height: 70px"></textarea>
+								<textarea name="noidung" class="form-control" placeholder="Nội dung câu hỏi" style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>A: </label>
-								<textarea name="A" class="form-control" placeholder="Nội dung đáp án A"  style="height: 70px"></textarea>
+								<textarea name="A" class="form-control" placeholder="Nội dung đáp án A" style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>B: </label>
-								<textarea name="B" class="form-control" placeholder="Nội dung đáp án B"  style="height: 70px"></textarea>
+								<textarea name="B" class="form-control" placeholder="Nội dung đáp án B" style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>C: </label>
-								<textarea name="C" class="form-control" placeholder="Nội dung đáp án C"  style="height: 70px"></textarea>
+								<textarea name="C" class="form-control" placeholder="Nội dung đáp án C" style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>D: </label>
-								<textarea name="D" class="form-control" placeholder="Nội dung đáp án D"  style="height: 70px"></textarea>
+								<textarea name="D" class="form-control" placeholder="Nội dung đáp án D" style="height: 70px"></textarea>
 							</div>
 							<div class="mb-3">
 								<label>Đáp án</label>
@@ -141,11 +143,21 @@
 <script>
 	var currentMon;
 	var currentSearch;
+	var isDiffSite = false;
+	
+	function checkSite(value) {
+		if (value == 'diff') isDiffSite = true;
+		else isDiffSite = false;
+		refreshData();
+	}
+
 	function loadBoDes(value) {
+		var isDiff = isDiffSite ? 'true' : 'false';
 		fetch('bode/get-bode-by-monhoc.htm', {
 				method: 'POST',
 				body: JSON.stringify({
-					mamh: value
+					mamh: value,
+					diff: isDiff
 				})
 			})
 			.then(response => response.text())
@@ -220,7 +232,7 @@
 			}
 		}
 	}
-
+	
 	function loadActionButton() {
 		fetch('bode/refresh-action-buttons.htm', {
 				method: 'POST',
@@ -246,9 +258,9 @@
 		loadBoDes(window.currentMon);
 		if(currentSearch) searchBoDes(currentSearch);
 	}
-
+	
 	var addBodeModal = document.getElementById('add-bode');
-	addBodeModal.addEventListener('hidden.bs.modal', function () {
-        document.getElementById('addBodeForm').reset();
-    });
+	addBodeModal.addEventListener('hidden.bs.modal', function() {
+		document.getElementById('addBodeForm').reset();
+	});
 </script>

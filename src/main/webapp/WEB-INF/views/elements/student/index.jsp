@@ -22,16 +22,17 @@
 </style>
 <div class="student container-fluid" style="width:85%;">
 	<div class="filter-wrapper d-flex justify-content-between mb-2">
-		<div class="d-flex col-md-2">
-			<select class="form-select" id="site" name="site">
-				<option value="1">Cơ sở 1</option>
-				<option value="2">Cơ sở 2</option>
-			</select>
-		</div>
+		<c:if test="${role_al == 'TRUONG'}">
+			<div class="d-flex col-md-2">
+				<select class="form-select" id="site" name="site" onchange="checkSite(this.value)">
+					<c:forEach var="cs" items="${sites}">
+						<option value="${currentSite==cs.tenServer ? 'current' : 'diff' }" ${currentSite==cs.tenServer ? 'selected' : '' }>${cs.tenCS}</option>
+					</c:forEach>
+			</div>
+		</c:if>
 		<div class="col-md-3">
 			<form role="search" action="student.htm" target="formSubmitFrame" class="d-flex gap-1">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, lớp..." 
-					aria-label="Search" style="width: 80%;" onchange="searchStudents(this.value)">
+				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, lớp..." aria-label="Search" style="width: 80%;" onchange="searchStudents(this.value)">
 		</div>
 		<div class="col-md-2">
 			<form action="student.htm" target="formSubmitFrame">
@@ -124,12 +125,21 @@
 <script>
 	var currentLop;
 	var currentSearch;
+	var isDiffSite = false;
+	
+	function checkSite(value) {
+		if (value == 'diff') isDiffSite = true;
+		else isDiffSite = false;
+		refreshData();
+	}
 	
 	function loadStudents(value) {
+		var isDiff = isDiffSite ? 'true' : 'false';
 		fetch('student/get-sv-by-lop.htm', {
 				method: 'POST',
 				body: JSON.stringify({
-					malop: value
+					malop: value,
+					diff: isDiff
 				})
 			})
 			.then(response => {
@@ -161,7 +171,7 @@
 			});
 		currentLop = value;
 	}
-
+	
 	function searchStudents(value) {
 		fetch('student/search.htm', {
 				method: 'POST',
@@ -231,7 +241,7 @@
 		if (!currentLop) currentLop = "all";
 		loadActionButton();
 		loadStudents(window.currentLop);
-		if(currentSearch) searchStudents(currentSearch);
+		if (currentSearch) searchStudents(currentSearch);
 	}
 	
 	var addStudentModal = document.getElementById('add-student');

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class GlobalVariable {
+    private DriverManagerDataSource rootSite;
     private DriverManagerDataSource site;
     private JdbcTemplate root_cmd;
     private JdbcTemplate cmd;
@@ -151,6 +152,18 @@ public class GlobalVariable {
 
     public void setSite(DriverManagerDataSource site) {
         this.site = site;
+    }
+
+    public DriverManagerDataSource getRootSite() {
+        return rootSite;
+    }
+
+    public void setRootSite(DriverManagerDataSource rootSite) {
+        this.rootSite = rootSite;
+    }
+
+    public void setRoot_cmd(JdbcTemplate root_cmd) {
+        this.root_cmd = root_cmd;
     }
 
     public JdbcTemplate getRoot_cmd() {
