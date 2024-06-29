@@ -210,6 +210,7 @@ public class SubjectController {
 
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchSubjects(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<String, String>();
         map = gson.fromJson(searchInput, map.getClass());

@@ -181,20 +181,16 @@ public class BoDeJDBCTemplate {
     }
 
     public int getMaxCauHoi() {
+        String SQL = "SELECT ISNULL(MAX(CAUHOI), 0) AS MAXCAUHOI FROM BoDe";
+        int res;
         try {
-            String SQL = "SELECT ISNULL(MAX(CAUHOI), 0) AS MAXCAUHOI FROM BoDe";
-            return jdbcTemplate.query(SQL, new Object[] {}, (ResultSet rs) -> {
-                if (rs.next()) {
-                    return rs.getInt("MAXCAUHOI");
-                } else {
-                    return 0;
-                }
-            });
-        } catch (Exception e) {
+            res = jdbcTemplate.queryForObject(SQL, new Object[] {}, Integer.class);
+        } catch (DataAccessException e) {
             e.printStackTrace();
-            System.err.println("Bo De - Max cau hoi Error: " + e.getMessage());
-            return 0;
+            System.err.println("Bo De - select Error: " + e.getMessage());
+            res = 0;
         }
+        return res;
     }
 
     public List<BoDe> search(String input){
