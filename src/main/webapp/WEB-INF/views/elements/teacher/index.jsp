@@ -206,10 +206,9 @@
 	}
 	
 	function refreshData() {
-		if (!currentKhoa) currentKhoa = "all";
-		loadActionButton();
+		if (!currentKhoa) currentKhoa = 'all';
 		loadTeachers(window.currentKhoa);
-		if(currentSearch) searchTeachers(currentSearch);
+		loadActionButton();
 		loadKhoa(window.currentKhoa);
 	}
 	

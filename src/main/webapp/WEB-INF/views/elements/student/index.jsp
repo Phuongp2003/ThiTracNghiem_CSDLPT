@@ -32,22 +32,17 @@
 			</div>
 		</c:if>
 		<div class="col-md-3">
-			<form role="search" action="student.htm" target="formSubmitFrame" class="d-flex gap-1">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, lớp..." aria-label="Search" style="width: 80%;" onchange="searchStudents(this.value)">
+			<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, lớp..." aria-label="Search" style="width: 80%;" onchange="searchStudents(this.value)">
 		</div>
 		<div class="col-md-2">
 			<form action="student.htm" target="formSubmitFrame">
 				<select class="form-select chon-lop" id="lop" name="malop" onchange="loadStudents(this.value)">
-					<option value="all" ${malop=="all" ? 'selected' : '' }>Lớp: Tất cả</option>
-					<c:forEach var="l" items="${lops}">
-						<option value="${l.MALOP}" ${l.MALOP==malop ? 'selected' : '' }>
-							${l.MALOP} (${l.TENLOP})</option>
-					</c:forEach>
+					<jsp:include page="./lop_option.jsp" />
 				</select>
 			</form>
 		</div>
 		<div class="">
-			<c:if test="${role_al != 'TRUONG'}">
+			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
 					Thêm sinh viên
 				</button>
@@ -104,25 +99,8 @@
 	<div class="student-list">
 		<jsp:include page="./student_list.jsp" />
 	</div>
-	<div class="class-list mt-4">
-		<table class="table lop-table">
-			<thead>
-				<tr>
-					<th scope="col">Mã lớp</th>
-					<th scope="col">Tên lớp</th>
-					<th scope="col">Khoa</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="l" items="${lops}">
-					<tr class="is-action sl-${l.MALOP}" onclick="toggleAndLoad('${l.MALOP}')">
-						<td>${l.MALOP}</td>
-						<td>${l.TENLOP}</td>
-						<td>${khoaMap.get(l.MAKH)}</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
+	<div class="lop-list mt-4">
+		<jsp:include page="./lop_list.jsp" />
 	</div>
 </div>
 <script>
@@ -173,6 +151,50 @@
 				console.error('Error:', error);
 			});
 		currentLop = value;
+	}
+
+	function loadLop(value) {
+		var isDiff = isDiffSite ? 'true' : 'false';
+		fetch('student/load-lop-o.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					current: value,
+					diff: isDiff
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.chon-lop');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
+		fetch('student/load-lop-t.htm', {
+				method: 'POST',
+				body: JSON.stringify({
+					current: value,
+					diff: isDiff
+				})
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				return response.text();
+			})
+			.then(data => {
+				const userBar = document.querySelector('.lop-list');
+				userBar.innerHTML = data;
+			})
+			.catch(error => {
+				console.error('Error:', error);
+			});
 	}
 	
 	function searchStudents(value) {
@@ -244,7 +266,7 @@
 		if (!currentLop) currentLop = "all";
 		loadActionButton();
 		loadStudents(window.currentLop);
-		if (currentSearch) searchStudents(currentSearch);
+		loadLop(currentLop);
 	}
 	
 	var addStudentModal = document.getElementById('add-student');

@@ -131,6 +131,63 @@ public class StudentController {
         return "elements/student/student_list";
     }
 
+    @RequestMapping(value = "load-lop-o", method = RequestMethod.POST)
+    public String loadLopTable(ModelMap model, HttpSession session, @RequestBody String body) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        if (currentConnection != null) {
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String current = map.get("current");
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
+            List<Lop> lops = null;
+            if (diff)
+                lops = khoaLopJDBCTemplate.listLopDiffSite();
+            else
+                lops = khoaLopJDBCTemplate.listLop();
+            model.addAttribute("current", current);
+            model.addAttribute("lops", lops);
+        } else {
+            model.addAttribute("message", "Không có lớp nào!");
+        }
+
+        return "elements/student/lop_option";
+    }
+
+    @RequestMapping(value = "load-lop-t", method = RequestMethod.POST)
+    public String loadKhoaOption(ModelMap model, HttpSession session, @RequestBody String body) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+        if (currentConnection != null) {
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String current = map.get("current");
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
+            List<Lop> lops = null;
+            if (diff)
+                lops = khoaLopJDBCTemplate.listLopDiffSite();
+            else
+                lops = khoaLopJDBCTemplate.listLop();
+
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+            khoasDiff.addAll(khoas);
+            Map<String, String> khoaMap = new HashMap();
+            for (Khoa i : khoasDiff) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
+            model.addAttribute("current", current);
+            model.addAttribute("lops", lops);
+            model.addAttribute("khoaMap", khoaMap);
+        } else {
+            model.addAttribute("message", "Không có lớp nào!");
+        }
+
+        return "elements/student/lop_list";
+    }
+
     @RequestMapping(value = "add-student", method = RequestMethod.POST)
     public String addStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
@@ -316,6 +373,7 @@ public class StudentController {
 
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchStudent(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<String, String>();
         map = gson.fromJson(searchInput, map.getClass());

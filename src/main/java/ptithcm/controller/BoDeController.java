@@ -19,13 +19,13 @@ import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.BoDeJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
+import ptithcm.JDBCtemplate.GiaoVienJDBCTemplate;
 import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.BoDe;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
-import ptithcm.bean.Khoa;
-import ptithcm.bean.Lop;
 import ptithcm.bean.BoDeAction;
+import ptithcm.bean.GiaoVien;
 import ptithcm.bean.MonHoc;
 
 @Controller
@@ -39,6 +39,9 @@ public class BoDeController {
 
     @Autowired
     MonHocJDBCTemplate monHocJDBCTemplate;
+
+    @Autowired
+    GiaoVienJDBCTemplate giaoVienJDBCTemplate;
 
     @Autowired
     UtilJDBCTemplate utilJDBCTemplate;
@@ -57,24 +60,13 @@ public class BoDeController {
             model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
             model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
             List<BoDe> bodes;
-            if (currentConnection.getRoleAlias().equals("TRUONG"))
+            if (currentConnection.getRoleAlias().equals("TRUONG") ||
+                    currentConnection.getRoleAlias().equals("COSO")) {
                 bodes = boDeJDBCTemplate.listAllBoDe();
-            else
+            } else
                 bodes = boDeJDBCTemplate.listBoDe(currentConnection.getEmployeeID());
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
-
             Map<String, String> monhocMap = new HashMap();
-            for (MonHoc i : monhocs) {
-                monhocMap.put(i.getMAMH(), i.getTENMH());
-            }
-
-            model.addAttribute("currentSite", session.getAttribute("site"));
-            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
-            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
-            model.addAttribute("bodes", bodes);
-            model.addAttribute("monhocs", monhocs);
-            model.addAttribute("monhocMap", monhocMap);
-        } else {
             model.addAttribute("message", "Không có bộ đề nào!");
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
@@ -97,16 +89,25 @@ public class BoDeController {
                     if (diff) {
                         bodes = boDeJDBCTemplate.listAllBoDeDiffSite();
                     } else {
-                        if (currentConnection.getRoleAlias().equals("TRUONG"))
+                        if (currentConnection.getRoleAlias().equals("TRUONG") ||
+                                currentConnection.getRoleAlias().equals("COSO")) {
                             bodes = boDeJDBCTemplate.listAllBoDe();
-                        else
-                            bodes = boDeJDBCTemplate.listBoDe(currentConnection.getEmployeeID());
+                            List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
+                            Map<String, String> giaovienMap = new HashMap();
+                            for (GiaoVien i : giaoviens) {
+                                giaovienMap.put(i.getMAGV(), i.getFullName());
+                            }
+
+                            model.addAttribute("giaovienMap", giaovienMap);
+                        } else
+                            bodes = boDeJDBCTemplate.listBoDe("TH123");
                     }
                 } else {
                     if (diff) {
                         bodes = boDeJDBCTemplate.listAllBoDeDiffSite();
                     } else {
-                        if (currentConnection.getRoleAlias().equals("TRUONG"))
+                        if (currentConnection.getRoleAlias().equals("TRUONG") ||
+                                currentConnection.getRoleAlias().equals("COSO"))
                             bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh);
                         else
                             bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh, currentConnection.getEmployeeID());
@@ -269,20 +270,28 @@ public class BoDeController {
 
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchBoDe(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<String, String>();
         map = gson.fromJson(searchInput, map.getClass());
         searchInput = map.get("searchInput");
         List<BoDe> bodes = boDeJDBCTemplate.search(searchInput);
         List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+        List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
 
         Map<String, String> monhocMap = new HashMap();
         for (MonHoc i : monhocs) {
             monhocMap.put(i.getMAMH(), i.getTENMH());
         }
+        Map<String, String> giaovienMap = new HashMap();
+        for (GiaoVien i : giaoviens) {
+            giaovienMap.put(i.getMAGV(), i.getFullName());
+        }
+
         model.addAttribute("bodes", bodes);
         model.addAttribute("monhocs", monhocs);
         model.addAttribute("monhocMap", monhocMap);
+        model.addAttribute("giaovienMap", giaovienMap);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/bode/bode_list";

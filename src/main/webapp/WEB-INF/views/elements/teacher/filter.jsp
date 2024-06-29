@@ -5,20 +5,18 @@
 
 </style>
 
-<div class="d-flex col-md-2">
-	<c:if test="${role_al == 'TRUONG'}">
-		<select class="form-select" id="site" name="site" onchange="checkSite(this.value)">
-			<c:forEach var="cs" items="${sites}">
-				<option value="${currentSite==cs.tenServer ? 'current' : 'diff' }" ${currentSite==cs.tenServer ? 'selected' : '' }>${cs.tenCS}</option>
-			</c:forEach>
-		</select>
-	</c:if>
-</div>
+<c:if test="${role_al == 'TRUONG'}">
+	<div class="d-flex col-md-2">
+			<select class="form-select" id="site" name="site" onchange="checkSite(this.value)">
+				<c:forEach var="cs" items="${sites}">
+					<option value="${currentSite==cs.tenServer ? 'current' : 'diff' }" ${currentSite==cs.tenServer ? 'selected' : '' }>${cs.tenCS}</option>
+				</c:forEach>
+			</select>
+	</div>
+</c:if>
 <div class="col-md-3">
-	<form role="search" action="teacher.htm" target="formSubmitFrame">
-		<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, khoa..." 
-			aria-label="Search" style="width: 80%;" onchange="searchTeachers(this.value)">
-	</form>
+	<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, khoa..." 
+		aria-label="Search" style="width: 80%;" onchange="searchTeachers(this.value)">
 </div>
 <div class="col-md-2">
 	<select class="form-select chon-khoa" id="khoa" name="makhoa" onchange="loadTeachers(this.value)">
@@ -31,10 +29,10 @@
 	</select>
 </div>
 <div class="d-flex justify-content-end">
-	<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
-		Thêm giáo viên
-	</button>
-	<c:if test="${role_al != 'TRUONG'}">
+	<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
+		<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-student">
+			Thêm giáo viên
+		</button>
 		<div class="action-btn-group d-inline">
 			<jsp:include page="./button_action_list.jsp" />
 		</div>

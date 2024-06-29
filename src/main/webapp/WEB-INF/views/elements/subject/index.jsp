@@ -13,13 +13,11 @@
 			</div>
 		</c:if>
 		<div class="col-md-4 col-sm-12 col-lg-4">
-			<form role="search" action="subject.htm" target="formSubmitFrame">
-				<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên..." 
-					aria-label="Search" style="width: 50%;" onchange="searchSubjects(this.value)">
-			</form>
+			<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên..." 
+				aria-label="Search" style="width: 50%;" onchange="searchSubjects(this.value)">
 		</div>
 		<div class="">
-			<c:if test="${role_al != 'TRUONG'}">
+			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-subject">
 					Thêm môn học
 				</button>
@@ -163,6 +161,5 @@
 	function refreshData() {
 		loadActionButton();
 		loadSubjects();
-		if(currentSearch) searchSubjects(currentSearch);
 	}
 </script>

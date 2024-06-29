@@ -319,6 +319,7 @@ public class TeacherController {
 
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchTeacher(ModelMap model, HttpSession session, @RequestBody String searchInput) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         Gson gson = new Gson();
         Map<String, String> map = new HashMap<String, String>();
         map = gson.fromJson(searchInput, map.getClass());
@@ -326,7 +327,9 @@ public class TeacherController {
         List<GiaoVien> giaoViens = giaoVienJDBCTemplate.search(searchInput);
         List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
         Map<String, String> khoaMap = new HashMap();
-        for (Khoa i : khoas) {
+        List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+        khoasDiff.addAll(khoas);
+        for (Khoa i : khoasDiff) {
             khoaMap.put(i.getMAKH(), i.getTENKH());
         }
         session.setAttribute("historyAction", new HistoryAction());
