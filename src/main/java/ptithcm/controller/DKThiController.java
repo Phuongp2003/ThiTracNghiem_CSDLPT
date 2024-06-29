@@ -101,6 +101,8 @@ public class DKThiController {
             @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate,
             HttpSession session) {
         List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(startdate, enddate);
+        
+        model.addAttribute("currentSite", session.getAttribute("site"));
         model.addAttribute("dsdk", dsdk);
         model.addAttribute("total", dsdk.size());
         model.addAttribute("startdate", startdate);
