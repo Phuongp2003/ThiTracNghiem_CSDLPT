@@ -1,6 +1,9 @@
 package ptithcm.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -100,20 +103,22 @@ public class UserController {
         GlobalVariable currentConnection = new GlobalVariable();
         currentConnection.setRootSite(mainSite);
         try {
+            String pcName = "ukn";
+            InetAddress addr = InetAddress.getLocalHost();
+            pcName = addr.getHostName().toUpperCase();
+            final String siteName1 = pcName + "\\MSSQLSERVER_TN1";
+            final String siteName2 = pcName + "\\MSSQLSERVER_TN2";
+            final String siteName3 = pcName + "\\MSSQLSERVER_TN3";
             // Check site
-            switch (site) {
-                case "DESKTOP-SVEFPRH\\MSSQLSERVER_TN1":
-                    currentConnection.setSite(firstSite);
-                    break;
-                case "DESKTOP-SVEFPRH\\MSSQLSERVER_TN2":
-                    currentConnection.setSite(secondSite);
-                    break;
-                case "DESKTOP-SVEFPRH\\MSSQLSERVER_TN3":
-                    currentConnection.setSite(reportSite);
-                    break;
-                default:
-                    throw new Exception("SITE NOT FOUND");
-            }
+
+            if (siteName1.equals(site))
+                currentConnection.setSite(firstSite);
+            else if (siteName2.equals(site))
+                currentConnection.setSite(secondSite);
+            else if (siteName3.equals(site))
+                currentConnection.setSite(reportSite);
+            else
+                throw new Exception("SITE NOT FOUND");
 
             // Check role
             if (usertype.equals("SV")) {
@@ -176,6 +181,11 @@ public class UserController {
             System.out.println("LOGIN FAIL" + e);
             model.addAttribute("type", "login");
             model.addAttribute("message", e);
+            return "redirect:/auth/login.htm";
+        } catch (UnknownHostException e) {
+            System.out.println("LOGIN FAIL" + e);
+            model.addAttribute("type", "login");
+            model.addAttribute("message", "Không thể xác định tên máy!");
             return "redirect:/auth/login.htm";
         } catch (Exception e) {
             System.out.println("LOGIN FAIL" + e);
