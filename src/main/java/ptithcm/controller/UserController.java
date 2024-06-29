@@ -125,6 +125,7 @@ public class UserController {
             for (int i = 0; i < siteName.size(); i++) {
                 if (siteName.get(i).equals(site)) {
                     currentConnection.setSite(sites.get(i));
+                    currentConnection.setSite_al(svi.get(i).getTenCS_s());
                     break;
                 }
             }

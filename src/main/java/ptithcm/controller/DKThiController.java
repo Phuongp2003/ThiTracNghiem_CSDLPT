@@ -1,6 +1,7 @@
 package ptithcm.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,10 +69,10 @@ public class DKThiController {
     }
 
     @RequestMapping(value = "add-dkthi", method = RequestMethod.POST)
-    public String addDKThi(ModelMap model, @RequestParam("malop") String malop, 
-            @RequestParam("mamh") String mamh, @RequestParam("trinhdo") String trinhdo, 
-            @RequestParam("lanthi") int lanthi, @RequestParam("socauthi") int socauthi, 
-            @RequestParam("ngaythi") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaythi, 
+    public String addDKThi(ModelMap model, @RequestParam("malop") String malop,
+            @RequestParam("mamh") String mamh, @RequestParam("trinhdo") String trinhdo,
+            @RequestParam("lanthi") int lanthi, @RequestParam("socauthi") int socauthi,
+            @RequestParam("ngaythi") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaythi,
             @RequestParam("thoigianthi") int thoigianthi, HttpSession session) {
         try {
             GiaoVienDangKy gvdk = new GiaoVienDangKy();
@@ -91,22 +92,35 @@ public class DKThiController {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        
+
         return "pages/dkthi";
     }
 
     @RequestMapping(value = "dsdkthi", method = RequestMethod.POST)
     public String listDKThi(ModelMap model,
-            @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate, 
+            @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate,
             @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate,
             HttpSession session) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(startdate, enddate);
-        
+        model.addAttribute("site_al", currentConnection.getSite_al());
         model.addAttribute("currentSite", session.getAttribute("site"));
-        model.addAttribute("dsdk", dsdk);
-        model.addAttribute("total", dsdk.size());
+        model.addAttribute("dsdk1", listDKThiTheoCS(dsdk, "CS1"));
+        model.addAttribute("dsdk2", listDKThiTheoCS(dsdk, "CS2"));
+        model.addAttribute("total1", listDKThiTheoCS(dsdk, "CS1").size());
+        model.addAttribute("total2", listDKThiTheoCS(dsdk, "CS2").size());
         model.addAttribute("startdate", startdate);
         model.addAttribute("enddate", enddate);
         return "pages/dsdkthi";
+    }
+
+    public List<List<String>> listDKThiTheoCS(List<List<String>> base, String tenCsRutGon) {
+        List<List<String>> res = new ArrayList<>();
+        for (List<String> list : base) {
+            if (list.get(6).equals(tenCsRutGon)) {
+                res.add(list);
+            }
+        }
+        return res;
     }
 }

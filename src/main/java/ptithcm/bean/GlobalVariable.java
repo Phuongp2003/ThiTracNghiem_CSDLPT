@@ -27,6 +27,8 @@ public class GlobalVariable {
         // Employee ID
         private String e_id;
 
+        private String site_al;
+
         public CurrentUser() {
         }
 
@@ -251,5 +253,13 @@ public class GlobalVariable {
     public void setCurrentUser(String loginName, String fullname, String role, String uid, String roleAlias,
             boolean is_e) {
         this.currentUser.setCurrentUser(loginName, fullname, role, uid, roleAlias, is_e);
+    }
+
+    public String getSite_al() {
+        return currentUser.site_al;
+    }
+
+    public void setSite_al(String site_al) {
+        this.currentUser.site_al = site_al;
     }
 }
