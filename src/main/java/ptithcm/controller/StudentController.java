@@ -132,7 +132,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "load-lop-o", method = RequestMethod.POST)
-    public String loadLopTable(ModelMap model, HttpSession session, @RequestBody String body) {
+    public String loadLopOption(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
@@ -156,7 +156,7 @@ public class StudentController {
     }
 
     @RequestMapping(value = "load-lop-t", method = RequestMethod.POST)
-    public String loadKhoaOption(ModelMap model, HttpSession session, @RequestBody String body) {
+    public String loadLopTable(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
