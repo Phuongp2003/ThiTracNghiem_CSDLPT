@@ -13,6 +13,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+
 import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.SinhVien;
@@ -153,22 +155,25 @@ public class GiaoVienJDBCTemplate {
     }
 
     // Login GiaoVien by Procedure
-    public Map<String, String> login(String magv) {
+    public Map<String, String> login(String magv) throws SQLServerException, DataAccessException {
         String SQL = "{call SP_DangNhapGiangVien(?)}";
         List<Map<String, String>> res;
         try {
             res = jdbcTemplate.query(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
                 Map<String, String> list = new HashMap<String, String>();
-                list.put("USERNAME", rs.getString("USERNAME"));
+                list.put("MANV", rs.getString("MANV"));
                 list.put("HOTEN", rs.getString("HOTEN"));
                 list.put("TENNHOM", rs.getString("TENNHOM"));
                 return list;
             });
             return res.get(0);
+        } catch (DataAccessException e) {
+            System.err.println("Giao Vien - login DA Error: " + e.getMessage());
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Giao Vien - login Error: " + e.getMessage());
-            return null;
+            throw e;
         }
     }
 
@@ -183,7 +188,7 @@ public class GiaoVienJDBCTemplate {
         }
     }
 
-    public List<GiaoVien> search(String input){
+    public List<GiaoVien> search(String input) {
         try {
             String SQL = "{call SP_TimKiemGiaoVien(?)}";
             return jdbcTemplate.query(SQL, new Object[] { input }, new GiaoVienMapper());

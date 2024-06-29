@@ -1,5 +1,7 @@
 package ptithcm.JDBCtemplate;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,8 +42,9 @@ public class UtilJDBCTemplate {
                     while (rs.next()) {
                         String tenServer = rs.getString("TENSERVER");
                         String tenCS = rs.getString("TENCS");
-                        if (!tenServer.equals("DESKTOP-SVEFPRH\\MSSQLSERVER_TN3")) {
-                            listRet.add(new ServerInfo(tenServer, tenCS));
+                        String tenCS_s = rs.getString("s_TENCS");
+                        if (!tenCS_s.equals("TC")) {
+                            listRet.add(new ServerInfo(tenServer, tenCS, tenCS_s));
                         }
                     }
                     return listRet;

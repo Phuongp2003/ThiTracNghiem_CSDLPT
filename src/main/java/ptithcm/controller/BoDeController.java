@@ -56,12 +56,11 @@ public class BoDeController {
             // Pass history actions to the template for potential undo/redo display
             model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
             model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
-
             List<BoDe> bodes;
             if (currentConnection.getRoleAlias().equals("TRUONG"))
                 bodes = boDeJDBCTemplate.listAllBoDe();
             else
-                bodes = boDeJDBCTemplate.listBoDe("TH123");
+                bodes = boDeJDBCTemplate.listBoDe(currentConnection.getEmployeeID());
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
 
             Map<String, String> monhocMap = new HashMap();
@@ -101,7 +100,7 @@ public class BoDeController {
                         if (currentConnection.getRoleAlias().equals("TRUONG"))
                             bodes = boDeJDBCTemplate.listAllBoDe();
                         else
-                            bodes = boDeJDBCTemplate.listBoDe("TH123");
+                            bodes = boDeJDBCTemplate.listBoDe(currentConnection.getEmployeeID());
                     }
                 } else {
                     if (diff) {
@@ -110,11 +109,11 @@ public class BoDeController {
                         if (currentConnection.getRoleAlias().equals("TRUONG"))
                             bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh);
                         else
-                            bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh, "TH123");
+                            bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh, currentConnection.getEmployeeID());
                     }
                 }
             } else {
-                bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh, "TH123");
+                bodes = boDeJDBCTemplate.findBoDeByMonHoc(mamh, currentConnection.getEmployeeID());
             }
             model.addAttribute("mamh", mamh);
             model.addAttribute("bodes", bodes);

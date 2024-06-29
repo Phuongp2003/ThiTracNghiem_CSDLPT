@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -102,23 +102,32 @@ public class UserController {
         String roleAlias = null;
         GlobalVariable currentConnection = new GlobalVariable();
         currentConnection.setRootSite(mainSite);
+        utilJDBCTemplate.setRootDataSource(mainSite);
         try {
             String pcName = "ukn";
             InetAddress addr = InetAddress.getLocalHost();
             pcName = addr.getHostName().toUpperCase();
-            final String siteName1 = pcName + "\\MSSQLSERVER_TN1";
-            final String siteName2 = pcName + "\\MSSQLSERVER_TN2";
-            final String siteName3 = pcName + "\\MSSQLSERVER_TN3";
+            List<ServerInfo> svi = utilJDBCTemplate.getDSPhanManh();
+            List<String> siteName = new ArrayList<>();
+            siteName.add("");
+            siteName.add("");
+            siteName.add("");
+            for (int i = 0; i < svi.size(); i++) {
+                if (svi.get(i).getTenCS_s().equals("CS" + (i + 1))) {
+                    siteName.add(i, svi.get(i).getTenServer());
+                }
+            }
+            List<DriverManagerDataSource> sites = new ArrayList<>();
+            sites.add(firstSite);
+            sites.add(secondSite);
+            sites.add(reportSite);
             // Check site
-
-            if (siteName1.equals(site))
-                currentConnection.setSite(firstSite);
-            else if (siteName2.equals(site))
-                currentConnection.setSite(secondSite);
-            else if (siteName3.equals(site))
-                currentConnection.setSite(reportSite);
-            else
-                throw new Exception("SITE NOT FOUND");
+            for (int i = 0; i < siteName.size(); i++) {
+                if (siteName.get(i).equals(site)) {
+                    currentConnection.setSite(sites.get(i));
+                    break;
+                }
+            }
 
             // Check role
             if (usertype.equals("SV")) {
@@ -162,7 +171,7 @@ public class UserController {
                         throw new NullPointerException("Vai trò người dùng không hợp lệ!");
                 }
                 currentConnection.setCurrentUser(username, giaoVienInfo.get("HOTEN"), role,
-                        giaoVienInfo.get("USERNAME"),
+                        giaoVienInfo.get("MANV"),
                         roleAlias, true);
             }
             Cookie usernameCookie = new Cookie("username", currentConnection.getCurrentUser().getUserName());
@@ -177,18 +186,18 @@ public class UserController {
             model.addAttribute("type", "login");
             model.addAttribute("message", "Thông tin đăng nhập không chính xác!");
             return "redirect:/auth/login.htm";
-        } catch (NullPointerException e) {
-            System.out.println("LOGIN FAIL" + e);
+        } catch (NullPointerException | DataAccessException e) {
+            System.out.println("LOGIN FAIL" + e.getMessage());
             model.addAttribute("type", "login");
-            model.addAttribute("message", e);
+            model.addAttribute("message", e.getMessage());
             return "redirect:/auth/login.htm";
         } catch (UnknownHostException e) {
-            System.out.println("LOGIN FAIL" + e);
+            System.out.println("LOGIN FAIL" + e.getMessage());
             model.addAttribute("type", "login");
             model.addAttribute("message", "Không thể xác định tên máy!");
             return "redirect:/auth/login.htm";
         } catch (Exception e) {
-            System.out.println("LOGIN FAIL" + e);
+            System.out.println("LOGIN FAIL" + e.getMessage());
             model.addAttribute("type", "login");
             model.addAttribute("message", "Không tồn tại cơ sở!");
             return "redirect:/auth/login.htm";

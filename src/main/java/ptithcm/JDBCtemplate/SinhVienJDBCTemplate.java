@@ -218,8 +218,13 @@ public class SinhVienJDBCTemplate {
 
     public boolean checkMasv(String masv) {
         try {
-            String SQL = "{call SP_KTSinhVienTonTai(?)}";
-            return jdbcTemplate.queryForObject(SQL, new Object[] { masv }, Boolean.class);
+            String SQL = "{call SP_KiemTraSinhVienTonTai(?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { masv }, (ResultSet rs, int rowNum) -> {
+                if (rs == null) {
+                    return false;
+                }
+                return rs.getInt(1) > 0;
+            });
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - find Error: " + e.getMessage());

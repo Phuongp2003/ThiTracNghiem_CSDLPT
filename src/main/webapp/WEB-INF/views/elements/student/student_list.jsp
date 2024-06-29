@@ -12,7 +12,9 @@
 			<th scope="col">Địa chỉ</th>
 			<th scope="col">Lớp</th>
 			<th scope="col">Mật khẩu</th>
-			<c:if test="${role_al != 'TRUONG'}"><th scope="col">Thao tác</th></c:if>
+			<c:if test="${role_al != 'TRUONG'}">
+				<th scope="col">Thao tác</th>
+			</c:if>
 		</tr>
 	</thead>
 	<tbody>
@@ -71,7 +73,7 @@
 								</div>
 							</div>
 						</div>
-	
+						
 						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-student-${sv.MASV.trim()}">
 							Chuyển lớp
 						</button>
@@ -84,8 +86,11 @@
 											<label>Lớp</label>
 											<select class="form-select" id="lop" name="malop">
 												<c:forEach var="l" items="${lops}">
-													<option value="${l.MALOP}">
-														${l.MALOP} (${l.TENLOP})</option>
+													<c:if test="${sv.MALOP != l.MALOP}">
+														<option value="${l.MALOP}">
+															${l.MALOP} (${l.TENLOP})
+														</option>
+													</c:if>
 												</c:forEach>
 											</select>
 										</div>

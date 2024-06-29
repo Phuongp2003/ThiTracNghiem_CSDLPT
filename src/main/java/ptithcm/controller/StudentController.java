@@ -36,7 +36,7 @@ import ptithcm.bean.SinhVien;
 public class StudentController {
     @Autowired
     private GlobalVariable currentConnection;
-    
+
     @Autowired
     SinhVienJDBCTemplate sinhVienJDBCTemplate;
 
@@ -293,8 +293,25 @@ public class StudentController {
     }
 
     @RequestMapping(value = "check-masv", method = RequestMethod.POST)
-    public boolean checkMasvExist(@RequestParam("masv") String masv) {
-        return sinhVienJDBCTemplate.checkMasv(masv);
+
+    public String checkMasvExist(@RequestBody String body) {
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String masv = map.get("masv");
+            if (masv == null || masv.isEmpty()) {
+                return "false";
+            }
+            Boolean isAvai = sinhVienJDBCTemplate.checkMasv(masv);
+            if (!isAvai) {
+                return "false";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "true";
     }
 
     @RequestMapping(value = "search", method = RequestMethod.POST)

@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
+
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import ptithcm.JDBCtemplate.GiaoVienJDBCTemplate;
 import ptithcm.bean.GiaoVien;
@@ -39,8 +42,12 @@ public class GiaoVienService {
         giaoVienJDBCTemplate.delete(maGiaoVien);
     }
 
-    public Map<String, String> dangNhap(String username) {
-        return giaoVienJDBCTemplate.login(username);
+    public Map<String, String> dangNhap(String username) throws DataAccessException, SQLServerException {
+        try {
+            return giaoVienJDBCTemplate.login(username);
+        } catch (DataAccessException | SQLServerException e) {
+            throw e;
+        }
     }
 
     public List<GiaoVien> docDanhSachGiaoVienTheoKhoa(String makhoa) {

@@ -268,15 +268,31 @@
 		return sinhVienObjects;
 	}
 	
-	function checkMasvExist(element) {
+	async function checkMasvExist(element) {
 		const masv = element.value;
-		const list = parseSinhVienList(`${sinhViens}`)
 		var submitForm = document.getElementById('submit-form');
 		// Convert the string representation of list to an actual array of objects
 		try {
+			var check = await fetch('student/check-masv.htm', {
+					method: 'POST',
+					body: JSON.stringify({
+						masv: masv
+					})
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.text();
+				})
+				.then(data => {
+					return data.includes('true');
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
 			// Check if the provided masv exists in the sinhVienArray by MASV
-			const masvExists = list.some(sinhVien => sinhVien.MASV.trim() === masv.trim());
-			if (!masvExists && masv.trim() != "" && masv) {
+			if (check) {
 				element.classList.remove('is-invalid')
 				element.classList.add('is-valid')
 				if (submitForm !== null) {
