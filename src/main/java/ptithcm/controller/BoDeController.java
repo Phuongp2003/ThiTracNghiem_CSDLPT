@@ -59,14 +59,34 @@ public class BoDeController {
             // Pass history actions to the template for potential undo/redo display
             model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
             model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
+
             List<BoDe> bodes;
             if (currentConnection.getRoleAlias().equals("TRUONG") ||
                     currentConnection.getRoleAlias().equals("COSO")) {
                 bodes = boDeJDBCTemplate.listAllBoDe();
+                List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
+                Map<String, String> giaovienMap = new HashMap();
+                for (GiaoVien i : giaoviens) {
+                    giaovienMap.put(i.getMAGV(), i.getFullName());
+                }
+
+                model.addAttribute("giaovienMap", giaovienMap);
             } else
                 bodes = boDeJDBCTemplate.listBoDe(currentConnection.getEmployeeID());
+
             List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
             Map<String, String> monhocMap = new HashMap();
+            for (MonHoc i : monhocs) {
+                monhocMap.put(i.getMAMH(), i.getTENMH());
+            }
+
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
+            model.addAttribute("bodes", bodes);
+            model.addAttribute("monhocs", monhocs);
+            model.addAttribute("monhocMap", monhocMap);
+        } else {
             model.addAttribute("message", "Không có bộ đề nào!");
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
