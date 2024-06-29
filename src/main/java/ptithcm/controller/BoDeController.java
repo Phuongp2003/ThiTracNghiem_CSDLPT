@@ -32,9 +32,6 @@ import ptithcm.bean.MonHoc;
 @RequestMapping("bode")
 public class BoDeController {
     @Autowired
-    private GlobalVariable currentConnection;
-
-    @Autowired
     BoDeJDBCTemplate boDeJDBCTemplate;
 
     @Autowired

@@ -2,6 +2,8 @@ package ptithcm.bean;
 
 import java.util.Date;
 
+import ptithcm.util.DateFM;
+
 public class SinhVien {
     private String MASV;
     private String HO;
@@ -50,6 +52,10 @@ public class SinhVien {
 
     public Date getNGAYSINH() {
         return NGAYSINH;
+    }
+
+    public String getNGAYSINHF() {
+        return DateFM.Date(this.NGAYSINH);
     }
 
     public void setNGAYSINH(Date NGAYSINH) {

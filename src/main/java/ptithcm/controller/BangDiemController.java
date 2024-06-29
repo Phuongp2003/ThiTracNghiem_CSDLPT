@@ -16,6 +16,7 @@ import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.Lop;
 import ptithcm.bean.MonHoc;
+import ptithcm.util.DateFM;
 
 @Controller
 @RequestMapping("score-list")
@@ -50,6 +51,7 @@ public class BangDiemController {
             model.addAttribute("message", "Không có bảng điểm nào!");
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
+        model.addAttribute("DateFM", new DateFM());
         return "pages/score_subject";
     }
 }

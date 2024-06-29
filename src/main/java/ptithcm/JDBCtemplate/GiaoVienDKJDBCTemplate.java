@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.mapper.GiaoVienDKMapper;
+import ptithcm.util.DateFM;
 
 @Service
 public class GiaoVienDKJDBCTemplate {
@@ -121,7 +122,7 @@ public class GiaoVienDKJDBCTemplate {
                         list.add(rs.getString("TENMH"));
                         list.add(rs.getString("HOTEN"));
                         list.add(rs.getString("SOCAUTHI"));
-                        list.add(rs.getDate("NGAYTHI").toString());
+                        list.add(DateFM.Date(rs.getDate("NGAYTHI")));
                         list.add(rs.getString("DATHI"));
                         list.add(rs.getString("MACS"));
                         return list;
@@ -147,7 +148,7 @@ public class GiaoVienDKJDBCTemplate {
                         list.add(rs.getString("TENMH"));
                         list.add(rs.getString("HOTEN"));
                         list.add(rs.getString("SOCAUTHI"));
-                        list.add(rs.getString("NGAYTHI"));
+                        list.add(DateFM.Date(rs.getDate("NGAYTHI")));
                         list.add(rs.getString("DATHI"));
                         return list;
                     });

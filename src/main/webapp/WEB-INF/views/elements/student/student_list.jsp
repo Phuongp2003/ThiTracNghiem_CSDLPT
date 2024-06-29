@@ -23,7 +23,7 @@
 				<td>${sv.MASV}</td>
 				<td>${sv.HO}</td>
 				<td>${sv.TEN}</td>
-				<td>${sv.NGAYSINH}</td>
+				<td>${sv.getNGAYSINHF()}</td>
 				<td>${sv.DIACHI}</td>
 				<td>${lopMap.get(sv.MALOP)}</td>
 				<td>${sv.MATKHAU}</td>

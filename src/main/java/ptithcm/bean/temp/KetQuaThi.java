@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import ptithcm.util.DateFM;
+
 public class KetQuaThi {
     String HOTEN;
     String LOP;
@@ -82,8 +84,8 @@ public class KetQuaThi {
         if (NGAYTHI == null) {
             return "";
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return sdf.format(NGAYTHI);
+
+        return DateFM.Datetime(NGAYTHI);
     }
 
     public KetQuaThi(String HOTEN, String LOP, String MAMH, String TENMH, Timestamp NGAYTHI, int LAN, float DIEM,
