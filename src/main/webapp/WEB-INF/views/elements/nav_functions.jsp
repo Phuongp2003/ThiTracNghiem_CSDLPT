@@ -2,6 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <c:if test="${role == 'COSO' || role == 'GIANGVIEN' || role == 'TRUONG'}">
 	<li class="nav-item">
+		<a class="nav-link" href="account.htm">Tạo tài khoản</a>
+	</li>
+	<li class="nav-item">
 		<a class="nav-link" href="teacher.htm">Giáo viên</a>
 	</li>
 	<li class="nav-item">

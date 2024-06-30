@@ -198,4 +198,20 @@ public class GiaoVienJDBCTemplate {
             return null;
         }
     }
+
+    public String checkMagv(String magv) {
+        try {
+            String SQL = "{call SP_KiemTraGiaoVienTonTai(?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { magv }, (ResultSet rs, int rowNum) -> {
+                if (rs == null) {
+                    return "false";
+                }
+                return rs.getString("");
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Giao Vien - find Error: " + e.getMessage());
+            return "false";
+        }
+    }
 }

@@ -150,4 +150,20 @@ public class MonHocJDBCTemplate {
             return null;
         }
     }
+
+    public boolean checkMamh(String mamh) {
+        try {
+            String SQL = "{call SP_KiemTraMonHocTonTai(?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { mamh }, (ResultSet rs, int rowNum) -> {
+                if (rs == null) {
+                    return false;
+                }
+                return rs.getInt(1) > 0;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Mon Hoc - find Error: " + e.getMessage());
+            return false;
+        }
+    }
 }

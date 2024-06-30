@@ -208,6 +208,27 @@ public class SubjectController {
         return "elements/subject/button_action_list";
     }
 
+    @RequestMapping(value = "check-mamh", method = RequestMethod.POST)
+    public String checkMamh(@RequestBody String body) {
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String mamh = map.get("mamh");
+            if (mamh == null || mamh.isEmpty()) {
+                return "false";
+            }
+            Boolean isAvai = monHocJDBCTemplate.checkMamh(mamh);
+            if (!isAvai) {
+                return "false";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "true";
+    }
+
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchSubjects(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");

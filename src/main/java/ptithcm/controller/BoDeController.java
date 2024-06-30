@@ -112,15 +112,8 @@ public class BoDeController {
                         if (currentConnection.getRoleAlias().equals("TRUONG") ||
                                 currentConnection.getRoleAlias().equals("COSO")) {
                             bodes = boDeJDBCTemplate.listAllBoDe();
-                            List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
-                            Map<String, String> giaovienMap = new HashMap();
-                            for (GiaoVien i : giaoviens) {
-                                giaovienMap.put(i.getMAGV(), i.getFullName());
-                            }
-
-                            model.addAttribute("giaovienMap", giaovienMap);
                         } else
-                            bodes = boDeJDBCTemplate.listBoDe("TH123");
+                            bodes = boDeJDBCTemplate.listBoDe(currentConnection.getEmployeeID());
                     }
                 } else {
                     if (diff) {
@@ -147,6 +140,13 @@ public class BoDeController {
         for (MonHoc i : monhocs) {
             monhocMap.put(i.getMAMH(), i.getTENMH());
         }
+        List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
+        Map<String, String> giaovienMap = new HashMap();
+        for (GiaoVien i : giaoviens) {
+            giaovienMap.put(i.getMAGV(), i.getFullName());
+        }
+
+        model.addAttribute("giaovienMap", giaovienMap);
         model.addAttribute("monhocMap", monhocMap);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
 
