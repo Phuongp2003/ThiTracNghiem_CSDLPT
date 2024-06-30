@@ -1,12 +1,17 @@
 package ptithcm.JDBCtemplate;
 
+import java.sql.CallableStatement;
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.temp.CauHoiDeThi;
@@ -29,16 +34,37 @@ public class ThiJDBCTemplate {
     }
 
     public List<CauHoiDeThi> getDeThi(String masv, String malop, String mamh,
-            int lanthi) {
-        String SQL = "{call SP_TaoBaiThi(?, ?, ?, ?)}";
-        List<CauHoiDeThi> res;
+            int lanthi) throws SQLException, DataAccessException, Exception {
+        List<CauHoiDeThi> res = new ArrayList<>();
         try {
-            res = jdbcTemplate.query(SQL, new Object[] { masv, malop, mamh, lanthi },
-                    new DeThiMapper());
+            String SQL = "{call SP_TaoBaiThi(?, ?, ?, ?)}";
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.setString(1, masv);
+            cs.setString(2, malop);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            try (ResultSet rs = cs.executeQuery()) {
+                RowMapper<CauHoiDeThi> mapper = new DeThiMapper();
+                while (rs.next()) {
+                    res.add(mapper.mapRow(rs, 0));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("SQL Error - Message: " + e.getMessage());
+            throw new Exception("SQL Error - Message: " + e.getMessage());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("De Thi - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("De Thi - select Error: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("De Thi - select Unhandle Error: " + e.getMessage());
+            throw new Exception("De Thi - select Unhandle Error: " + e.getMessage());
         }
 
         return res;

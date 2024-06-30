@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 
@@ -53,7 +54,8 @@ public class ThiController {
     ThiJDBCTemplate thiJDBCTemplate;
 
     @RequestMapping("")
-    public String infoStudent(ModelMap model, HttpSession session) {
+    public String infoStudent(ModelMap model, HttpSession session,
+            RedirectAttributes redirectAttributes) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         if (currentConnection != null) {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
@@ -80,29 +82,36 @@ public class ThiController {
 
     @RequestMapping(value = "start-exam", method = RequestMethod.POST)
     public String startExam(ModelMap model, HttpSession session, @RequestParam("mamh") String mamh,
-            @RequestParam("lanthi") int lanthi) {
-        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
-            List<CauHoiDeThi> deThi = null;
-            session.setAttribute("sv", sv);
-            session.setAttribute("mamh", mamh);
-            session.setAttribute("lanthi", lanthi);
-            String trangthai = thiJDBCTemplate.getTrangThaiThi(sv.getMASV(), mamh, lanthi);
+            @RequestParam("lanthi") int lanthi,
+            RedirectAttributes redirectAttributes) {
+        try {
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+            if (currentConnection != null) {
+                sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
+                SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
+                List<CauHoiDeThi> deThi = null;
+                session.setAttribute("sv", sv);
+                session.setAttribute("mamh", mamh);
+                session.setAttribute("lanthi", lanthi);
+                String trangthai = thiJDBCTemplate.getTrangThaiThi(sv.getMASV(), mamh, lanthi);
 
-            switch (trangthai) {
-                case "CHUATHI":
-                    deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(), mamh, lanthi);
-                    break;
-                case "DATHI":
-                    break;
-                case "DANGTHI":
-                    deThi = thiJDBCTemplate.reGetDeThi(sv.getMASV(), mamh, lanthi);
-                    break;
+                switch (trangthai) {
+                    case "CHUATHI":
+                        deThi = thiJDBCTemplate.getDeThi(sv.getMASV(), sv.getMALOP(), mamh, lanthi);
+                        break;
+                    case "DATHI":
+                        break;
+                    case "DANGTHI":
+                        deThi = thiJDBCTemplate.reGetDeThi(sv.getMASV(), mamh, lanthi);
+                        break;
+                }
+                session.setAttribute("trangthaithi", trangthai);
+                session.setAttribute("deThi", deThi);
             }
-            session.setAttribute("trangthaithi", trangthai);
-            session.setAttribute("deThi", deThi);
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("e_message", e.getMessage());
+            return "redirect:/thi.htm";
         }
         return "redirect:/thi/exam.htm";
     }

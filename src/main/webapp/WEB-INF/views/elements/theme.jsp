@@ -83,6 +83,8 @@
 		</li>
 	</ul>
 </div>
+<jsp:include page="./message_box.jsp" />
+
 <script>
 	(() => {
 		'use strict'
