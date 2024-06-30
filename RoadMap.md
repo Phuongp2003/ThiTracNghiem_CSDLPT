@@ -3,48 +3,48 @@
     Fix SP support throw error
 </summary>
 
-| Is Fixed | Done? | Name (+Last time update?)                    |Link Message
+| Is Fixed | Done? | Should delete  | Name (+Last time update?)                    |Link Message
 |----------|-------|----------------------------------------------|---------
-| [ ]      | [ ]   | LayDanhSachThiTracNghiem | example link
-| [ ]      | [ ]   | SP_CapNhatBaiThi         
-| [ ]      | [ ]   | ChamDiemBaiThi           
-| [ ]      | [ ]   | ChuyenKhoa               
-| [ ]      | [ ]   | ChuyenLop
-| [ ]      | [ ]   | DangKyThi
-| [ ]      | [ ]   | DangNhapGiangVien
-| [ ]      | [ ]   | DangNhapSinhVien
-| [ ]      | [ ]   | DanhSachCacMonThi
-| [ ]      | [ ]   | DanhSachDangKyThi
-| [ ]      | [ ]   | DanhSachLop
-| [ ]      | [ ]   | DanhSachMonCoDiem
-| [ ]      | [ ]   | DanhSachSinhVien
-| [ ]      | [ ]   | DeThi
-| [ ]      | [ ]   | InBangDiem
-| [ ]      | [ ]   | KiemTraBoDeTonTai
-| [ ]      | [ ]   | KiemTraDangKyThi
-| [ ]      | [ ]   | KiemTraGiaoVienTonTai
-| [ ]      | [ ]   | KiemTraKhoaTonTai
-| [ ]      | [ ]   | KiemTraLopTonTai
-| [ ]      | [ ]   | KiemTraMonHocTonTai
-| [ ]      | [ ]   | KiemTraSoLuongCau
-| [ ]      | [ ]   | KiemTraSoLuongCauCungBac
-| [ ]      | [ ]   | KiemTraTrangThaiThi
-| [ ]      | [ ]   | KiemTraXoaGVDK
-| [ ]      | [ ]   | KTSinhVienTonTai
-| [ ]      | [ ]   | LayThoiGianThi
-| [ ]      | [ ]   | Login[?]
-| [ ]      | [ ]   | TaoLogin
-| [ ]      | [ ]   | TaoBaiThi
-| [ ]      | [ ]   | ThiSinhXemKetQua
-| [ ]      | [ ]   | TimKiemBoDe
-| [ ]      | [ ]   | TimKiemGiaoVien
-| [ ]      | [ ]   | TimKiemLop
-| [ ]      | [ ]   | TimKiemMonHoc
-| [ ]      | [ ]   | TimKiemSinhVien
-| [ ]      | [ ]   | XemKetQua
-| [ ]      | [ ]   | XOA_LOGIN
-| [ ]      | [ ]   | XoaKhoa
-| [ ]      | [ ]   | XoaLop
+| [ ]      | [ ]   |   [ ]          |LayDanhSachThiTracNghiem | example link
+| [ ]      | [X]   |   [ ]          | SP_CapNhatBaiThi         
+| [ ]      | [X]   |   [ ]          | ChamDiemBaiThi           
+| [ ]      | [X]   |   [ ]          | ChuyenKhoa               
+| [ ]      | [X]   |   [ ]          | ChuyenLop
+| [ ]      | [X]   |   [ ]          | DangKyThi
+| [ ]      | [X]   |   [ ]          | DangNhapGiangVien
+| [ ]      | [X]   |   [ ]          | DangNhapSinhVien
+| [ ]      | [X]   |   [ ]          | DanhSachCacMonThi
+| [ ]      | [X]   |   [ ]          | DanhSachDangKyThi
+| [ ]      | [ ]   |   [X]          | DanhSachLop
+| [ ]      | [X]   |   [ ]          | DanhSachMonCoDiem
+| [ ]      | [ ]   |   [X]          | DanhSachSinhVien
+| [ ]      | [X]   |   [ ]          | DeThi
+| [ ]      | [X]   |   [ ]          | InBangDiem
+| [ ]      | [X]   |   [ ]          | KiemTraBoDeTonTai
+| [ ]      | [X]   |   [ ]          | KiemTraDangKyThi
+| [ ]      | [X]   |   [ ]          | KiemTraGiaoVienTonTai
+| [ ]      | [X]   |   [ ]          | KiemTraKhoaTonTai
+| [ ]      | [X]   |   [ ]          | KiemTraLopTonTai
+| [ ]      | [X]   |   [ ]          | KiemTraMonHocTonTai
+| [ ]      | [X]   |   [ ]          | KiemTraSoLuongCau
+| [ ]      | [X]   |   [ ]          | KiemTraSoLuongCauCungBac
+| [ ]      | [X]   |   [ ]          | KiemTraTrangThaiThi
+| [ ]      | [X]   |   [ ]          | KiemTraXoaGVDK
+| [ ]      | [X]   |   [ ]          | KTSinhVienTonTai
+| [ ]      | [X]   |   [ ]          | LayThoiGianThi
+| [ ]      | [ ]   |   [ ]          | Login[?]
+| [ ]      | [X]   |   [ ]          | TaoLogin
+| [ ]      | [X]   |   [ ]          | TaoBaiThi
+| [ ]      | [X]   |   [ ]          | ThiSinhXemKetQua
+| [ ]      | [X]   |   [ ]          | TimKiemBoDe
+| [ ]      | [X]   |   [ ]          | TimKiemGiaoVien
+| [ ]      | [X]   |   [ ]          | TimKiemLop
+| [ ]      | [X]   |   [ ]          | TimKiemMonHoc
+| [ ]      | [ ]   |   [ ]          | TimKiemSinhVien
+| [ ]      | [X]   |   [ ]          | XemKetQua
+| [ ]      | [X]   |   [ ]          | XOA_LOGIN
+| [ ]      | [X]   |   [ ]          | XoaKhoa
+| [ ]      | [X]   |   [ ]          | XoaLop
 </details>
 
 
