@@ -54,12 +54,15 @@
 									<label>Tên lớp: </label>
 									<input name="tenlop" class="form-control" />
 								</div>
-								<select class="form-select" id="khoa" name="makh">
-									<c:forEach var="k" items="${khoas}">
-										<option value="${k.MAKH}">
-											${k.MAKH} (${k.TENKH})</option>
-									</c:forEach>
-								</select>
+								<div class="mb-3">
+									<label>Khoa</label>
+									<select class="form-select" id="khoa" name="makh">
+										<c:forEach var="k" items="${khoas}">
+											<option value="${k.MAKH}">
+												${k.MAKH} (${k.TENKH})</option>
+										</c:forEach>
+									</select>
+								</div>
 								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>

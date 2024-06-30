@@ -1,7 +1,6 @@
 package ptithcm.JDBCtemplate;
 
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,16 +33,17 @@ public class ThiJDBCTemplate {
     }
 
     public List<CauHoiDeThi> getDeThi(String masv, String malop, String mamh,
-            int lanthi) throws SQLException, DataAccessException, Exception {
+            int lanthi) throws Exception {
         List<CauHoiDeThi> res = new ArrayList<>();
         try {
-            String SQL = "{call SP_TaoBaiThi(?, ?, ?, ?)}";
+            String SQL = "{? = call SP_TaoBaiThi(?, ?, ?, ?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
-            cs.setString(1, masv);
-            cs.setString(2, malop);
-            cs.setString(3, mamh);
-            cs.setInt(4, lanthi);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, malop);
+            cs.setString(4, mamh);
+            cs.setInt(5, lanthi);
             try (ResultSet rs = cs.executeQuery()) {
                 RowMapper<CauHoiDeThi> mapper = new DeThiMapper();
                 while (rs.next()) {
@@ -56,7 +56,7 @@ public class ThiJDBCTemplate {
             int errorCode = e.getErrorCode();
             System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
             System.err.println("SQL Error - Message: " + e.getMessage());
-            throw new Exception("SQL Error - Message: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: TaoBaiThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("De Thi - select Error: " + e.getMessage());
@@ -71,12 +71,23 @@ public class ThiJDBCTemplate {
     }
 
     public List<CauHoiDeThi> reGetDeThi(String masv, String mamh,
-            int lanthi) {
-        String SQL = "{call SP_DeThi(?, ?, ?)}";
+            int lanthi) throws Exception {
+        String SQL = "{? = call SP_DeThi(?, ?, ?)}";
         List<CauHoiDeThi> res;
         try {
-            res = jdbcTemplate.query(SQL, new Object[] { masv, mamh, lanthi },
-                    new DeThiMapper());
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            ResultSet rs = cs.executeQuery();
+            res = new ArrayList<>();
+            RowMapper<CauHoiDeThi> mapper = new DeThiMapper();
+            while (rs.next()) {
+                res.add(mapper.mapRow(rs, 0));
+            }
+
             String maBangDiem = masv.trim() + mamh.trim() + lanthi;
             for (CauHoiDeThi cauHoiDeThi : res) {
                 String traloi = jdbcTemplate.queryForObject(
@@ -84,108 +95,256 @@ public class ThiJDBCTemplate {
                         new Object[] { maBangDiem, cauHoiDeThi.getCAUHOI() }, String.class);
                 cauHoiDeThi.setDAPAN(traloi);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: DeThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("REGET - De Thi - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("REGET - De Thi - select Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
 
         return res;
     }
 
     public String getTrangThaiThi(String masv, String mamh,
-            int lanthi) {
-        String SQL = "{call SP_KiemTraTrangThaiThi(?, ?, ?)}";
+            int lanthi) throws Exception {
+        String SQL = "{? = call SP_KiemTraTrangThaiThi(?, ?, ?)}";
         String res;
         try {
-            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, mamh, lanthi }, String.class);
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.VARCHAR);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            cs.execute();
+            res = cs.getString(1); // Need change to return value
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: KiemTraTrangThaiThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Trang Thai Thi - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Trang Thai Thi - select Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
         return res;
     }
 
-    public List<MonThi> getListMonThi(String masv) {
-        String SQL = "{call SP_DanhSachCacMonThi(?)}";
-        List<MonThi> res;
+    public List<MonThi> getListMonThi(String masv) throws Exception {
+        String SQL = "{? = call SP_DanhSachCacMonThi(?)}";
+        List<MonThi> res = new ArrayList<>();
+        ;
         try {
-            res = jdbcTemplate.query(SQL, new Object[] { masv }, new MonThiMapper());
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            ResultSet rs = cs.executeQuery();
+            RowMapper<MonThi> mapper = new MonThiMapper();
+            while (rs.next()) {
+                res.add(mapper.mapRow(rs, 0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: DanhSachCacMonThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Mon Thi - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Mon Thi - select Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
         return res;
     }
 
-    public ThoiGianThi getThoiGianThi(String masv, String maMonThi, int lanThi) {
-        String SQL = "{call SP_LayThoiGianThi(?, ?, ?)}";
-        ThoiGianThi res;
+    public ThoiGianThi getThoiGianThi(String masv, String maMonThi, int lanThi) throws Exception {
+        String SQL = "{? = call SP_LayThoiGianThi(?, ?, ?)}";
+        ThoiGianThi res = new ThoiGianThi();
         try {
-            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, maMonThi, lanThi }, new ThoiGianThiMapper());
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, maMonThi);
+            cs.setInt(4, lanThi);
+            ResultSet rs = cs.executeQuery();
+            res = new ThoiGianThi();
+            RowMapper<ThoiGianThi> mapper = new ThoiGianThiMapper();
+            while (rs.next()) {
+                res = mapper.mapRow(rs, 0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: LayThoiGianThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Thoi Gian Thi - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Thoi Gian Thi - select Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
         return res;
     }
 
     public void updateBaiThi(String masv, String mamh, int lanthi, int cauhoi, String traloi) throws Exception {
-        String SQL = "{call SP_CapNhatBaiThi(?, ?, ?, ?, ?)}";
+        String SQL = "{? = call SP_CapNhatBaiThi(?, ?, ?, ?, ?)}";
         try {
-            jdbcTemplate.update(SQL, masv, mamh, lanthi, cauhoi, traloi);
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            cs.setInt(5, cauhoi);
+            cs.setString(6, traloi);
+            cs.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: CapNhatBaiThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Update Bai Thi - update Error: " + e.getMessage());
-            throw new Exception("Update Bai Thi - update Error: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Update Bai Thi - update Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     public void chamBaiThi(String masv, String mamh, int lanthi) throws Exception {
-        String SQL = "{call SP_ChamDiemBaiThi(?, ?, ?)}";
+        String SQL = "{? = call SP_ChamDiemBaiThi(?, ?, ?)}";
         try {
-            jdbcTemplate.update(SQL, masv, mamh, lanthi);
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            cs.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: ChamDiemBaiThi)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Cham Bai Thi - update Error: " + e.getMessage());
-            throw new Exception("Cham Bai Thi - update Error: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Cham Bai Thi - update Error: " + e.getMessage());
-            throw new Exception("Cham Bai Thi - update Error: " + e.getMessage());
+            System.err.println("Cham Bai Thi - update Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     public KetQuaThi nhanKetQuaThi(String masv, String mamh, int lanthi) throws Exception {
-        String SQL = "{call SP_ThiSinhXemKetQua(?, ?, ?)}";
-        KetQuaThi res;
+        String SQL = "{? = call SP_ThiSinhXemKetQua(?, ?, ?)}";
+        KetQuaThi res = new KetQuaThi();
         try {
-            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, mamh, lanthi }, new KetQuaThiMapper());
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            KetQuaThiMapper mapper = new KetQuaThiMapper();
+            res = (KetQuaThi) mapper.mapRow(cs.getResultSet(), 0);
             return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: ThiSinhXemKetQua)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Nhan Dap An - select Error: " + e.getMessage());
-            throw new Exception("Nhan Dap An - select Error: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Nhan Dap An - select Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     public KetQuaThi nhanDapAn(String masv, String mamh, int lanthi) throws Exception {
-        String SQL = "{call SP_ThiSinhXemKetQua(?, ?, ?)}";
+        String SQL = "{? = call SP_ThiSinhXemKetQua(?, ?, ?)}";
         KetQuaThi res;
         try {
-            res = jdbcTemplate.queryForObject(SQL, new Object[] { masv, mamh, lanthi }, new KetQuaThiMapper());
-            String SQL2 = "{call SP_XemKetQua(?, ?, ?)}";
-            List<ChiTietDapAn> chiTietDapAn = jdbcTemplate.query(SQL2, new Object[] { masv, mamh, lanthi },
-                    new ChiTietDapAnMapper());
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            KetQuaThiMapper mapper = new KetQuaThiMapper();
+            res = (KetQuaThi) mapper.mapRow(cs.getResultSet(), 0);
+            String SQL2 = "{? = call SP_XemKetQua(?, ?, ?)}";
+            cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL2);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, mamh);
+            cs.setInt(4, lanthi);
+            ChiTietDapAnMapper mapper2 = new ChiTietDapAnMapper();
+            List<ChiTietDapAn> chiTietDapAn = new ArrayList<>();
+            while (cs.getResultSet().next()) {
+                chiTietDapAn.add((ChiTietDapAn) mapper2.mapRow(cs.getResultSet(), 0));
+            }
             res.setChiTietDapAn(chiTietDapAn);
             return res;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: ThiSinhXemKetQua)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Nhan Dap An - select Error: " + e.getMessage());
-            throw new Exception("Nhan Dap An - select Error: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Nhan Dap An - select Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 }

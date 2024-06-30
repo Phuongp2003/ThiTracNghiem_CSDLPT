@@ -39,7 +39,9 @@
 				<c:if test="${role_al == 'TRUONG' || role_al == 'COSO'}"><td>${giaovienMap.get(bd.MAGV)}</td></c:if>
 				<c:if test="${role_al == 'COSO' || role_al == 'GIANGVIEN'}">
 					<td>
-						<a href="bode/delete-bode/${bd.CAUHOI}.htm" onclick="return confirm('Bạn có chắc muốn xóa câu ${bd.CAUHOI}?')"><button class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button></a>
+						<form class="d-inline" action="bode/delete-bode/${bd.CAUHOI}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa câu ${bd.CAUHOI}?')" target="formSubmitFrame">
+                            <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>
+                        </form>
 						
 						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-bode-${bd.CAUHOI}">
 							<i class="bi bi-pencil-square"></i>

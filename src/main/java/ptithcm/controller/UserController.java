@@ -1,6 +1,5 @@
 package ptithcm.controller;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -58,7 +57,12 @@ public class UserController {
             RedirectAttributes redirectAttributes) {
         utilJDBCTemplate = new UtilJDBCTemplate();
         utilJDBCTemplate.setRootDataSource(mainSite);
-        List<ServerInfo> sites = utilJDBCTemplate.getDSPhanManh();
+        List<ServerInfo> sites = new ArrayList<>();
+        try {
+            sites = utilJDBCTemplate.getDSPhanManh();
+        } catch (Exception e) {
+            model.addAttribute("message", e.getMessage());
+        }
         model.addAttribute("sites", sites);
         if (message != null) {
             redirectAttributes.addFlashAttribute("message", message);
@@ -96,7 +100,8 @@ public class UserController {
             @RequestParam("password") String password,
             @RequestParam("usertype") String usertype,
             HttpSession session,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            RedirectAttributes redirectAttributes) {
         String svUsername = username;
         String svPassword = password;
         String roleAlias = null;
@@ -104,9 +109,6 @@ public class UserController {
         currentConnection.setRootSite(mainSite);
         utilJDBCTemplate.setRootDataSource(mainSite);
         try {
-            String pcName = "ukn";
-            InetAddress addr = InetAddress.getLocalHost();
-            pcName = addr.getHostName().toUpperCase();
             List<ServerInfo> svi = utilJDBCTemplate.getDSPhanManh();
             List<String> siteName = new ArrayList<>();
             siteName.add("");
@@ -184,23 +186,23 @@ public class UserController {
 
         } catch (SQLException e) {
             System.out.println("LOGIN FAIL" + e);
-            model.addAttribute("type", "login");
-            model.addAttribute("message", "Thông tin đăng nhập không chính xác!");
+            redirectAttributes.addAttribute("type", "login");
+            redirectAttributes.addAttribute("message", "Thông tin đăng nhập không chính xác!");
             return "redirect:/auth/login.htm";
         } catch (NullPointerException | DataAccessException e) {
             System.out.println("LOGIN FAIL" + e.getMessage());
-            model.addAttribute("type", "login");
-            model.addAttribute("message", e.getMessage());
+            redirectAttributes.addAttribute("type", "login");
+            redirectAttributes.addAttribute("message", e.getMessage());
             return "redirect:/auth/login.htm";
         } catch (UnknownHostException e) {
             System.out.println("LOGIN FAIL" + e.getMessage());
-            model.addAttribute("type", "login");
-            model.addAttribute("message", "Không thể xác định tên máy!");
+            redirectAttributes.addAttribute("type", "login");
+            redirectAttributes.addAttribute("message", "Không thể xác định tên máy!");
             return "redirect:/auth/login.htm";
         } catch (Exception e) {
             System.out.println("LOGIN FAIL" + e.getMessage());
-            model.addAttribute("type", "login");
-            model.addAttribute("message", "Không tồn tại cơ sở!");
+            redirectAttributes.addAttribute("type", "login");
+            redirectAttributes.addAttribute("message", "Không tồn tại cơ sở!");
             return "redirect:/auth/login.htm";
         }
         session.setAttribute("currentConnection", currentConnection);

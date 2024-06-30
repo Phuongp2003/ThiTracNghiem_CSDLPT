@@ -1,6 +1,5 @@
 package ptithcm.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +19,10 @@ import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.GiaoVienJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
-import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
 import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
-import ptithcm.bean.Lop;
-import ptithcm.bean.SinhVien;
-import ptithcm.bean.SinhVienAction;
 import ptithcm.util.IDFix;
 import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GiaoVienAction;
@@ -36,8 +30,6 @@ import ptithcm.bean.GiaoVienAction;
 @Controller
 @RequestMapping("teacher")
 public class TeacherController {
-    @Autowired
-    private GlobalVariable currentConnection;
 
     @Autowired
     GiaoVienJDBCTemplate giaoVienJDBCTemplate;
@@ -51,115 +43,134 @@ public class TeacherController {
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        model.addAttribute("currentSite", session.getAttribute("site"));
-        utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
-        model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
+        try {
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
 
-        giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
-        khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-        List<GiaoVien> giaoViens = giaoVienJDBCTemplate.listGiaoVien();
-        List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-        List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
-        khoasDiff.addAll(khoas);
-        Map<String, String> khoaMap = new HashMap();
-        for (Khoa i : khoasDiff) {
-            khoaMap.put(i.getMAKH(), i.getTENKH());
+            giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            List<GiaoVien> giaoViens = giaoVienJDBCTemplate.listGiaoVien();
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+            khoasDiff.addAll(khoas);
+            Map<String, String> khoaMap = new HashMap<>();
+            for (Khoa i : khoasDiff) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
+            session.setAttribute("historyAction", new HistoryAction());
+            model.addAttribute("idFix", new IDFix());
+            model.addAttribute("giaoViens", giaoViens);
+            model.addAttribute("khoa", khoaMap);
+            model.addAttribute("khoas", khoas);
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
-        session.setAttribute("historyAction", new HistoryAction());
-        model.addAttribute("idFix", new IDFix());
-        model.addAttribute("giaoViens", giaoViens);
-        model.addAttribute("khoa", khoaMap);
-        model.addAttribute("khoas", khoas);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/teacher";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "get-gv-by-khoa", method = RequestMethod.POST)
     public String getGVByKhoa(ModelMap model, HttpSession session,
             @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        List<GiaoVien> giaoViens;
-        Gson gson = new Gson();
-        Map<String, String> map = new HashMap<String, String>();
-        map = gson.fromJson(body, map.getClass());
-        Boolean diff = Boolean.parseBoolean(map.get("diff"));
-        String makhoa = map.get("makhoa");
-        if (makhoa != null) {
-            if (makhoa.equals("all")) {
-                if (diff)
-                    giaoViens = giaoVienJDBCTemplate.listGiaoVienDiffSite();
-                else
-                    giaoViens = giaoVienJDBCTemplate.listGiaoVien();
+        try {
+            List<GiaoVien> giaoViens;
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            Boolean diff = Boolean.parseBoolean(map.get("diff"));
+            String makhoa = map.get("makhoa");
+            if (makhoa != null) {
+                if (makhoa.equals("all")) {
+                    if (diff)
+                        giaoViens = giaoVienJDBCTemplate.listGiaoVienDiffSite();
+                    else
+                        giaoViens = giaoVienJDBCTemplate.listGiaoVien();
+                } else {
+                    if (diff)
+                        giaoViens = giaoVienJDBCTemplate.findTeacherByKhoaDiffSite(makhoa);
+                    else
+                        giaoViens = giaoVienJDBCTemplate.findTeacherByKhoa(makhoa);
+                }
             } else {
-                if (diff)
-                    giaoViens = giaoVienJDBCTemplate.findTeacherByKhoaDiffSite(makhoa);
-                else
-                    giaoViens = giaoVienJDBCTemplate.findTeacherByKhoa(makhoa);
+                throw new NullPointerException("Mã khoa không được để trống!");
             }
-        } else {
-            throw new NullPointerException("Mã khoa không được để trống!");
-        }
 
-        String current = map.get("current");
-        List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-        Map<String, String> khoaMap = new HashMap();
-        List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
-        khoasDiff.addAll(khoas);
-        for (Khoa i : khoasDiff) {
-            khoaMap.put(i.getMAKH(), i.getTENKH());
+            String current = map.get("current");
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            Map<String, String> khoaMap = new HashMap<>();
+            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+            khoasDiff.addAll(khoas);
+            for (Khoa i : khoasDiff) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
+            model.addAttribute("idFix", new IDFix());
+            model.addAttribute("current", current);
+            model.addAttribute("giaoViens", giaoViens);
+            model.addAttribute("khoa", khoaMap);
+            model.addAttribute("khoas", khoas);
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
-        model.addAttribute("idFix", new IDFix());
-        model.addAttribute("current", current);
-        model.addAttribute("giaoViens", giaoViens);
-        model.addAttribute("khoa", khoaMap);
-        model.addAttribute("khoas", khoas);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "elements/teacher/list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-khoa-o", method = RequestMethod.POST)
     public String loadKhoaTable(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            String current = map.get("current");
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<Khoa> khoas = null;
-            if (diff)
-                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
-            else
-                khoas = khoaLopJDBCTemplate.listKhoa();
-            model.addAttribute("current", current);
-            model.addAttribute("khoas", khoas);
-        } else {
-            model.addAttribute("message", "Không có khoa nào!");
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                String current = map.get("current");
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<Khoa> khoas = null;
+                if (diff)
+                    khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+                else
+                    khoas = khoaLopJDBCTemplate.listKhoa();
+                model.addAttribute("current", current);
+                model.addAttribute("khoas", khoas);
+            } else {
+                model.addAttribute("message", "Không có khoa nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/teacher/khoa_option";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-khoa-t", method = RequestMethod.POST)
     public String loadKhoaOption(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            String current = map.get("current");
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<Khoa> khoas = null;
-            if (diff)
-                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
-            else
-                khoas = khoaLopJDBCTemplate.listKhoa();
-            model.addAttribute("current", current);
-            model.addAttribute("khoas", khoas);
-        } else {
-            model.addAttribute("message", "Không có khoa nào!");
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                String current = map.get("current");
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<Khoa> khoas = null;
+                if (diff)
+                    khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+                else
+                    khoas = khoaLopJDBCTemplate.listKhoa();
+                model.addAttribute("current", current);
+                model.addAttribute("khoas", khoas);
+            } else {
+                model.addAttribute("message", "Không có khoa nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/teacher/khoa_table";
@@ -185,9 +196,7 @@ public class TeacherController {
 
             model.addAttribute("message", "Thêm giáo viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm giáo viên thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Thêm giáo viên thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -215,9 +224,7 @@ public class TeacherController {
 
             model.addAttribute("message", "Cập nhật giáo viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật giáo viên thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Cập nhật giáo viên thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -238,9 +245,7 @@ public class TeacherController {
 
             model.addAttribute("message", "Xóa giáo viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa giáo viên thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Xóa giáo viên thất bại!" + e.getMessage());
         }
         return "elements/message";
     }
@@ -264,9 +269,7 @@ public class TeacherController {
 
             model.addAttribute("message", "Chuyển khoa thành công!");
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Chuyển khoa thất bại!");
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Chuyển khoa thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -283,9 +286,7 @@ public class TeacherController {
             } else
                 model.addAttribute("message", "Không có hành động nào để hoàn tác!");
         } catch (Exception e) {
-            model.addAttribute("message", "Hoàn tác thất bại!");
-            e.printStackTrace();
-            System.out.println("TeacherController.java: Hoàn tác thất bại:  " + e.getMessage());
+            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -317,8 +318,9 @@ public class TeacherController {
         return "elements/teacher/button_action_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "check-magv", method = RequestMethod.POST)
-    public String checkMagv(@RequestBody String body) {
+    public String checkMagv(@RequestBody String body, ModelMap model) {
         try {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
@@ -333,32 +335,37 @@ public class TeacherController {
                 return "false";
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Kiểm tra mã giáo viên thất bại! " + e.getMessage());
+            return "elements/message";
         }
         return "true";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchTeacher(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        Gson gson = new Gson();
-        Map<String, String> map = new HashMap<String, String>();
-        map = gson.fromJson(searchInput, map.getClass());
-        searchInput = map.get("searchInput");
-        List<GiaoVien> giaoViens = giaoVienJDBCTemplate.search(searchInput);
-        List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-        Map<String, String> khoaMap = new HashMap();
-        List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
-        khoasDiff.addAll(khoas);
-        for (Khoa i : khoasDiff) {
-            khoaMap.put(i.getMAKH(), i.getTENKH());
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(searchInput, map.getClass());
+            searchInput = map.get("searchInput");
+            List<GiaoVien> giaoViens = giaoVienJDBCTemplate.search(searchInput);
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            Map<String, String> khoaMap = new HashMap<>();
+            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+            khoasDiff.addAll(khoas);
+            for (Khoa i : khoasDiff) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
+            session.setAttribute("historyAction", new HistoryAction());
+            model.addAttribute("idFix", new IDFix());
+            model.addAttribute("giaoViens", giaoViens);
+            model.addAttribute("khoa", khoaMap);
+            model.addAttribute("khoas", khoas);
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
-        session.setAttribute("historyAction", new HistoryAction());
-        model.addAttribute("idFix", new IDFix());
-        model.addAttribute("giaoViens", giaoViens);
-        model.addAttribute("khoa", khoaMap);
-        model.addAttribute("khoas", khoas);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/teacher/list";

@@ -30,7 +30,7 @@
 				<td>${sv.MATKHAU}</td>
 				<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 					<td>
-						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
+						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.TEN}?')" target="formSubmitFrame">
 							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
 						</form>
 						
@@ -65,7 +65,7 @@
 										<div class="mb-3">
 											<label>Lớp</label>
 											<select class="form-select" id="lop" name="malop" disabled>
-												<option value="${sv.MALOP}">${sv.MALOP}</option>
+												<option value="${sv.MALOP}">${sv.MALOP} (${lopMap.get(sv.MALOP)})</option>
 											</select>
 										</div>
 										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>

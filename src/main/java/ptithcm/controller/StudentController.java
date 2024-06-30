@@ -3,22 +3,19 @@ package ptithcm.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Date;
+import java.sql.Date;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
@@ -35,9 +32,6 @@ import ptithcm.bean.SinhVien;
 @RequestMapping("student")
 public class StudentController {
     @Autowired
-    private GlobalVariable currentConnection;
-
-    @Autowired
     SinhVienJDBCTemplate sinhVienJDBCTemplate;
 
     @Autowired
@@ -49,140 +43,159 @@ public class StudentController {
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+        try {
+            if (currentConnection != null) {
+                sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
 
-            // Initialize HistoryAction in session if not present
-            session.setAttribute("historyAction", new HistoryAction());
+                // Initialize HistoryAction in session if not present
+                session.setAttribute("historyAction", new HistoryAction());
 
-            // Pass history actions to the template for potential undo/redo display
-            model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
-            model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
+                // Pass history actions to the template for potential undo/redo display
+                model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
+                model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
-            List<SinhVien> sinhViens = sinhVienJDBCTemplate.listSinhVien();
-            List<Lop> lops = khoaLopJDBCTemplate.listLop();
-            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-            Map<String, String> khoaMap = new HashMap();
-            for (Khoa i : khoas) {
-                khoaMap.put(i.getMAKH(), i.getTENKH());
+                List<SinhVien> sinhViens = sinhVienJDBCTemplate.listSinhVien();
+                List<Lop> lops = khoaLopJDBCTemplate.listLop();
+                List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+                Map<String, String> khoaMap = new HashMap<>();
+                for (Khoa i : khoas) {
+                    khoaMap.put(i.getMAKH(), i.getTENKH());
+                }
+                Map<String, String> lopMap = new HashMap<>();
+                for (Lop i : lops) {
+                    lopMap.put(i.getMALOP(), i.getTENLOP());
+                }
+
+                model.addAttribute("currentSite", session.getAttribute("site"));
+                utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+                model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
+                model.addAttribute("sinhViens", sinhViens);
+                model.addAttribute("lops", lops);
+                model.addAttribute("lopMap", lopMap);
+                model.addAttribute("khoaMap", khoaMap);
+            } else {
+                model.addAttribute("message", "Không có sinh viên nào!");
             }
-            Map<String, String> lopMap = new HashMap();
-            for (Lop i : lops) {
-                lopMap.put(i.getMALOP(), i.getTENLOP());
-            }
-
-            model.addAttribute("currentSite", session.getAttribute("site"));
-            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
-            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
-            model.addAttribute("sinhViens", sinhViens);
-            model.addAttribute("lops", lops);
-            model.addAttribute("lopMap", lopMap);
-            model.addAttribute("khoaMap", khoaMap);
-        } else {
-            model.addAttribute("message", "Không có sinh viên nào!");
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/student";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/get-sv-by-lop", method = RequestMethod.POST)
     public String listByLop(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<SinhVien> sinhViens;
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            String malop = map.get("malop");
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            if (malop != null) {
-                if ("all".equals(malop)) {
-                    if (diff) {
-                        sinhViens = sinhVienJDBCTemplate.listSinhVienDiffSite();
+        try {
+            if (currentConnection != null) {
+                sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                List<SinhVien> sinhViens;
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                String malop = map.get("malop");
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                if (malop != null) {
+                    if ("all".equals(malop)) {
+                        if (diff) {
+                            sinhViens = sinhVienJDBCTemplate.listSinhVienDiffSite();
+                        } else {
+                            sinhViens = sinhVienJDBCTemplate.listSinhVien();
+                        }
                     } else {
-                        sinhViens = sinhVienJDBCTemplate.listSinhVien();
+                        if (diff) {
+                            sinhViens = sinhVienJDBCTemplate.findSinhVienByLopDiffSite(malop);
+                        } else {
+                            sinhViens = sinhVienJDBCTemplate.findSinhVienByLop(malop);
+                        }
                     }
                 } else {
-                    if (diff) {
-                        sinhViens = sinhVienJDBCTemplate.findSinhVienByLopDiffSite(malop);
-                    } else {
-                        sinhViens = sinhVienJDBCTemplate.findSinhVienByLop(malop);
-                    }
+                    throw new NullPointerException("Mã lớp không được để trống!");
                 }
+                List<Lop> lops = khoaLopJDBCTemplate.listLop();
+                Map<String, String> lopMap = new HashMap<>();
+                for (Lop i : lops) {
+                    lopMap.put(i.getMALOP(), i.getTENLOP());
+                }
+                model.addAttribute("sinhViens", sinhViens);
+                model.addAttribute("lops", lops);
+                model.addAttribute("malop", malop);
+                model.addAttribute("lopMap", lopMap);
             } else {
-                throw new NullPointerException("Mã lớp không được để trống!");
+                model.addAttribute("message", "Không có sinh viên nào!");
             }
-            List<Lop> lops = khoaLopJDBCTemplate.listLop();
-            Map<String, String> lopMap = new HashMap();
-            for (Lop i : lops) {
-                lopMap.put(i.getMALOP(), i.getTENLOP());
-            }
-            model.addAttribute("sinhViens", sinhViens);
-            model.addAttribute("lops", lops);
-            model.addAttribute("malop", malop);
-            model.addAttribute("lopMap", lopMap);
-            model.addAttribute("role_al", currentConnection.getRoleAlias());
-        } else {
-            model.addAttribute("message", "Không có sinh viên nào!");
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "elements/student/student_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-lop-o", method = RequestMethod.POST)
     public String loadLopTable(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            String current = map.get("current");
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<Lop> lops = null;
-            if (diff)
-                lops = khoaLopJDBCTemplate.listLopDiffSite();
-            else
-                lops = khoaLopJDBCTemplate.listLop();
-            model.addAttribute("current", current);
-            model.addAttribute("lops", lops);
-        } else {
-            model.addAttribute("message", "Không có lớp nào!");
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                String current = map.get("current");
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<Lop> lops = null;
+                if (diff)
+                    lops = khoaLopJDBCTemplate.listLopDiffSite();
+                else
+                    lops = khoaLopJDBCTemplate.listLop();
+                model.addAttribute("current", current);
+                model.addAttribute("lops", lops);
+            } else {
+                model.addAttribute("message", "Không có lớp nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/student/lop_option";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-lop-t", method = RequestMethod.POST)
     public String loadKhoaOption(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            String current = map.get("current");
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<Lop> lops = null;
-            if (diff)
-                lops = khoaLopJDBCTemplate.listLopDiffSite();
-            else
-                lops = khoaLopJDBCTemplate.listLop();
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                String current = map.get("current");
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<Lop> lops = null;
+                if (diff)
+                    lops = khoaLopJDBCTemplate.listLopDiffSite();
+                else
+                    lops = khoaLopJDBCTemplate.listLop();
 
-            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
-            khoasDiff.addAll(khoas);
-            Map<String, String> khoaMap = new HashMap();
-            for (Khoa i : khoasDiff) {
-                khoaMap.put(i.getMAKH(), i.getTENKH());
+                List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+                List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+                khoasDiff.addAll(khoas);
+                Map<String, String> khoaMap = new HashMap<>();
+                for (Khoa i : khoasDiff) {
+                    khoaMap.put(i.getMAKH(), i.getTENKH());
+                }
+                model.addAttribute("current", current);
+                model.addAttribute("lops", lops);
+                model.addAttribute("khoaMap", khoaMap);
+            } else {
+                model.addAttribute("message", "Không có lớp nào!");
             }
-            model.addAttribute("current", current);
-            model.addAttribute("lops", lops);
-            model.addAttribute("khoaMap", khoaMap);
-        } else {
-            model.addAttribute("message", "Không có lớp nào!");
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/student/lop_list";
@@ -215,9 +228,7 @@ public class StudentController {
 
             model.addAttribute("message", "Thêm sinh viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm sinh viên thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Thêm sinh viên thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -237,9 +248,7 @@ public class StudentController {
 
             model.addAttribute("message", "Xóa sinh viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa sinh viên thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Xóa sinh viên thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -252,7 +261,6 @@ public class StudentController {
         try {
             SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
             SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
-            newSv.setMASV(masv);
             newSv.setHO(ho);
             newSv.setTEN(ten);
             newSv.setNGAYSINH(ngaysinh);
@@ -269,9 +277,7 @@ public class StudentController {
 
             model.addAttribute("message", "Cập nhật sinh viên thành công!");
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Cập nhật sinh viên thất bại!");
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Cập nhật sinh viên thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -296,9 +302,7 @@ public class StudentController {
 
             model.addAttribute("message", "Chuyển lớp thành công!");
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Chuyển lớp thất bại!");
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Chuyển lớp thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -316,9 +320,7 @@ public class StudentController {
                 model.addAttribute("message", "Không có hành động nào để hoàn tác!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Hoàn tác thất bại!");
-            System.out.println("StudentController.java: Hoàn tác thất bại!" + e.getMessage());
+            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -334,9 +336,7 @@ public class StudentController {
                 model.addAttribute("message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Làm lại thất bại!");
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -349,8 +349,9 @@ public class StudentController {
         return "elements/student/button_action_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "check-masv", method = RequestMethod.POST)
-    public String checkMasvExist(@RequestBody String body) {
+    public String checkMasvExist(@RequestBody String body, ModelMap model) {
         try {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
@@ -364,28 +365,33 @@ public class StudentController {
                 return "false";
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Kiểm tra mã sinh viên thất bại! " + e.getMessage());
+            return "elements/message";
         }
         return "true";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchStudent(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        Gson gson = new Gson();
-        Map<String, String> map = new HashMap<String, String>();
-        map = gson.fromJson(searchInput, map.getClass());
-        searchInput = map.get("searchInput");
-        List<SinhVien> sinhViens = sinhVienJDBCTemplate.search(searchInput);
-        List<Lop> lops = khoaLopJDBCTemplate.listLop();
-        Map<String, String> lopMap = new HashMap();
-        for (Lop i : lops) {
-            lopMap.put(i.getMALOP(), i.getTENLOP());
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(searchInput, map.getClass());
+            searchInput = map.get("searchInput");
+            List<SinhVien> sinhViens = sinhVienJDBCTemplate.search(searchInput);
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            Map<String, String> lopMap = new HashMap<>();
+            for (Lop i : lops) {
+                lopMap.put(i.getMALOP(), i.getTENLOP());
+            }
+            model.addAttribute("sinhViens", sinhViens);
+            model.addAttribute("lops", lops);
+            model.addAttribute("lopMap", lopMap);
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
-        model.addAttribute("sinhViens", sinhViens);
-        model.addAttribute("lops", lops);
-        model.addAttribute("lopMap", lopMap);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/student/student_list";

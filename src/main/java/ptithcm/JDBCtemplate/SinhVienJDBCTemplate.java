@@ -1,34 +1,29 @@
 package ptithcm.JDBCtemplate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.SinhVien;
 import ptithcm.mapper.SinhVienMapper;
 import ptithcm.util.IDFix;
 
 import javax.sql.DataSource;
+
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SinhVienJDBCTemplate {
-    @Autowired
-    private JdbcTemplate mainSiteTemplate;
-
-    @Autowired
-    private GlobalVariable currentConnection;
-
     private JdbcTemplate jdbcTemplate;
 
     public int setDataSource(DataSource dataSource) {
         try {
             this.jdbcTemplate = new JdbcTemplate(dataSource);
-            this.currentConnection.setCmd(jdbcTemplate);
             return 1;
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,31 +32,37 @@ public class SinhVienJDBCTemplate {
         }
     }
 
-    public int tryGetSources() {
-        if (this.jdbcTemplate == null) {
-            this.jdbcTemplate = this.mainSiteTemplate;
-            this.currentConnection.setCmd(jdbcTemplate);
-            return 1;
-        }
-        return 0;
-    }
-
     // New SinhVien
-    public void create(SinhVien sinhVien) {
+    public void create(SinhVien sinhVien) throws Exception {
         try {
             String SQL = "INSERT INTO SinhVien (MASV, HO, TEN, NGAYSINH, DIACHI, MALOP, MATKHAU) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            jdbcTemplate.update(SQL, sinhVien.getMASV(), sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(),
-                    sinhVien.getDIACHI(), sinhVien.getMALOP(),
-                    sinhVien.getMATKHAU() != null ? sinhVien.getMATKHAU() : sinhVien.getMASV());
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.setString(1, sinhVien.getMASV());
+            cs.setString(2, sinhVien.getHO());
+            cs.setString(3, sinhVien.getTEN());
+            cs.setDate(4, sinhVien.getNGAYSINH());
+            cs.setString(5, sinhVien.getDIACHI());
+            cs.setString(6, sinhVien.getMALOP());
+            cs.setString(7, sinhVien.getMATKHAU() != null ? sinhVien.getMATKHAU() : sinhVien.getMASV());
+            cs.execute();
             System.out.println("Created Record Name = " + sinhVien.getTEN());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Sinh Vien - create error: " + e.getMessage());
+            System.err.println("Sinh Vien - create Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     // Get SinhVien by ID
-    public SinhVien getStudent(String masv) {
+    public SinhVien getStudent(String masv) throws Exception {
         String SQL = "SELECT * FROM SinhVien WHERE MASV = ?";
         IDFix.fix(masv, 8);
         SinhVien res;
@@ -80,13 +81,17 @@ public class SinhVienJDBCTemplate {
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - select Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
 
         return res;
     }
 
-    public SinhVien getStudentDiffSite(String masv) {
+    public SinhVien getStudentDiffSite(String masv) throws Exception {
         String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.SinhVien WHERE MASV = ?";
         IDFix.fix(masv, 8);
         SinhVien res;
@@ -105,152 +110,279 @@ public class SinhVienJDBCTemplate {
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - select Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - select Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
 
         return res;
     }
 
     // Get all SinhVien
-    public List<SinhVien> listSinhVien() {
-        tryGetSources();
+    public List<SinhVien> listSinhVien() throws Exception {
         try {
             String SQL = "SELECT * FROM SinhVien";
             return jdbcTemplate.query(SQL, new SinhVienMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - list Error: " + e.getMessage());
-            return null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Sinh Vien - list Error: " + e.getMessage());
-            return null;
+            System.err.println("Sinh Vien - list Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
-    public List<SinhVien> listSinhVienDiffSite() {
+    public List<SinhVien> listSinhVienDiffSite() throws Exception {
         try {
             String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.SinhVien";
             return jdbcTemplate.query(SQL, new SinhVienMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - list Error: " + e.getMessage());
-            return null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - list Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     // Update SinhVien (input: Id, SinhVien)
-    public void update(String masv, SinhVien sinhVien) {
+    public void update(String masv, SinhVien sinhVien) throws Exception {
         try {
             String SQL = "UPDATE SinhVien SET HO = ?, TEN = ?, NGAYSINH = ?, DIACHI = ?, MALOP = ?, MATKHAU = ? WHERE MASV = ?";
-            jdbcTemplate.update(SQL, sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(), sinhVien.getDIACHI(),
-                    sinhVien.getMALOP(), sinhVien.getMATKHAU(), masv);
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.setString(1, sinhVien.getHO());
+            cs.setString(2, sinhVien.getTEN());
+            cs.setDate(3, sinhVien.getNGAYSINH());
+            cs.setString(4, sinhVien.getDIACHI());
+            cs.setString(5, sinhVien.getMALOP());
+            cs.setString(6, sinhVien.getMATKHAU());
+            cs.setString(7, masv);
+            cs.execute();
             System.out.println("Updated Record with ID = " + masv);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Sinh Vien - update Error: " + e.getMessage());
+            System.err.println("Sinh Vien - update Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     // Delete SinhVien (input: Id)
-    public void delete(String masv) {
+    public void delete(String masv) throws Exception {
         try {
             String SQL = "DELETE FROM SinhVien WHERE MASV = ?";
-            jdbcTemplate.update(SQL, masv);
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.setString(1, masv);
+            cs.execute();
             System.out.println("Deleted Record with ID = " + masv);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Sinh Vien - delete Error: " + e.getMessage());
+            System.err.println("Sinh Vien - delete Handled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
-    public void move(String malop, String masv, SinhVien sinhVien) {
+    public void move(String malop, String masv, SinhVien sinhVien) throws Exception {
         try {
             String SQL = "{call SP_ChuyenLop(?, ?)}";
-            jdbcTemplate.update(SQL, new Object[] { sinhVien.getMALOP().trim(), masv });
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.setString(1, sinhVien.getMALOP().trim());
+            cs.setString(2, masv);
+            cs.execute();
             System.out.println("Move Record with ID = " + masv);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Sinh Vien - delete Error: " + e.getMessage());
+            System.err.println("Sinh Vien - delete Unhanled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
-    public List<SinhVien> findSinhVienByLop(String malop) {
+    public List<SinhVien> findSinhVienByLop(String malop) throws Exception {
         try {
             String SQL = "SELECT * FROM SinhVien WHERE MALOP = ?";
             return jdbcTemplate.query(SQL, new Object[] { malop }, new SinhVienMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - find Error: " + e.getMessage());
-            return null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
-    public List<SinhVien> findSinhVienByLopDiffSite(String malop) {
+    public List<SinhVien> findSinhVienByLopDiffSite(String malop) throws Exception {
         try {
             String SQL = "SELECT * FROM LINK1.TN_CSDLPT.DBO.SinhVien WHERE MALOP = ?";
             return jdbcTemplate.query(SQL, new Object[] { malop }, new SinhVienMapper());
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - find Error: " + e.getMessage());
-            return null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
     // Login SinhVien by Procedure
-    public List<String> login(String masv, String matkhau) {
-        String SQL = "{call SP_DangNhapSinhVien(?, ?)}";
-        List<List<String>> res;
+    public List<String> login(String masv, String matkhau) throws Exception {
+        String SQL = "{? = call SP_DangNhapSinhVien(?, ?)}";
+        List<List<String>> res = new ArrayList<>();
+        ;
         try {
-            res = jdbcTemplate.query(SQL, new Object[] { masv, matkhau }, (ResultSet rs, int rowNum) -> {
-                // return USERNAME and TENNHOM
-                List<String> list = new ArrayList<String>();
-                list.add(rs.getString("HOTEN"));
-                list.add(rs.getString("TENNHOM"));
-                return list;
-            });
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.setString(3, matkhau);
+            try (ResultSet rs = cs.executeQuery()) {
+                while (rs.next()) {
+                    List<String> list = new ArrayList<>();
+                    list.add(rs.getString("HOTEN"));
+                    list.add(rs.getString("TENNHOM"));
+                    res.add(list);
+                }
+            }
         } catch (DataAccessException e) {
             System.err.println("Error: " + e.getMessage());
-            res = null;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: DangNhapSinhVien)");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - login Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
         return res.get(0);
     }
 
-    public boolean checkMasv(String masv) {
+    public boolean checkMasv(String masv) throws Exception {
         try {
-            String SQL = "{call SP_KiemTraSinhVienTonTai(?)}";
-            return jdbcTemplate.queryForObject(SQL, new Object[] { masv }, (ResultSet rs, int rowNum) -> {
-                if (rs == null) {
-                    return false;
+            String SQL = "{? = call SP_KiemTraSinhVienTonTai(?)}";
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, masv);
+            cs.execute();
+            return cs.getInt(1) == 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: KiemTraSinhVienTonTai)");
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Error: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
+        }
+    }
+
+    public List<SinhVien> search(String input) throws Exception {
+        try {
+            String SQL = "{? = call SP_TimKiemSinhVien(?)}";
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, input);
+            try (ResultSet rs = cs.executeQuery()) {
+                List<SinhVien> res = new ArrayList<>();
+                while (rs.next()) {
+                    RowMapper<SinhVien> mapper = new SinhVienMapper();
+                    res.add(mapper.mapRow(rs, 0));
                 }
-                return rs.getInt(1) > 0;
-            });
+                return res;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: TimKiemSinhVien)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - find Error: " + e.getMessage());
-            return false;
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Sinh Vien - find unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 
-    public List<SinhVien> search(String input) {
+    public List<SinhVien> searchDiffSite(String input) throws Exception {
         try {
-            String SQL = "{call SP_TimKiemSinhVien(?)}";
-            return jdbcTemplate.query(SQL, new Object[] { input }, new SinhVienMapper());
+            String SQL = "{? = call LINK1.TN_CSDLPT.DBO.SP_TimKiemSinhVien(?)}";
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, input);
+            try (ResultSet rs = cs.executeQuery()) {
+                List<SinhVien> res = new ArrayList<>();
+                while (rs.next()) {
+                    RowMapper<SinhVien> mapper = new SinhVienMapper();
+                    res.add(mapper.mapRow(rs, 0));
+                }
+                return res;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("Database: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: TimKiemSinhVien)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - find Error: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public List<SinhVien> searchDiffSite(String input) {
-        try {
-            String SQL = "{call LINK1.TN_CSDLPT.DBO.SP_TimKiemSinhVien(?)}";
-            return jdbcTemplate.query(SQL, new Object[] { input }, new SinhVienMapper());
-        } catch (DataAccessException e) {
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+        } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Sinh Vien - find Error: " + e.getMessage());
-            return null;
+            System.err.println("Sinh Vien - find Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 }
