@@ -52,3 +52,4 @@
         </c:forEach>
     </tbody>
 </table>
+<c:if test="${empty lops}"><h5>Không có lớp nào!</h5></c:if>

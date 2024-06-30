@@ -350,7 +350,6 @@ public class StudentController {
     }
 
     @RequestMapping(value = "check-masv", method = RequestMethod.POST)
-
     public String checkMasvExist(@RequestBody String body) {
         try {
             Gson gson = new Gson();

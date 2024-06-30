@@ -367,6 +367,48 @@ public class KhoaLopController {
         return "elements/khoalop/button_action_list";
     }
 
+    @RequestMapping(value = "check-malop", method = RequestMethod.POST)
+    public String checkMalop(@RequestBody String body) {
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String malop = map.get("malop");
+            if (malop == null || malop.isEmpty()) {
+                return "false";
+            }
+            Boolean isAvai = khoaLopJDBCTemplate.checkMalop(malop);
+            if (!isAvai) {
+                return "false";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "true";
+    }
+
+    @RequestMapping(value = "check-makh", method = RequestMethod.POST)
+    public String checkmakh(@RequestBody String body) {
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String makh = map.get("makh");
+            if (makh == null || makh.isEmpty()) {
+                return "false";
+            }
+            Boolean isAvai = khoaLopJDBCTemplate.checkMakh(makh);
+            if (!isAvai) {
+                return "false";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "true";
+    }
+
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchLop(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");

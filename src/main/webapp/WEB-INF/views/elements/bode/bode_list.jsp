@@ -130,3 +130,4 @@
 		</c:forEach>
 	</tbody>
 </table>
+<c:if test="${empty bodes}"><h5>Không có bộ đề nào!</h5></c:if>

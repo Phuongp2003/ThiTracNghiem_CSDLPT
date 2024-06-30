@@ -26,10 +26,16 @@
 <div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form id="addStudentForm" method="POST" action="teacher/add.htm" class="form-control" target="formSubmitFrame">
+			<form id="addStudentForm" method="POST" action="teacher/add.htm" class="form-control needs-validation" target="formSubmitFrame">
 				<div class="mb-3">
 					<label>Mã nhân viên: </label>
-					<input name="manv" class="form-control" required />
+					<input name="manv" class="form-control" required onblur="checkMagvExist(this)" />
+					<div class="valid-feedback">
+						Mã giáo viên hợp lệ!
+					</div>
+					<div class="invalid-feedback">
+						Mã giáo viên không hợp lệ!
+					</div>
 				</div>
 				<div class="mb-3">
 					<label>Họ: </label>
@@ -46,10 +52,14 @@
 				<div class="mb-3">
 					<label>Khoa: </label>
 					<select class="form-select khoa-list-o" id="khoa" name="makhoa">
-						<jsp:include page="./khoa_option.jsp" />
+						<c:forEach var="k" items="${khoas}">
+							<option value="${k.MAKH}" ${(k.MAKH==current ? 'selected' : '' )}>
+								${k.getFullName()}
+							</option>
+						</c:forEach>
 					</select>
 				</div>
-				<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+				<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal" id="submit-form">Save</button>
 				<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 			</form>
 		</div>
@@ -216,4 +226,88 @@
 	addStudentModal.addEventListener('hidden.bs.modal', function() {
 		document.getElementById('addTeacherForm').reset();
 	});
+
+	function parseGiaoVienList(listStr) {
+		const trimmedListStr = listStr.substring(1, listStr.length - 1); // Remove leading and trailing square brackets
+		const giaoVienStrs = trimmedListStr.split('}, ');
+		const giaoVienObjects = giaoVienStrs.map(giaoVienStr => {
+			const propertiesStr = giaoVienStr.replace('GiaoVien{', '').replace('}', '');
+			const properties = propertiesStr.split(', ');
+			const giaoVienObj = {};
+			properties.forEach(property => {
+				const [key, value] = property.split('=');
+				giaoVienObj[key.trim()] = value.trim().replace(/'/g, ''); // Remove single quotes from values
+			});
+			return giaoVienObj;
+		});
+		return giaoVienObjects;
+	}
+	
+	async function checkMagvExist(element) {
+		const manv = element.value;
+		var submitForm = document.getElementById('submit-form');
+		// Convert the string representation of list to an actual array of objects
+		try {
+			var check = await fetch('teacher/check-magv.htm', {
+					method: 'POST',
+					body: JSON.stringify({
+						manv: manv
+					})
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.text();
+				})
+				.then(data => {
+					return data.includes('true');
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+			// Check if the provided magv exists in the sinhVienArray by magv
+			if (check) {
+				element.classList.remove('is-invalid')
+				element.classList.add('is-valid')
+				if (submitForm !== null) {
+					submitForm.disabled = false;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			} else {
+				element.classList.remove('is-valid')
+				element.classList.add('is-invalid')
+				if (submitForm !== null) {
+					submitForm.disabled = true;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			}
+		} catch (error) {
+			window.alert("Lỗi: ", error)
+		}
+	}
+	
+	// Fetch all the forms we want to apply custom Bootstrap validation styles to
+	var forms = document.querySelectorAll('.needs-validation')
+	
+	// Loop over them and prevent submission
+	Array.prototype.slice.call(forms)
+		.forEach(function(form) {
+			form.addEventListener('submit', function(event) {
+				// Loop over them and prevent submission
+				event.preventDefault(); // Prevent form submission
+				
+				const invalidElements = form.querySelectorAll('.is-invalid');
+				
+				if (invalidElements.length === 0) {
+					form.submit();
+				} else {
+					alert('Please fix the errors in the form before submitting.');
+				}
+			}, false)
+		})
 </script>

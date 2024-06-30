@@ -162,4 +162,20 @@ public class GiaoVienDKJDBCTemplate {
             return null;
         }
     }
+
+    public boolean checkDKThi(String mamh, String malop, int lan) {
+        try {
+            String SQL = "{call SP_KiemTraDangKyThi(?, ?, ?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { mamh, malop, lan }, (ResultSet rs, int rowNum) -> {
+                if (rs == null) {
+                    return false;
+                }
+                return rs.getInt(1) > 0;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("DK Thi - find Error: " + e.getMessage());
+            return false;
+        }
+    }
 }

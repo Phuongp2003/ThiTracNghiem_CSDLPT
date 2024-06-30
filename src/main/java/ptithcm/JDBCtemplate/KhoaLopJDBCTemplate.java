@@ -276,4 +276,36 @@ public class KhoaLopJDBCTemplate {
             return null;
         }
     }
+
+    public boolean checkMalop(String malop) {
+        try {
+            String SQL = "{call SP_KiemTraLopTonTai(?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { malop }, (ResultSet rs, int rowNum) -> {
+                if (rs == null) {
+                    return false;
+                }
+                return rs.getInt(1) > 0;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Lop - find Error: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean checkMakh(String makh) {
+        try {
+            String SQL = "{call SP_KiemTraKhoaTonTai(?)}";
+            return jdbcTemplate.queryForObject(SQL, new Object[] { makh }, (ResultSet rs, int rowNum) -> {
+                if (rs == null) {
+                    return false;
+                }
+                return rs.getInt(1) > 0;
+            });
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            System.err.println("Khoa - find Error: " + e.getMessage());
+            return false;
+        }
+    }
 }

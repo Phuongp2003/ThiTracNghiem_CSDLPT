@@ -9,7 +9,7 @@
 			<th scope="col">Tên</th>
 			<th scope="col">Địa chỉ</th>
 			<th scope="col">Khoa</th>
-			<c:if test="${role_al != 'TRUONG'}"><th scope="col">Thao tác</th></c:if>
+			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}"><th scope="col">Thao tác</th></c:if>
 		</tr>
 	</thead>
 	<tbody>
@@ -20,7 +20,7 @@
 				<td>${gv.TEN}</td>
 				<td>${gv.DIACHI}</td>
 				<td>${khoa.get(idFix.fix(gv.MAKH, 8))}</td>
-				<c:if test="${role_al != 'TRUONG'}">
+				<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 					<td>
 						<form class="d-inline" action="teacher/delete/${gv.MAGV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
 							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
@@ -72,8 +72,11 @@
 											<label>Khoa</label>
 											<select class="form-select" name="makh">
 												<c:forEach var="k" items="${khoas}">
-													<option value="${k.MAKH}">
-														${k.MAKH} (${k.TENKH})</option>
+													<c:if test="${gv.MAKH != k.MAKH}">
+														<option value="${k.MAKH}">
+															${k.MAKH} (${k.TENKH})
+														</option>
+													</c:if>
 												</c:forEach>
 											</select>
 										</div>
@@ -89,3 +92,4 @@
 		</c:forEach>
 	</tbody>
 </table>
+<c:if test="${empty giaoViens}"><h5>Không có giáo viên nào!</h5></c:if>

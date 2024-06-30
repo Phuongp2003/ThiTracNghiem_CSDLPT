@@ -317,6 +317,28 @@ public class TeacherController {
         return "elements/teacher/button_action_list";
     }
 
+    @RequestMapping(value = "check-magv", method = RequestMethod.POST)
+    public String checkMagv(@RequestBody String body) {
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(body, map.getClass());
+            String manv = map.get("manv");
+            if (manv == null || manv.isEmpty()) {
+                return "false";
+            }
+            String isAvai = giaoVienJDBCTemplate.checkMagv(manv);
+            System.out.println(isAvai);
+            if (isAvai == "false") {
+                return "false";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return "true";
+    }
+
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchTeacher(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");

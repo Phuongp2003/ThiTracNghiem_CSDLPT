@@ -12,12 +12,13 @@
 			<th scope="col">Địa chỉ</th>
 			<th scope="col">Lớp</th>
 			<th scope="col">Mật khẩu</th>
-			<c:if test="${role_al != 'TRUONG'}">
+			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 				<th scope="col">Thao tác</th>
 			</c:if>
 		</tr>
 	</thead>
 	<tbody>
+		<c:if test="${empty sinhViens}"><td>Không có sinh viên nào!</td></c:if>
 		<c:forEach var="sv" items="${sinhViens}">
 			<tr>
 				<td>${sv.MASV}</td>
@@ -27,7 +28,7 @@
 				<td>${sv.DIACHI}</td>
 				<td>${lopMap.get(sv.MALOP)}</td>
 				<td>${sv.MATKHAU}</td>
-				<c:if test="${role_al != 'TRUONG'}">
+				<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 					<td>
 						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
 							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
