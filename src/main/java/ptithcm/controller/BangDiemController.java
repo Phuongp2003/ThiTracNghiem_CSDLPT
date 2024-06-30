@@ -16,7 +16,6 @@ import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.Lop;
 import ptithcm.bean.MonHoc;
-import ptithcm.util.DateFM;
 
 @Controller
 @RequestMapping("score-list")
@@ -36,22 +35,25 @@ public class BangDiemController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public String list(ModelMap model, @RequestParam("malop") String malop,
             @RequestParam("mamh") String mamh, @RequestParam("lanthi") int lanthi, HttpSession session) {
-        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            bangDiemJDBCTemplate.setDataSource(currentConnection.getSite());
-            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<List<String>> bangdiems = bangDiemJDBCTemplate.listBangDiem(malop, mamh, lanthi);
-            MonHoc monhoc = monHocJDBCTemplate.getMonHoc(mamh);
-            Lop lop = khoaLopJDBCTemplate.getLop(malop);
-            model.addAttribute("bangdiems", bangdiems);
-            model.addAttribute("monhoc", monhoc);
-            model.addAttribute("lop", lop);
-        } else {
-            model.addAttribute("message", "Không có bảng điểm nào!");
+        try {
+            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
+            if (currentConnection != null) {
+                bangDiemJDBCTemplate.setDataSource(currentConnection.getSite());
+                monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                List<List<String>> bangdiems = bangDiemJDBCTemplate.listBangDiem(malop, mamh, lanthi);
+                MonHoc monhoc = monHocJDBCTemplate.getMonHoc(mamh);
+                Lop lop = khoaLopJDBCTemplate.getLop(malop);
+                model.addAttribute("bangdiems", bangdiems);
+                model.addAttribute("monhoc", monhoc);
+                model.addAttribute("lop", lop);
+            } else {
+                model.addAttribute("message", "Không có bảng điểm nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
-        model.addAttribute("DateFM", new DateFM());
         return "pages/score_subject";
     }
 }

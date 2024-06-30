@@ -12,9 +12,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import ptithcm.bean.BangDiem;
-import ptithcm.mapper.BangDiemMapper;
-
 @Service
 public class BangDiemJDBCTemplate {
     private JdbcTemplate jdbcTemplate;
@@ -23,13 +20,14 @@ public class BangDiemJDBCTemplate {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<List<String>> listBangDiem(String malop, String mamh, int lan) {
+    public List<List<String>> listBangDiem(String malop, String mamh, int lan) throws Exception {
         try {
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
-                    .prepareCall("{call SP_InBangDiem(?, ?, ?)}");
-            cs.setString(1, malop);
-            cs.setString(2, mamh);
-            cs.setInt(3, lan);
+                    .prepareCall("{? = call SP_InBangDiem(?, ?, ?)}");
+            cs.registerOutParameter(1, java.sql.Types.INTEGER);
+            cs.setString(2, malop);
+            cs.setString(3, mamh);
+            cs.setInt(4, lan);
 
             try (ResultSet rs = cs.executeQuery()) {
                 List<List<String>> results = new ArrayList<>();
@@ -45,19 +43,19 @@ public class BangDiemJDBCTemplate {
             }
         } catch (DataAccessException e) {
             e.printStackTrace();
-            System.err.println("Bang Diem - list Error: " + e.getMessage());
-            return null;
+            System.err.println("call SP_InBangDiem error: " + e.getMessage());
+            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
         } catch (SQLException e) {
             e.printStackTrace();
             String sqlState = e.getSQLState();
             int errorCode = e.getErrorCode();
             System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
             System.err.println("SQL: " + e.getMessage());
-            return null;
+            throw new Exception(e.getMessage() + " (DB_ERR: InBangDiem)");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Bang Diem - list Error: " + e.getMessage());
-            return null;
+            System.err.println("Bang Diem - list Unhandled Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         }
     }
 }

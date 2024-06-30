@@ -1,6 +1,6 @@
 package ptithcm.bean;
 
-import java.util.Date;
+import java.sql.Date;
 
 import ptithcm.util.DateFM;
 

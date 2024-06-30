@@ -25,13 +25,10 @@ import ptithcm.bean.Khoa;
 import ptithcm.bean.KhoaAction;
 import ptithcm.bean.Lop;
 import ptithcm.bean.LopAction;
-import ptithcm.bean.SinhVien;
 
 @Controller
 @RequestMapping("department-class")
 public class KhoaLopController {
-    @Autowired
-    private GlobalVariable currentConnection;
 
     @Autowired
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
@@ -42,130 +39,149 @@ public class KhoaLopController {
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
 
-            // Initialize HistoryAction in session if not present
-            session.setAttribute("historyAction", new HistoryAction());
+                // Initialize HistoryAction in session if not present
+                session.setAttribute("historyAction", new HistoryAction());
 
-            // Pass history actions to the template for potential undo/redo display
-            model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
-            model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
+                // Pass history actions to the template for potential undo/redo display
+                model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
+                model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
-            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-            List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
-            khoasDiff.addAll(khoas);
-            Map<String, String> khoaMap = new HashMap();
-            for (Khoa i : khoasDiff) {
-                khoaMap.put(i.getMAKH(), i.getTENKH());
+                List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+                List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+                khoasDiff.addAll(khoas);
+                Map<String, String> khoaMap = new HashMap<>();
+                for (Khoa i : khoasDiff) {
+                    khoaMap.put(i.getMAKH(), i.getTENKH());
+                }
+                List<Lop> lops = khoaLopJDBCTemplate.listLop();
+
+                model.addAttribute("currentSite", session.getAttribute("site"));
+                utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+                model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
+                model.addAttribute("khoas", khoas);
+                model.addAttribute("lops", lops);
+                model.addAttribute("khoaMap", khoaMap);
+            } else {
+                model.addAttribute("message", "Không có khoa nào!");
             }
-            List<Lop> lops = khoaLopJDBCTemplate.listLop();
-
-            model.addAttribute("currentSite", session.getAttribute("site"));
-            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
-            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
-            model.addAttribute("khoas", khoas);
-            model.addAttribute("lops", lops);
-            model.addAttribute("khoaMap", khoaMap);
-        } else {
-            model.addAttribute("message", "Không có khoa nào!");
+        } catch (Exception e) {
+            model.addAttribute("message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/khoalop";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "/get-lop-by-khoa", method = RequestMethod.POST)
     public String listByKhoa(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<Lop> lops;
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            String makh = map.get("makh");
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            if (makh != null) {
-                if ("all".equals(makh)) {
-                    if (diff)
-                        lops = khoaLopJDBCTemplate.listLopDiffSite();
-                    else
-                        lops = khoaLopJDBCTemplate.listLop();
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                List<Lop> lops;
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                String makh = map.get("makh");
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                if (makh != null) {
+                    if ("all".equals(makh)) {
+                        if (diff)
+                            lops = khoaLopJDBCTemplate.listLopDiffSite();
+                        else
+                            lops = khoaLopJDBCTemplate.listLop();
+                    } else {
+                        if (diff)
+                            lops = khoaLopJDBCTemplate.findLopByKhoaDiffSite(makh);
+                        else
+                            lops = khoaLopJDBCTemplate.findLopByKhoa(makh);
+                    }
                 } else {
-                    if (diff)
-                        lops = khoaLopJDBCTemplate.findLopByKhoaDiffSite(makh);
-                    else
-                        lops = khoaLopJDBCTemplate.findLopByKhoa(makh);
+                    throw new NullPointerException("Mã khoa không được để trống!");
                 }
+                List<Khoa> khoas = null;
+                List<Khoa> khoasDiff = null;
+                if (diff) {
+                    khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+                    khoasDiff = khoaLopJDBCTemplate.listKhoa();
+                } else {
+                    khoas = khoaLopJDBCTemplate.listKhoa();
+                    khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
+                }
+                khoasDiff.addAll(khoas);
+                Map<String, String> khoaMap = new HashMap<>();
+                for (Khoa i : khoasDiff) {
+                    khoaMap.put(i.getMAKH(), i.getTENKH());
+                }
+                model.addAttribute("lops", lops);
+                model.addAttribute("khoas", khoas);
+                model.addAttribute("makh", makh);
+                model.addAttribute("khoaMap", khoaMap);
+                model.addAttribute("role_al", currentConnection.getRoleAlias());
             } else {
-                throw new NullPointerException("Mã khoa không được để trống!");
+                model.addAttribute("message", "Không có khoa nào!");
             }
-            List<Khoa> khoas = null;
-            List<Khoa> khoasDiff = null;
-            if (diff) {
-                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
-                khoasDiff = khoaLopJDBCTemplate.listKhoa();
-            } else {
-                khoas = khoaLopJDBCTemplate.listKhoa();
-                khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
-            }
-            khoasDiff.addAll(khoas);
-            Map<String, String> khoaMap = new HashMap();
-            for (Khoa i : khoasDiff) {
-                khoaMap.put(i.getMAKH(), i.getTENKH());
-            }
-            model.addAttribute("lops", lops);
-            model.addAttribute("khoas", khoas);
-            model.addAttribute("makh", makh);
-            model.addAttribute("khoaMap", khoaMap);
-            model.addAttribute("role_al", currentConnection.getRoleAlias());
-        } else {
-            model.addAttribute("message", "Không có khoa nào!");
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/khoalop/lop_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-khoa", method = RequestMethod.POST)
     public String loadKhoa(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<Khoa> khoas = null;
-            if (diff)
-                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
-            else
-                khoas = khoaLopJDBCTemplate.listKhoa();
-            model.addAttribute("khoas", khoas);
-            model.addAttribute("role_al", currentConnection.getRoleAlias());
-        } else {
-            model.addAttribute("message", "Không có khoa nào!");
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<Khoa> khoas = null;
+                if (diff)
+                    khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+                else
+                    khoas = khoaLopJDBCTemplate.listKhoa();
+                model.addAttribute("khoas", khoas);
+                model.addAttribute("role_al", currentConnection.getRoleAlias());
+            } else {
+                model.addAttribute("message", "Không có khoa nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/khoalop/khoa_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-rf-khoa", method = RequestMethod.POST)
     public String loadRfKhoa(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<Khoa> khoas = null;
-            if (diff)
-                khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
-            else
-                khoas = khoaLopJDBCTemplate.listKhoa();
-            model.addAttribute("khoas", khoas);
-        } else {
-            model.addAttribute("message", "Không có khoa nào!");
+        try {
+            if (currentConnection != null) {
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<Khoa> khoas = null;
+                if (diff)
+                    khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
+                else
+                    khoas = khoaLopJDBCTemplate.listKhoa();
+                model.addAttribute("khoas", khoas);
+            } else {
+                model.addAttribute("message", "Không có khoa nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
 
         return "elements/khoalop/khoa_rf_list";
@@ -191,9 +207,8 @@ public class KhoaLopController {
 
             model.addAttribute("message", "Thêm lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm lớp thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Thêm lớp thất bại! " + e.getMessage());
+
         }
 
         return "elements/message";
@@ -214,9 +229,7 @@ public class KhoaLopController {
 
             model.addAttribute("message", "Xóa lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa lớp thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Xóa lớp thất bại!" + e.getMessage());
         }
 
         return "elements/message";
@@ -240,9 +253,7 @@ public class KhoaLopController {
 
             model.addAttribute("message", "Cập nhật lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật lớp thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Cập nhật lớp thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -267,9 +278,7 @@ public class KhoaLopController {
 
             model.addAttribute("message", "Thêm khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm khoa thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Thêm khoa thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -289,9 +298,7 @@ public class KhoaLopController {
 
             model.addAttribute("message", "Xóa khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa khoa thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Xóa khoa thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -315,9 +322,7 @@ public class KhoaLopController {
 
             model.addAttribute("message", "Cập nhật khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật khoa thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Cập nhật khoa thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -336,7 +341,7 @@ public class KhoaLopController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("message", "Hoàn tác thất bại!");
+            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -353,7 +358,7 @@ public class KhoaLopController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("message", "Làm lại thất bại!");
+            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
             System.out.println(e.getMessage());
         }
         return "elements/message";
@@ -367,8 +372,9 @@ public class KhoaLopController {
         return "elements/khoalop/button_action_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "check-malop", method = RequestMethod.POST)
-    public String checkMalop(@RequestBody String body) {
+    public String checkMalop(@RequestBody String body, ModelMap modal) {
         try {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
@@ -382,14 +388,16 @@ public class KhoaLopController {
                 return "false";
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            // Need parse to new view
+            modal.addAttribute("message", e.getMessage());
+            return "elements/message";
         }
         return "true";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "check-makh", method = RequestMethod.POST)
-    public String checkmakh(@RequestBody String body) {
+    public String checkmakh(@RequestBody String body, ModelMap modal) {
         try {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
@@ -403,28 +411,33 @@ public class KhoaLopController {
                 return "false";
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            modal.addAttribute("message", e.getMessage());
+            return "elements/message";
         }
         return "true";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchLop(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        Gson gson = new Gson();
-        Map<String, String> map = new HashMap<String, String>();
-        map = gson.fromJson(searchInput, map.getClass());
-        searchInput = map.get("searchInput");
-        List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
-        List<Lop> lops = khoaLopJDBCTemplate.search(searchInput);
-        Map<String, String> khoaMap = new HashMap();
-        for (Khoa i : khoas) {
-            khoaMap.put(i.getMAKH(), i.getTENKH());
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(searchInput, map.getClass());
+            searchInput = map.get("searchInput");
+            List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
+            List<Lop> lops = khoaLopJDBCTemplate.search(searchInput);
+            Map<String, String> khoaMap = new HashMap<>();
+            for (Khoa i : khoas) {
+                khoaMap.put(i.getMAKH(), i.getTENKH());
+            }
+            model.addAttribute("khoas", khoas);
+            model.addAttribute("lops", lops);
+            model.addAttribute("khoaMap", khoaMap);
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
-        model.addAttribute("khoas", khoas);
-        model.addAttribute("lops", lops);
-        model.addAttribute("khoaMap", khoaMap);
         model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/khoalop/lop_list";

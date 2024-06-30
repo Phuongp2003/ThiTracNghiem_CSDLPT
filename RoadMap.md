@@ -45,6 +45,7 @@
 | [ ]      | [X]   |   [ ]          | XOA_LOGIN
 | [ ]      | [X]   |   [ ]          | XoaKhoa
 | [ ]      | [X]   |   [ ]          | XoaLop
+
 </details>
 
 

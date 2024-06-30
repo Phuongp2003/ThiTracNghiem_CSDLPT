@@ -22,35 +22,32 @@ public class GiaoVienService {
         giaoVienJDBCTemplate.setDataSource(site);
     }
 
-    public void themGiaoVien(GiaoVien giaoVien) {
+    public void themGiaoVien(GiaoVien giaoVien) throws Exception {
         giaoVienJDBCTemplate.create(giaoVien);
     }
 
-    public GiaoVien docGiaoVien(String magv) {
+    public GiaoVien docGiaoVien(String magv) throws Exception {
         return giaoVienJDBCTemplate.getTeacher(magv);
     }
 
-    public List<GiaoVien> docDanhSachGiaoVien() {
+    public List<GiaoVien> docDanhSachGiaoVien() throws Exception {
         return giaoVienJDBCTemplate.listGiaoVien();
     }
 
-    public void capNhatGiaoVien(String maGiaoVien, GiaoVien giaoVien) {
+    public void capNhatGiaoVien(String maGiaoVien, GiaoVien giaoVien) throws Exception {
         giaoVienJDBCTemplate.update(maGiaoVien, giaoVien);
+
     }
 
-    public void xoaGiaoVien(String maGiaoVien) {
+    public void xoaGiaoVien(String maGiaoVien) throws Exception {
         giaoVienJDBCTemplate.delete(maGiaoVien);
     }
 
-    public Map<String, String> dangNhap(String username) throws DataAccessException, SQLServerException {
-        try {
-            return giaoVienJDBCTemplate.login(username);
-        } catch (DataAccessException | SQLServerException e) {
-            throw e;
-        }
+    public Map<String, String> dangNhap(String username) throws Exception {
+        return giaoVienJDBCTemplate.login(username);
     }
 
-    public List<GiaoVien> docDanhSachGiaoVienTheoKhoa(String makhoa) {
+    public List<GiaoVien> docDanhSachGiaoVienTheoKhoa(String makhoa) throws Exception {
         return giaoVienJDBCTemplate.findTeacherByKhoa(makhoa);
     }
 }

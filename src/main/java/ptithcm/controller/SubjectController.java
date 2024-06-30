@@ -25,13 +25,10 @@ import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Lop;
 import ptithcm.bean.MonHoc;
 import ptithcm.bean.MonHocAction;
-import ptithcm.bean.SinhVien;
 
 @Controller
 @RequestMapping("subject")
 public class SubjectController {
-    @Autowired
-    private GlobalVariable currentConnection;
 
     @Autowired
     MonHocJDBCTemplate monHocJDBCTemplate;
@@ -45,46 +42,55 @@ public class SubjectController {
     @RequestMapping("")
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        model.addAttribute("currentSite", session.getAttribute("site"));
-        utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
-        model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
-        monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+        try {
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
+            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
 
-        // Initialize HistoryAction in session if not present
-        session.setAttribute("historyAction", new HistoryAction());
+            // Initialize HistoryAction in session if not present
+            session.setAttribute("historyAction", new HistoryAction());
 
-        // Pass history actions to the template for potential undo/redo display
-        model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
-        model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
+            // Pass history actions to the template for potential undo/redo display
+            model.addAttribute("canUndo", ((HistoryAction) session.getAttribute("historyAction")).canUndo());
+            model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
-        List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
-        List<Lop> lops = khoaLopJDBCTemplate.listLop();
-        model.addAttribute("monHocs", monHocs);
-        model.addAttribute("lops", lops);
+            List<MonHoc> monHocs = monHocJDBCTemplate.listMonHoc();
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            model.addAttribute("monHocs", monHocs);
+            model.addAttribute("lops", lops);
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
+        }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/subject";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "load-subject", method = RequestMethod.POST)
     public String loadSubject(ModelMap model, HttpSession session, @RequestBody String body) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
-            Gson gson = new Gson();
-            Map<String, String> map = new HashMap<String, String>();
-            map = gson.fromJson(body, map.getClass());
-            Boolean diff = Boolean.parseBoolean(map.get("diff"));
-            List<MonHoc> monHocs = null;
-            if (diff) {
-                monHocs = monHocJDBCTemplate.listMonHocDiffSite();
+        try {
+            if (currentConnection != null) {
+                monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+                Gson gson = new Gson();
+                Map<String, String> map = new HashMap<String, String>();
+                map = gson.fromJson(body, map.getClass());
+                Boolean diff = Boolean.parseBoolean(map.get("diff"));
+                List<MonHoc> monHocs = null;
+                if (diff) {
+                    monHocs = monHocJDBCTemplate.listMonHocDiffSite();
+                } else {
+                    monHocs = monHocJDBCTemplate.listMonHoc();
+                }
+                model.addAttribute("monHocs", monHocs);
             } else {
-                monHocs = monHocJDBCTemplate.listMonHoc();
+                model.addAttribute("message", "Không có môn học nào!");
             }
-            model.addAttribute("monHocs", monHocs);
-            model.addAttribute("role_al", currentConnection.getRoleAlias());
-        } else {
-            model.addAttribute("message", "Không có môn học nào!");
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
+        model.addAttribute("role_al", currentConnection.getRoleAlias());
 
         return "elements/subject/subject_list";
     }
@@ -107,9 +113,7 @@ public class SubjectController {
 
             model.addAttribute("message", "Thêm môn học thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm môn học thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Thêm môn học thất bại! " + e.getMessage());
         }
 
         return "elements/message";
@@ -130,9 +134,7 @@ public class SubjectController {
 
             model.addAttribute("message", "Xóa môn học thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa môn học thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Xóa môn học thất bại! " + e.getMessage());
         }
 
         return "elements/message";
@@ -156,9 +158,7 @@ public class SubjectController {
 
             model.addAttribute("message", "Cập nhật môn học thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật môn học thất bại!");
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Cập nhật môn học thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -176,8 +176,7 @@ public class SubjectController {
                 model.addAttribute("message", "Không có hành động nào để hoàn tác!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Hoàn tác thất bại!");
+            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -193,9 +192,7 @@ public class SubjectController {
                 model.addAttribute("message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("message", "Làm lại thất bại!");
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
         }
         return "elements/message";
     }
@@ -208,8 +205,9 @@ public class SubjectController {
         return "elements/subject/button_action_list";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "check-mamh", method = RequestMethod.POST)
-    public String checkMamh(@RequestBody String body) {
+    public String checkMamh(@RequestBody String body, ModelMap model) {
         try {
             Gson gson = new Gson();
             Map<String, String> map = new HashMap<String, String>();
@@ -223,24 +221,29 @@ public class SubjectController {
                 return "false";
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
+            model.addAttribute("message", "Lỗi: " + e.getMessage());
+            return "elements/message";
         }
         return "true";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "search", method = RequestMethod.POST)
     public String searchSubjects(ModelMap model, HttpSession session, @RequestBody String searchInput) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        Gson gson = new Gson();
-        Map<String, String> map = new HashMap<String, String>();
-        map = gson.fromJson(searchInput, map.getClass());
-        searchInput = map.get("searchInput");
-        List<MonHoc> monHocs = monHocJDBCTemplate.search(searchInput);
-        List<Lop> lops = khoaLopJDBCTemplate.listLop();
-        model.addAttribute("monHocs", monHocs);
-        model.addAttribute("lops", lops);
-        model.addAttribute("role_al", currentConnection.getRoleAlias());
+        try {
+            Gson gson = new Gson();
+            Map<String, String> map = new HashMap<String, String>();
+            map = gson.fromJson(searchInput, map.getClass());
+            searchInput = map.get("searchInput");
+            List<MonHoc> monHocs = monHocJDBCTemplate.search(searchInput);
+            List<Lop> lops = khoaLopJDBCTemplate.listLop();
+            model.addAttribute("monHocs", monHocs);
+            model.addAttribute("lops", lops);
+            model.addAttribute("role_al", currentConnection.getRoleAlias());
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
+        }
 
         return "elements/subject/subject_list";
     }
@@ -248,15 +251,19 @@ public class SubjectController {
     @RequestMapping(value = "score-subject", method = RequestMethod.POST)
     public String scoreSubject(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
-            monHocJDBCTemplate.setDataSource(currentConnection.getSite());
-            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-            List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
-            List<Lop> lops = khoaLopJDBCTemplate.listLop();
-            model.addAttribute("monhocs", monhocs);
-            model.addAttribute("lops", lops);
-        } else {
-            model.addAttribute("message", "Không có môn học nào!");
+        try {
+            if (currentConnection != null) {
+                monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+                khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                List<MonHoc> monhocs = monHocJDBCTemplate.listMonHoc();
+                List<Lop> lops = khoaLopJDBCTemplate.listLop();
+                model.addAttribute("monhocs", monhocs);
+                model.addAttribute("lops", lops);
+            } else {
+                model.addAttribute("message", "Không có môn học nào!");
+            }
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
         return "pages/subject";
     }
