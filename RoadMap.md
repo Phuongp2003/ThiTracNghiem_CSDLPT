@@ -1,5 +1,55 @@
 <details style="font-size: 15px;">
 <summary style="font-size: 25px; font-weight: 700; color: blue">
+    Fix SP support throw error
+</summary>
+
+| Is Fixed | Done? | Name (+Last time update?)                    |Link Message
+|----------|-------|----------------------------------------------|---------
+| [ ]      | [ ]   | LayDanhSachThiTracNghiem | example link
+| [ ]      | [ ]   | SP_CapNhatBaiThi         
+| [ ]      | [ ]   | ChamDiemBaiThi           
+| [ ]      | [ ]   | ChuyenKhoa               
+| [ ]      | [ ]   | ChuyenLop
+| [ ]      | [ ]   | DangKyThi
+| [ ]      | [ ]   | DangNhapGiangVien
+| [ ]      | [ ]   | DangNhapSinhVien
+| [ ]      | [ ]   | DanhSachCacMonThi
+| [ ]      | [ ]   | DanhSachDangKyThi
+| [ ]      | [ ]   | DanhSachLop
+| [ ]      | [ ]   | DanhSachMonCoDiem
+| [ ]      | [ ]   | DanhSachSinhVien
+| [ ]      | [ ]   | DeThi
+| [ ]      | [ ]   | InBangDiem
+| [ ]      | [ ]   | KiemTraBoDeTonTai
+| [ ]      | [ ]   | KiemTraDangKyThi
+| [ ]      | [ ]   | KiemTraGiaoVienTonTai
+| [ ]      | [ ]   | KiemTraKhoaTonTai
+| [ ]      | [ ]   | KiemTraLopTonTai
+| [ ]      | [ ]   | KiemTraMonHocTonTai
+| [ ]      | [ ]   | KiemTraSoLuongCau
+| [ ]      | [ ]   | KiemTraSoLuongCauCungBac
+| [ ]      | [ ]   | KiemTraTrangThaiThi
+| [ ]      | [ ]   | KiemTraXoaGVDK
+| [ ]      | [ ]   | KTSinhVienTonTai
+| [ ]      | [ ]   | LayThoiGianThi
+| [ ]      | [ ]   | Login[?]
+| [ ]      | [ ]   | TaoLogin
+| [ ]      | [ ]   | TaoBaiThi
+| [ ]      | [ ]   | ThiSinhXemKetQua
+| [ ]      | [ ]   | TimKiemBoDe
+| [ ]      | [ ]   | TimKiemGiaoVien
+| [ ]      | [ ]   | TimKiemLop
+| [ ]      | [ ]   | TimKiemMonHoc
+| [ ]      | [ ]   | TimKiemSinhVien
+| [ ]      | [ ]   | XemKetQua
+| [ ]      | [ ]   | XOA_LOGIN
+| [ ]      | [ ]   | XoaKhoa
+| [ ]      | [ ]   | XoaLop
+</details>
+
+
+<details style="font-size: 15px;">
+<summary style="font-size: 25px; font-weight: 700; color: blue">
     Tasks
 </summary>
 
@@ -9,9 +59,9 @@
 - [x] Import bean
 - [x] Thêm form mức đổ dữ liệu giáo viên, sinh viên, môn học, khoa-lớp 
     (sinh viên, môn học hoàn thiện nhất có lọc theo lớp, khoa)
-- [ ] Chỉnh các connection thành global
+- [x] Chỉnh các connection thành global
 - [ ] Login: chỉnh role thành check box
-- [ ] Login: chỉnh danh sách phân mảnh lấy bằng cách dùng SP
+- [x] Login: chỉnh danh sách phân mảnh lấy bằng cách dùng SP
 - [X] Form môn học: 
   - [X] thêm
   - [X] xóa
@@ -76,9 +126,9 @@
 - [X] Bảng điểm môn học
   - [X] Giáo viên chọn tên lớp, tên môn học, lần thi: chương trình in ra bảng điểm hết môn của lớp đã chọn
   - [X] Mẫu bảng: (Stt,) MASV, HO, TEN, DIEM, ĐIỂM CHỮ
-- [ ] Báo cáo DANH SÁCH ĐĂNG KÝ THI TRẮC NGHIỆM CƠ SỞ X
-  - [ ] Xem danh sách đăng ký thi trắc nghiệm của cả 2 cơ sở @tungay đến @denngay; In theo từng cơ sở, in theo thứ tự tăng dần của ngày đăng ký ***(xử lý job)***
-  - [ ] Mẫu: 
+- [x] Báo cáo DANH SÁCH ĐĂNG KÝ THI TRẮC NGHIỆM CƠ SỞ X
+  - [x] Xem danh sách đăng ký thi trắc nghiệm của cả 2 cơ sở @tungay đến @denngay; In theo từng cơ sở, in theo thứ tự tăng dần của ngày đăng ký ***(xử lý job)***
+  - [x] Mẫu: 
   ![alt text](.github/src/imgs/image2.png)
 
 </details>
@@ -88,13 +138,13 @@
     SP Task
 </summary>
 
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) môn học
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) khoa
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) lớp
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) sinh viên
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) giáo viên
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) đề thi (câu hỏi)
-- [ ] Xem, thêm, xóa, sửa(, phục hồi, reload) GiangVien_DangKy; khi thêm, sửa cần kiểm tra ràng buộc
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) môn học
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) khoa
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) lớp
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) sinh viên
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) giáo viên
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) đề thi (câu hỏi)
+- [x] Xem, thêm, xóa, sửa(, phục hồi, reload) GiangVien_DangKy; khi thêm, sửa cần kiểm tra ràng buộc
 - [x] Xem thông tin thí sinh dự thi
 - [x] ***Lọc danh sách câu hỏi phù hợp với thí sinh tham gia dự thi***
 - [x] ***Chọn câu hỏi từ danh sách đã lọc để tạo đề thi***
