@@ -27,7 +27,7 @@
 | [ ]      | [X]   |   [ ]          | KiemTraLopTonTai
 | [ ]      | [X]   |   [ ]          | KiemTraMonHocTonTai
 | [ ]      | [X]   |   [ ]          | KiemTraSoLuongCau
-| [ ]      | [X]   |   [ ]          | KiemTraSoLuongCauCungBac
+| [ ]      | [ ]   |   [X]          | KiemTraSoLuongCauCungBac
 | [ ]      | [X]   |   [ ]          | KiemTraTrangThaiThi
 | [ ]      | [X]   |   [ ]          | KiemTraXoaGVDK
 | [ ]      | [X]   |   [ ]          | KTSinhVienTonTai
