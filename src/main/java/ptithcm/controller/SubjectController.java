@@ -43,10 +43,11 @@ public class SubjectController {
     public String list(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         try {
-            model.addAttribute("currentSite", session.getAttribute("site"));
             utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
-            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+            khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            model.addAttribute("currentSite", session.getAttribute("site"));
+            model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
 
             // Initialize HistoryAction in session if not present
             session.setAttribute("historyAction", new HistoryAction());

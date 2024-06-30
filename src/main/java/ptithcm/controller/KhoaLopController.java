@@ -29,7 +29,6 @@ import ptithcm.bean.LopAction;
 @Controller
 @RequestMapping("department-class")
 public class KhoaLopController {
-
     @Autowired
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
 

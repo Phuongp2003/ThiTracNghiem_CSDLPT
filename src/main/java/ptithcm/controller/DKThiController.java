@@ -98,7 +98,8 @@ public class DKThiController {
             HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         try {
-            List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(DateFM.UtilToSQL(startdate), DateFM.UtilToSQL(enddate));
+            List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(DateFM.UtilToSQL(startdate),
+                    DateFM.UtilToSQL(enddate));
             model.addAttribute("site_al", currentConnection.getSite_al());
             model.addAttribute("currentSite", session.getAttribute("site"));
             model.addAttribute("dsdk1", listDKThiTheoCS(dsdk, "CS1"));
@@ -108,7 +109,7 @@ public class DKThiController {
             model.addAttribute("startdate", startdate);
             model.addAttribute("enddate", enddate);
         } catch (Exception e) {
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("e_message", e.getMessage());
         }
         return "pages/dsdkthi";
     }

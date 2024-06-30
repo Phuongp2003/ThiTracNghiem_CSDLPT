@@ -14,7 +14,6 @@
 		<jsp:include page="${elements}/teacher/index.jsp" />
 	</body>
 	
-	<jsp:include page="${elements}/theme.jsp" />
 	<jsp:include page="${viewsPath}/partial/script_al.jsp" />
 	
 </html>
