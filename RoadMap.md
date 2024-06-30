@@ -4,7 +4,7 @@
 </summary>
 
 | Is Fixed | Done? | Should delete  | Name (+Last time update?)                    |Link Message
-|----------|-------|----------------|--------------------------|`````````````````
+|----------|-------|----------------|--------------------------|-------------------
 | [ ]      | [ ]   |   [ ]          |LayDanhSachThiTracNghiem | example link
 | [ ]      | [X]   |   [ ]          | SP_CapNhatBaiThi         
 | [ ]      | [X]   |   [ ]          | ChamDiemBaiThi           
