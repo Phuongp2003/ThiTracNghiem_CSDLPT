@@ -35,4 +35,12 @@ public class DateFM {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         return sdf.format(date);
     }
+
+    public static java.util.Date SQLToUtil(java.util.Date enddate) {
+        return new java.util.Date(enddate.getTime());
+    }
+
+    public static Date UtilToSQL(java.util.Date date) {
+        return new Date(date.getTime());
+    }
 }

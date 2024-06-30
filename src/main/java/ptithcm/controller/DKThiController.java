@@ -20,6 +20,7 @@ import ptithcm.JDBCtemplate.UtilJDBCTemplate;
 import ptithcm.bean.GiaoVienDangKy;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.MonHoc;
+import ptithcm.util.DateFM;
 import ptithcm.bean.Lop;
 
 @Controller
@@ -92,12 +93,12 @@ public class DKThiController {
 
     @RequestMapping(value = "dsdkthi", method = RequestMethod.POST)
     public String listDKThi(ModelMap model,
-            @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startdate,
-            @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date enddate,
+            @RequestParam("startdate") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date startdate,
+            @RequestParam("enddate") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date enddate,
             HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         try {
-            List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(startdate, enddate);
+            List<List<String>> dsdk = giaoVienDKJDBCTemplate.listDKThi(DateFM.UtilToSQL(startdate), DateFM.UtilToSQL(enddate));
             model.addAttribute("site_al", currentConnection.getSite_al());
             model.addAttribute("currentSite", session.getAttribute("site"));
             model.addAttribute("dsdk1", listDKThiTheoCS(dsdk, "CS1"));
