@@ -1,6 +1,5 @@
 package ptithcm.controller;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,20 +9,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 
-import ptithcm.JDBCtemplate.GiaoVienDKJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.MonHocJDBCTemplate;
 import ptithcm.JDBCtemplate.SinhVienJDBCTemplate;
@@ -32,7 +27,6 @@ import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.temp.MonThi;
 import ptithcm.bean.SinhVien;
 import ptithcm.bean.temp.CauHoiDeThi;
-import ptithcm.bean.temp.ChiTietDapAn;
 import ptithcm.bean.temp.KetQuaThi;
 import ptithcm.bean.temp.ThoiGianThi;
 import ptithcm.bean.Lop;
@@ -54,10 +48,9 @@ public class ThiController {
     ThiJDBCTemplate thiJDBCTemplate;
 
     @RequestMapping("")
-    public String infoStudent(ModelMap model, HttpSession session,
-            RedirectAttributes redirectAttributes) {
+    public String infoStudent(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
+        try {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
             monHocJDBCTemplate.setDataSource(currentConnection.getSite());
@@ -75,6 +68,8 @@ public class ThiController {
             model.addAttribute("monthi", monthi);
             model.addAttribute("trangthai", trangthai);
             model.addAttribute("jdbc", monHocJDBCTemplate);
+        } catch (Exception e) {
+            model.addAttribute("message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/thi";
@@ -116,10 +111,11 @@ public class ThiController {
         return "redirect:/thi/exam.htm";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "exam", method = RequestMethod.GET)
     public String doExam(ModelMap model, HttpSession session) {
         GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-        if (currentConnection != null) {
+        try {
             sinhVienJDBCTemplate.setDataSource(currentConnection.getSite());
             SinhVien sv = (SinhVien) session.getAttribute("sv");
             Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
@@ -128,6 +124,8 @@ public class ThiController {
             model.addAttribute("sv", sv);
             model.addAttribute("lop", lop);
             model.addAttribute("trangthaithi", (String) session.getAttribute("trangthaithi"));
+        } catch (Exception e) {
+            model.addAttribute("e_message", e.getMessage());
         }
         return "pages/start_exam";
     }
@@ -149,8 +147,8 @@ public class ThiController {
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addAttribute("message", e.getMessage());
+            return "elements/message";
         }
         return "elements/thi/ketqua";
     }
@@ -174,12 +172,13 @@ public class ThiController {
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addAttribute("message", e.getMessage());
+            return "elements/message";
         }
         return "elements/thi/ketqua";
     }
 
+    @SuppressWarnings("unchecked")
     @RequestMapping(value = "submit-question", method = RequestMethod.POST)
     public String submitQuesttion(ModelMap model, HttpSession session, @RequestBody String body,
             HttpServletResponse response) {
@@ -209,8 +208,8 @@ public class ThiController {
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addAttribute("message", e.getMessage());
+            return "elements/message";
         }
         return "elements/message";
     }
@@ -242,9 +241,8 @@ public class ThiController {
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Time Exam - select Error: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            model.addAttribute("message", e.getMessage());
+            return "elements/message";
         }
         return "elements/message";
     }

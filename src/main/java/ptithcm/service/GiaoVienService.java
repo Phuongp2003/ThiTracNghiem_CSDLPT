@@ -42,10 +42,10 @@ public class GiaoVienService {
         giaoVienJDBCTemplate.delete(maGiaoVien);
     }
 
-    public Map<String, String> dangNhap(String username) throws DataAccessException, SQLServerException {
+    public Map<String, String> dangNhap(String username) throws Exception {
         try {
             return giaoVienJDBCTemplate.login(username);
-        } catch (DataAccessException | SQLServerException e) {
+        } catch (Exception e) {
             throw e;
         }
     }
