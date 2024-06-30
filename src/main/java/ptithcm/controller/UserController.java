@@ -1,6 +1,5 @@
 package ptithcm.controller;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -110,9 +109,6 @@ public class UserController {
         currentConnection.setRootSite(mainSite);
         utilJDBCTemplate.setRootDataSource(mainSite);
         try {
-            String pcName = "ukn";
-            InetAddress addr = InetAddress.getLocalHost();
-            pcName = addr.getHostName().toUpperCase();
             List<ServerInfo> svi = utilJDBCTemplate.getDSPhanManh();
             List<String> siteName = new ArrayList<>();
             siteName.add("");
