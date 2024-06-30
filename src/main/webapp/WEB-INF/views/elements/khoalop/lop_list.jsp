@@ -17,7 +17,7 @@
                 <td>${khoaMap.get(l.MAKH)}</td>
                 <c:if test="${role_al != 'TRUONG'}">
                     <td>
-                        <form class="d-inline" action="department-class/delete-class/${l.MALOP.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa lớp ${l.MALOP}?')" target="formSubmitFrame">
+                        <form class="d-inline" action="department-class/delete-class/${l.MALOP.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa lớp ${l.TENLOP}?')" target="formSubmitFrame">
                             <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>
                         </form>
     
@@ -37,9 +37,12 @@
                                             <label>Tên lớp: </label>
                                             <input name="tenlop" value="${l.TENLOP}" class="form-control" />
                                         </div>
-                                        <select class="form-select" id="khoa" name="makh" disabled>
-                                            <option value="${l.MAKH}">${l.MAKH}</option>
-                                        </select>
+                                        <div class="mb-3">
+                                            <label>Khoa</label>
+                                            <select class="form-select" id="khoa" name="makh" disabled>
+                                                <option value="${l.MAKH}">${l.MAKH} (${khoaMap.get(l.MAKH)})</option>
+                                            </select>
+                                        </div>
                                         <button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
                                         <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
                                     </form>

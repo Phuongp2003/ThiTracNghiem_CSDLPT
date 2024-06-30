@@ -186,8 +186,8 @@ public class BoDeJDBCTemplate {
 
     public void update(int cauhoi, BoDe bode) throws Exception {
         try {
-            String SQL = "UPDATE BoDe SET TRINHDO = ? AND SET NOIDUNG = ? AND SET A = ? AND SET B = ? "
-                    + "AND SET C = ? AND SET D = ? AND DAP_AN = ? WHERE CAUHOI = ?";
+            String SQL = "UPDATE BoDe SET MAMH = ?, TRINHDO = ?, NOIDUNG = ?, A = ?, B = ?"
+                    + ", C = ?, D = ?, DAP_AN = ? WHERE CAUHOI = ?";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.setString(1, bode.getTRINHDO());

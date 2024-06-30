@@ -113,7 +113,7 @@ public class GiaoVienJDBCTemplate {
     // Update GiaoVien (input: Id, GiaoVien)
     public void update(String magv, GiaoVien giaoVien) throws Exception {
         try {
-            String SQL = "UPDATE GiaoVien SET HO = ?, TEN = ?, DIACHI = ?, MAKH = ? WHERE MAGV = ?";
+            String SQL = "UPDATE GiaoVien SET HO = ?, TEN = ?, DIACHI = ? WHERE MAGV = ?";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.setString(1, giaoVien.getHO());

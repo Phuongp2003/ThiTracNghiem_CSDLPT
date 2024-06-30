@@ -17,7 +17,7 @@
                 <td onclick="toggleAndLoad('${k.MAKH}')">${k.MACS}</td>
                 <c:if test="${role_al != 'TRUONG'}">
                     <td>
-                        <form class="d-inline" action="department-class/delete-department/${k.MAKH.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa khoa ${k.MAKH}?')" target="formSubmitFrame">
+                        <form class="d-inline" action="department-class/delete-department/${k.MAKH.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa khoa ${k.TENKH}?')" target="formSubmitFrame">
                             <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>
                         </form>
     

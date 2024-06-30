@@ -50,9 +50,12 @@
 											<label>Địa chỉ: </label>
 											<input name="diachi" value="${gv.DIACHI}" class="form-control" />
 										</div>
-										<select class="form-select" id="khoa" name="makhoa" disabled>
-											<option value="${gv.MAKH}">${gv.MAKH}</option>
-										</select>
+										<div class="mb-3">
+											<label>Khoa</label>
+											<select class="form-select" id="khoa" name="makhoa" disabled>
+												<option value="${gv.MAKH}">${gv.MAKH} (${khoa.get(idFix.fix(gv.MAKH, 8))})</option>
+											</select>
+										</div>
 										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
 										<button type=" button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 									</form>
