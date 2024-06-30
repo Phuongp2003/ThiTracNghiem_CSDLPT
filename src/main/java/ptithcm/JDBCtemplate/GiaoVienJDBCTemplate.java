@@ -98,8 +98,8 @@ public class GiaoVienJDBCTemplate {
     // Update GiaoVien (input: Id, GiaoVien)
     public void update(String magv, GiaoVien giaoVien) {
         try {
-            String SQL = "UPDATE GiaoVien SET HO = ?, TEN = ?, DIACHI = ?, MAKH = ? WHERE MAGV = ?";
-            jdbcTemplate.update(SQL, giaoVien.getHO(), giaoVien.getTEN(), giaoVien.getDIACHI(), giaoVien.getMAKH(),
+            String SQL = "UPDATE GiaoVien SET HO = ?, TEN = ?, DIACHI = ? WHERE MAGV = ?";
+            jdbcTemplate.update(SQL, giaoVien.getHO(), giaoVien.getTEN(), giaoVien.getDIACHI(),
                     magv);
             System.out.println("Updated Record with ID = " + magv);
         } catch (Exception e) {

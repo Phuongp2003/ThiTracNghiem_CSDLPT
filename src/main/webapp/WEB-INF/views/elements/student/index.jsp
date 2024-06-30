@@ -77,6 +77,7 @@
 									<input name="diachi" class="form-control" />
 								</div>
 								<select class="form-select" id="lop" name="malop">
+									<label>Lớp</label>
 									<c:forEach var="l" items="${lops}">
 										<option value="${l.MALOP}">
 											${l.MALOP} (${l.TENLOP})</option>

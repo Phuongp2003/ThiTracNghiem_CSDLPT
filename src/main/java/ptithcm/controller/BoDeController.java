@@ -213,7 +213,6 @@ public class BoDeController {
         try {
             BoDe oldBode = boDeJDBCTemplate.getBoDe(cauhoi);
             BoDe newBode = boDeJDBCTemplate.getBoDe(cauhoi);
-            newBode.setCAUHOI(cauhoi);
             newBode.setMAMH(mamh);
             newBode.setTRINHDO(trinhdo);
             newBode.setNOIDUNG(noidung);

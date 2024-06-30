@@ -1,13 +1,9 @@
 package ptithcm.JDBCtemplate;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -17,7 +13,6 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
 import ptithcm.bean.temp.ServerInfo;
-import ptithcm.mapper.GiaoVienMapper;
 
 @Service
 public class UtilJDBCTemplate {
@@ -58,18 +53,5 @@ public class UtilJDBCTemplate {
         }
 
         return res;
-    }
-
-    public int createLogin(String loginname, String pass, String magv, String role) {
-        String SQL = "{call SP_TAO_LOGIN(?, ?, ?, ?)}";
-        try {
-            return root_cmd.queryForObject(SQL, new Object[] {loginname, pass, magv, role}, (ResultSet rs, int rowNum) -> {
-                return rs.getInt(1);
-            });
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            System.err.println("Tao login - select Error: " + e.getMessage());
-            return -1;
-        }
     }
 }

@@ -252,7 +252,6 @@ public class StudentController {
         try {
             SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
             SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
-            newSv.setMASV(masv);
             newSv.setHO(ho);
             newSv.setTEN(ten);
             newSv.setNGAYSINH(ngaysinh);

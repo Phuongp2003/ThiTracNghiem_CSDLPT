@@ -159,9 +159,10 @@ public class BoDeJDBCTemplate {
 
     public void update(int cauhoi, BoDe bode) {
         try {
-            String SQL = "UPDATE BoDe SET TRINHDO = ? AND SET NOIDUNG = ? AND SET A = ? AND SET B = ? "
-                    + "AND SET C = ? AND SET D = ? AND DAP_AN = ? WHERE CAUHOI = ?";
-            jdbcTemplate.update(SQL, bode.getCAUHOI(), cauhoi);
+            String SQL = "UPDATE BoDe SET MAMH = ?, TRINHDO = ?, NOIDUNG = ?, A = ?, B = ?"
+                    + ", C = ?, D = ?, DAP_AN = ? WHERE CAUHOI = ?";
+            jdbcTemplate.update(SQL, bode.getMAMH(), bode.getTRINHDO(), bode.getNOIDUNG(),
+                bode.getA(), bode.getB(), bode.getC(), bode.getD(), bode.getDAP_AN(), cauhoi);
             System.out.println("Updated Record with ID = " + cauhoi);
         } catch (Exception e) {
             e.printStackTrace();

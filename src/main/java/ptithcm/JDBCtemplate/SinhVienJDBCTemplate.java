@@ -144,7 +144,7 @@ public class SinhVienJDBCTemplate {
         try {
             String SQL = "UPDATE SinhVien SET HO = ?, TEN = ?, NGAYSINH = ?, DIACHI = ?, MALOP = ?, MATKHAU = ? WHERE MASV = ?";
             jdbcTemplate.update(SQL, sinhVien.getHO(), sinhVien.getTEN(), sinhVien.getNGAYSINH(), sinhVien.getDIACHI(),
-                    sinhVien.getMALOP(), sinhVien.getMATKHAU(), masv);
+                sinhVien.getMATKHAU(), masv);
             System.out.println("Updated Record with ID = " + masv);
         } catch (Exception e) {
             e.printStackTrace();
