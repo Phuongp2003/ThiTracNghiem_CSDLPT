@@ -85,7 +85,7 @@ public class KetQuaThiController {
                 session.setAttribute("lanthi", lanthi);
                 session.setAttribute("trangthaithi", trangthai);
             } else {
-                model.addAttribute("message", "Không có kết nối nào!");
+                model.addAttribute("e_message", "Không có kết nối nào!");
             }
         } catch (Exception e) {
             redirectAttributes.addAttribute("e_message", e.getMessage());
@@ -107,8 +107,8 @@ public class KetQuaThiController {
                 throw new Exception("Thông tin dự thi không hợp lệ!");
             }
         } catch (Exception e) {
-            redirectAttributes.addAttribute("error", e.getMessage());
-            return "redirect:/login.htm";
+            redirectAttributes.addAttribute("message", e.getMessage());
+            return "redirect:/auth/login.htm";
         }
     }
 }

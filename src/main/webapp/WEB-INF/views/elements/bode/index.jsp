@@ -32,8 +32,7 @@
 			</div>
 		</c:if>
 		<div class="col-md-4">
-			<input name="searchInput" class="form-control" type="search" placeholder="Tìm..." 
-				aria-label="Search" style="width: 60%;" onchange="searchBoDes(this.value)">
+			<input name="searchInput" class="form-control" type="search" placeholder="Tìm..." aria-label="Search" style="width: 60%;" onchange="searchBoDes(this.value)">
 		</div>
 		<div class="col-md-2">
 			<select class="form-select chon-monhoc" id="monhoc" name="mamh" onchange="loadBoDes(this.value)">
@@ -52,7 +51,7 @@
 				<div class="modal fade" id="add-bode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
-							<form id="addBodeForm" method="POST" action="bode/add-bode.htm" class="form-control" target="formSubmitFrame">
+							<form id="addBodeForm" method="POST" action="bode/add-bode.htm" class="form-control">
 								<div class="mb-3">
 									<label>Môn học</label>
 									<select class="form-select" id="monhoc" name="mamh">
@@ -110,7 +109,7 @@
 										</select>
 									</div>
 								</c:if>
-								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick=" submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -162,7 +161,7 @@
 	// 	else isDiffSite = false;
 	// 	refreshData();
 	// }
-
+	
 	function loadBoDes(value) {
 		var isDiff = isDiffSite ? 'true' : 'false';
 		fetch('bode/get-bode-by-monhoc.htm', {
@@ -221,7 +220,7 @@
 			});
 		currentSearch = value;
 	}
-
+	
 	function toggleAndLoad(value) {
 		const element = event.target.closest('.is-action');
 		element.classList.toggle('selected');

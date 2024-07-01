@@ -29,8 +29,8 @@
 				<td>${sv.MATKHAU}</td>
 				<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 					<td>
-						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onclick="if(confirm('Bạn có chắc muốn xóa sinh viên ${sv.TEN}?')) submitClosestForm(this, () => refreshData())" target="formSubmitFrame">
-							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
+						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post">
+							<button type="button" onclick="if(confirm('Bạn có chắc muốn xóa sinh viên ${sv.TEN}?')) submitClosestForm(this, () => refreshData())" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
 						</form>
 						
 						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-student-${sv.MASV.trim()}">

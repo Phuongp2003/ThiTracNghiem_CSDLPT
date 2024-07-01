@@ -151,7 +151,7 @@ public class TeacherController {
                 model.addAttribute("current", current);
                 model.addAttribute("khoas", khoas);
             } else {
-                model.addAttribute("message", "Không có khoa nào!");
+                model.addAttribute("e_message", "Không có khoa nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -188,7 +188,7 @@ public class TeacherController {
                 model.addAttribute("khoas", khoas);
                 model.addAttribute("cosoMap", cosoMap);
             } else {
-                model.addAttribute("message", "Không có khoa nào!");
+                model.addAttribute("e_message", "Không có khoa nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -215,11 +215,11 @@ public class TeacherController {
             historyAction.addAction(gvAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Thêm giáo viên thành công!");
+            model.addAttribute("ok_message", "Thêm giáo viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm giáo viên thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Thêm giáo viên thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
@@ -243,11 +243,11 @@ public class TeacherController {
             historyAction.addAction(gvAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Cập nhật giáo viên thành công!");
+            model.addAttribute("ok_message", "Cập nhật giáo viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật giáo viên thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Cập nhật giáo viên thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "delete/{id}", method = RequestMethod.POST)
@@ -264,11 +264,11 @@ public class TeacherController {
             historyAction.addAction(gvAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Xóa giáo viên thành công!");
+            model.addAttribute("ok_message", "Xóa giáo viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa giáo viên thất bại!" + e.getMessage());
+            model.addAttribute("e_message", "Xóa giáo viên thất bại!" + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "move-teacher", method = RequestMethod.POST)
@@ -288,11 +288,11 @@ public class TeacherController {
             historyAction.addAction(gvAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Chuyển khoa thành công!");
+            model.addAttribute("ok_message", "Chuyển khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Chuyển khoa thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Chuyển khoa thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "undo", method = RequestMethod.POST)
@@ -303,13 +303,13 @@ public class TeacherController {
                 if (!historyAction.undo()) {
                     throw new Exception("HistoryAction báo: Hoàn tác thất bại!");
                 }
-                model.addAttribute("message", "Hoàn tác thành công!");
+                model.addAttribute("ok_message", "Hoàn tác thành công!");
             } else
-                model.addAttribute("message", "Không có hành động nào để hoàn tác!");
+                model.addAttribute("e_message", "Không có hành động nào để hoàn tác!");
         } catch (Exception e) {
-            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Hoàn tác thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "redo", method = RequestMethod.POST)
@@ -320,15 +320,13 @@ public class TeacherController {
                 if (!historyAction.redo()) {
                     throw new Exception("HistoryAction báo: Làm lại thất bại!");
                 }
-                model.addAttribute("message", "Làm lại thành công!");
+                model.addAttribute("ok_message", "Làm lại thành công!");
             } else
-                model.addAttribute("message", "Không có hành động nào để làm lại!");
+                model.addAttribute("e_message", "Không có hành động nào để làm lại!");
         } catch (Exception e) {
-            model.addAttribute("message", "Làm lại thất bại!");
-            e.printStackTrace();
-            System.out.println("TeacherController.java: Làm lại thất bại:  " + e.getMessage());
+            model.addAttribute("e_message", "Làm lại thất bại!");
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "refresh-action-buttons", method = RequestMethod.POST)
@@ -351,13 +349,12 @@ public class TeacherController {
                 return "false";
             }
             String isAvai = giaoVienJDBCTemplate.checkMagv(manv);
-            System.out.println(isAvai);
             if (isAvai == "false") {
                 return "false";
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Kiểm tra mã giáo viên thất bại! " + e.getMessage());
-            return "elements/message";
+            model.addAttribute("e_message", "Kiểm tra mã giáo viên thất bại! " + e.getMessage());
+            return "elements/message_box";
         }
         return "true";
     }

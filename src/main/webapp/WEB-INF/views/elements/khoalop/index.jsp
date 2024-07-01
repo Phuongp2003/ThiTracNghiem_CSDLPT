@@ -27,8 +27,7 @@
 			</div>
 		</c:if>
 		<div class="col-md-3 col-sm-12 col-lg-3">
-			<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, khoa..." 
-				aria-label="Search" style="width: 80%;" onchange="searchClasses(this.value)">
+			<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên, khoa..." aria-label="Search" style="width: 80%;" onchange="searchClasses(this.value)">
 		</div>
 		<div class="khoa-select col-md-2">
 			<form action="department-class.htm" target="formSubmitFrame">
@@ -45,7 +44,7 @@
 				<div class="modal fade" id="add-class" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
-							<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control" target="formSubmitFrame">
+							<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control">
 								<div class="mb-3">
 									<label>Mã lớp: </label>
 									<input name="malop" class="form-control" required />
@@ -63,7 +62,7 @@
 										</c:forEach>
 									</select>
 								</div>
-								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -99,7 +98,7 @@
 									<label>Tên khoa: </label>
 									<input name="tenkh" class="form-control" />
 								</div>
-								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -158,7 +157,7 @@
 			});
 		currentKhoa = value;
 	}
-
+	
 	function searchClasses(value) {
 		fetch('department-class/search.htm', {
 				method: 'POST',

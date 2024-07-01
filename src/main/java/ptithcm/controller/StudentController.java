@@ -3,7 +3,6 @@ package ptithcm.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.sql.Date;
 
 import javax.servlet.http.HttpSession;
 
@@ -257,14 +256,14 @@ public class StudentController {
     @RequestMapping(value = "edit-student", method = RequestMethod.POST)
     public String updateStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
-            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
+            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date ngaysinh,
             @RequestParam("diachi") String diachi, HttpSession session) {
         try {
             SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
             SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
             newSv.setHO(ho);
             newSv.setTEN(ten);
-            newSv.setNGAYSINH(ngaysinh);
+            newSv.setNGAYSINH(DateFM.UtilToSQL(ngaysinh));
             newSv.setDIACHI(diachi);
 
             sinhVienJDBCTemplate.update(masv, newSv);
@@ -332,14 +331,14 @@ public class StudentController {
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             if (historyAction != null && historyAction.canRedo()) {
                 historyAction.redo();
-                model.addAttribute("message", "Làm lại thành công!");
+                model.addAttribute("ok_message", "Làm lại thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để làm lại!");
+                model.addAttribute("e_message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Làm lại thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "refresh-action-buttons", method = RequestMethod.POST)

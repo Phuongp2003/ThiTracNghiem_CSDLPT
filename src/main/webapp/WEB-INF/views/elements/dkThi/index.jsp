@@ -71,5 +71,4 @@
 		document.getElementById('enddate').value = today;
 		
 	});
-	submitFormAndGetMessage('#add-form');
 </script>

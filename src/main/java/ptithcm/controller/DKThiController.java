@@ -60,7 +60,7 @@ public class DKThiController {
                 throw new Exception("Không có kết nối nào!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("e_message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/dkthi";

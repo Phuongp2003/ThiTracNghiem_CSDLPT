@@ -64,9 +64,9 @@ public class AccountController {
 
             int res = accountJDBCTemplate.createLogin(loginname, pass, magv, role);
             if (res == 0) {
-                model.addAttribute("message", "Tạo tài khoản thành công!");
+                model.addAttribute("in4_message", "Tạo tài khoản thành công!");
             } else if (res == 1 || res == 2) {
-                model.addAttribute("message", "Tên login hoặc mã giáo viên đã tồn tại!");
+                model.addAttribute("e_message", "Tên login hoặc mã giáo viên đã tồn tại!");
             }
             model.addAttribute("giaoviens", giaoviens);
             model.addAttribute("user", user);

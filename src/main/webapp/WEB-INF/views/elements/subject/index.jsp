@@ -13,8 +13,7 @@
 			</div>
 		</c:if>
 		<div class="col-md-4 col-sm-12 col-lg-4">
-			<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên..." 
-				aria-label="Search" style="width: 50%;" onchange="searchSubjects(this.value)">
+			<input name="searchInput" class="form-control" type="search" placeholder="Tìm mã, tên..." aria-label="Search" style="width: 50%;" onchange="searchSubjects(this.value)">
 		</div>
 		<div class="">
 			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
@@ -24,7 +23,7 @@
 				<div class="modal fade" id="add-subject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
-							<form id="addSubjectForm" method="POST" action="subject/add-subject.htm" class="form-control" target="formSubmitFrame">
+							<form id="addSubjectForm" method="POST" action="subject/add-subject.htm" class="form-control">
 								<div class="mb-3">
 									<label>Mã môn học: </label>
 									<input name="mamh" class="form-control" required />
@@ -33,7 +32,7 @@
 									<label>Tên môn học: </label>
 									<input name="tenmh" class="form-control" />
 								</div>
-								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -45,7 +44,7 @@
 			</c:if>
 			<iframe id="message-iframe" name="formSubmitFrame" src="about:blank" style="display: none;" onload="refreshData()"></iframe>
 			<button type="button" class="btn btn-outline-primary" onclick="refreshData()">Reload</button>
-
+			
 			<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#score-subject">
 				Xem bảng điểm môn học
 			</button>
@@ -85,7 +84,7 @@
 	<div class="subject-list">
 		<jsp:include page="./subject_list.jsp" />
 	</div>
-
+	
 </div>
 
 <script>
@@ -115,7 +114,7 @@
 				console.error('Error:', error);
 			});
 	}
-
+	
 	function searchSubjects(value) {
 		fetch('subject/search.htm', {
 				method: 'POST',

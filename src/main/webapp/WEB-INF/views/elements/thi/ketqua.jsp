@@ -44,5 +44,4 @@
 			</tr>
 		</tbody>
 	</table>
-	
 </div>

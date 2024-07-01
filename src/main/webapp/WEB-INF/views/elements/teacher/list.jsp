@@ -9,7 +9,9 @@
 			<th scope="col">Tên</th>
 			<th scope="col">Địa chỉ</th>
 			<th scope="col">Khoa</th>
-			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}"><th scope="col">Thao tác</th></c:if>
+			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
+				<th scope="col">Thao tác</th>
+			</c:if>
 		</tr>
 	</thead>
 	<tbody>
@@ -22,8 +24,8 @@
 				<td>${khoa.get(idFix.fix(gv.MAKH, 8))}</td>
 				<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 					<td>
-						<form class="d-inline" action="teacher/delete/${gv.MAGV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')" target="formSubmitFrame">
-							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
+						<form class="d-inline" action="teacher/delete/${gv.MAGV.trim()}.htm" method="post">
+							<button type="button" onclick="if (confirm('Bạn có chắc muốn xóa sinh viên ${sv.MASV}?')) submitClosestForm(this, () => refreshData())" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
 						</form>
 						
 						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-teacher-${gv.MAGV.trim()}">
@@ -32,7 +34,7 @@
 						<div class="modal fade" id="edit-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
-									<form method="POST" action="teacher/edit.htm" class="form-control" target="formSubmitFrame">
+									<form method="POST" action="teacher/edit.htm" class="form-control">
 										<div class="mb-3">
 											<label>Mã nhân viên: </label>
 											<input name="manv" value="${gv.MAGV}" class="form-control" disabled />
@@ -56,20 +58,20 @@
 												<option value="${gv.MAKH}">${gv.MAKH} (${khoa.get(idFix.fix(gv.MAKH, 8))})</option>
 											</select>
 										</div>
-										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+										<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 										<button type=" button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 									</form>
 								</div>
 							</div>
 						</div>
-	
+						
 						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-teacher-${gv.MAGV.trim()}">
 							Chuyển khoa
 						</button>
 						<div class="modal fade" id="move-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
-									<form method="POST" action="teacher/move-teacher.htm" class="form-control" target="formSubmitFrame">
+									<form method="POST" action="teacher/move-teacher.htm" class="form-control">
 										<input type="hidden" name="magv" value="${gv.MAGV}" />
 										<div class="mb-3">
 											<label>Khoa</label>
@@ -83,7 +85,7 @@
 												</c:forEach>
 											</select>
 										</div>
-										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+										<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 										<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 									</form>
 								</div>
@@ -95,4 +97,6 @@
 		</c:forEach>
 	</tbody>
 </table>
-<c:if test="${empty giaoViens}"><h5>Không có giáo viên nào!</h5></c:if>
+<c:if test="${empty giaoViens}">
+	<h5>Không có giáo viên nào!</h5>
+</c:if>

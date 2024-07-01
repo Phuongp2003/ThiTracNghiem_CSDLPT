@@ -10,6 +10,7 @@
 	
 	<body class="bg-body-tertiary">
 		<jsp:include page="${elements}/navbar.jsp" />
+		<jsp:include page="${elements}/theme.jsp" />
 		<jsp:include page="${elements}/thi/index.jsp" />
 	</body>
 	

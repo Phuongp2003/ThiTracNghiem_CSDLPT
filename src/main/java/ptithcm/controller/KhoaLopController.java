@@ -76,10 +76,10 @@ public class KhoaLopController {
                 model.addAttribute("khoaMap", khoaMap);
                 model.addAttribute("cosoMap", cosoMap);
             } else {
-                model.addAttribute("message", "Không có khoa nào!");
+                model.addAttribute("e_message", "Không có khoa nào!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("e_message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/khoalop";
@@ -134,7 +134,7 @@ public class KhoaLopController {
                 model.addAttribute("khoaMap", khoaMap);
                 model.addAttribute("role_al", currentConnection.getRoleAlias());
             } else {
-                model.addAttribute("message", "Không có khoa nào!");
+                model.addAttribute("e_message", "Không có khoa nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -160,7 +160,7 @@ public class KhoaLopController {
                     khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
                 else
                     khoas = khoaLopJDBCTemplate.listKhoa();
-                
+
                 List<CoSo> cosos = coSoJDBCTemplate.listCoSo();
                 Map<String, String> cosoMap = new HashMap<>();
                 for (CoSo i : cosos) {
@@ -171,7 +171,7 @@ public class KhoaLopController {
                 model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
                 model.addAttribute("role_al", currentConnection.getRoleAlias());
             } else {
-                model.addAttribute("message", "Không có khoa nào!");
+                model.addAttribute("e_message", "Không có khoa nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -205,7 +205,7 @@ public class KhoaLopController {
                 model.addAttribute("khoas", khoas);
                 model.addAttribute("cosoMap", cosoMap);
             } else {
-                model.addAttribute("message", "Không có khoa nào!");
+                model.addAttribute("e_message", "Không có khoa nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -232,13 +232,13 @@ public class KhoaLopController {
             historyAction.addAction(lopAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Thêm lớp thành công!");
+            model.addAttribute("ok_message", "Thêm lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm lớp thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Thêm lớp thất bại! " + e.getMessage());
 
         }
 
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "delete-class/{id}")
@@ -254,12 +254,12 @@ public class KhoaLopController {
             historyAction.addAction(lopAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Xóa lớp thành công!");
+            model.addAttribute("ok_message", "Xóa lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa lớp thất bại!" + e.getMessage());
+            model.addAttribute("e_message", "Xóa lớp thất bại!" + e.getMessage());
         }
 
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "edit-class", method = RequestMethod.POST)
@@ -278,11 +278,11 @@ public class KhoaLopController {
             historyAction.addAction(lopAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Cập nhật lớp thành công!");
+            model.addAttribute("ok_message", "Cập nhật lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật lớp thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Cập nhật lớp thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "add-department", method = RequestMethod.POST)
@@ -304,11 +304,11 @@ public class KhoaLopController {
             historyAction.addAction(khoaAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Thêm khoa thành công!");
+            model.addAttribute("ok_message", "Thêm khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm khoa thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Thêm khoa thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "delete-department/{id}")
@@ -324,11 +324,11 @@ public class KhoaLopController {
             historyAction.addAction(khoaAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Xóa khoa thành công!");
+            model.addAttribute("ok_message", "Xóa khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa khoa thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Xóa khoa thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "edit-department", method = RequestMethod.POST)
@@ -348,11 +348,11 @@ public class KhoaLopController {
             historyAction.addAction(khoaAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Cập nhật khoa thành công!");
+            model.addAttribute("ok_message", "Cập nhật khoa thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật khoa thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Cập nhật khoa thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "undo", method = RequestMethod.POST)
@@ -363,15 +363,15 @@ public class KhoaLopController {
                 if (!historyAction.undo()) {
                     throw new Exception("HistoryAction.java báo: Hoàn tác thất bại!");
                 }
-                model.addAttribute("message", "Hoàn tác thành công!");
+                model.addAttribute("ok_message", "Hoàn tác thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để hoàn tác!");
+                model.addAttribute("e_message", "Không có hành động nào để hoàn tác!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Hoàn tác thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "redo", method = RequestMethod.POST)
@@ -380,16 +380,16 @@ public class KhoaLopController {
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             if (historyAction != null && historyAction.canRedo()) {
                 historyAction.redo();
-                model.addAttribute("message", "Làm lại thành công!");
+                model.addAttribute("ok_message", "Làm lại thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để làm lại!");
+                model.addAttribute("e_message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Làm lại thất bại! " + e.getMessage());
             System.out.println(e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "refresh-action-buttons", method = RequestMethod.POST)
@@ -417,8 +417,8 @@ public class KhoaLopController {
             }
         } catch (Exception e) {
             // Need parse to new view
-            modal.addAttribute("message", e.getMessage());
-            return "elements/message";
+            modal.addAttribute("e_message", e.getMessage());
+            return "elements/message_box";
         }
         return "true";
     }
@@ -439,8 +439,8 @@ public class KhoaLopController {
                 return "false";
             }
         } catch (Exception e) {
-            modal.addAttribute("message", e.getMessage());
-            return "elements/message";
+            modal.addAttribute("e_message", e.getMessage());
+            return "elements/message_box";
         }
         return "true";
     }

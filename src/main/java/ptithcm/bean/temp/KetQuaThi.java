@@ -1,7 +1,6 @@
 package ptithcm.bean.temp;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import ptithcm.util.DateFM;

@@ -2,8 +2,6 @@ package ptithcm.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-
 import org.springframework.jdbc.core.RowMapper;
 
 import ptithcm.bean.temp.ThoiGianThi;
