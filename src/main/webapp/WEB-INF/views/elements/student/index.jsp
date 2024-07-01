@@ -49,7 +49,7 @@
 				<div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
-							<form id="addStudentForm" method="POST" action="student/add-student.htm" class="form-control needs-validation" target="formSubmitFrame">
+							<form id="addStudentForm" method="POST" action="student/add-student.htm" class="form-control needs-validation">
 								<div class="mb-3">
 									<label>Mã sinh viên: </label>
 									<input name="masv" class="form-control" required onblur="checkMasvExist(this)" />
@@ -57,7 +57,7 @@
 										Mã sinh viên hợp lệ!
 									</div>
 									<div class="invalid-feedback">
-										Mã sinh viên không hợp lệ!
+										Mã sinh viên không hợp lệ (có thể trùng)!
 									</div>
 								</div>
 								<div class="mb-3">
@@ -83,7 +83,7 @@
 											${l.MALOP} (${l.TENLOP})</option>
 									</c:forEach>
 								</select>
-								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal" id="submit-form">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" id="submit-form">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -153,7 +153,7 @@
 			});
 		currentLop = value;
 	}
-
+	
 	function loadLop(value) {
 		var isDiff = isDiffSite ? 'true' : 'false';
 		fetch('student/load-lop-o.htm', {
@@ -352,9 +352,9 @@
 				const invalidElements = form.querySelectorAll('.is-invalid');
 				
 				if (invalidElements.length === 0) {
-					form.submit();
+					customSubmitForm(form);
 				} else {
-					alert('Please fix the errors in the form before submitting.');
+					alert('Hãy sửa những lỗi còn tồn tại trong form trước.');
 				}
 			}, false)
 		})
