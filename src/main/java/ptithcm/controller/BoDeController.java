@@ -50,6 +50,7 @@ public class BoDeController {
             if (currentConnection != null) {
                 boDeJDBCTemplate.setDataSource(currentConnection.getSite());
                 monHocJDBCTemplate.setDataSource(currentConnection.getSite());
+                giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
 
                 // Initialize HistoryAction in session if not present
                 session.setAttribute("historyAction", new HistoryAction());
@@ -59,10 +60,11 @@ public class BoDeController {
                 model.addAttribute("canRedo", ((HistoryAction) session.getAttribute("historyAction")).canRedo());
 
                 List<BoDe> bodes;
+                List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
                 if (currentConnection.getRoleAlias().equals("TRUONG") ||
                         currentConnection.getRoleAlias().equals("COSO")) {
                     bodes = boDeJDBCTemplate.listAllBoDe();
-                    List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
+                    
                     Map<String, String> giaovienMap = new HashMap<String, String>();
                     for (GiaoVien i : giaoviens) {
                         giaovienMap.put(i.getMAGV(), i.getFullName());
@@ -83,6 +85,7 @@ public class BoDeController {
                 model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
                 model.addAttribute("bodes", bodes);
                 model.addAttribute("monhocs", monhocs);
+                model.addAttribute("giaoviens", giaoviens);
                 model.addAttribute("monhocMap", monhocMap);
             } else {
                 throw new Exception("Không có kết nối nào!");
@@ -155,14 +158,12 @@ public class BoDeController {
             @RequestParam("trinhdo") String trinhdo, @RequestParam("noidung") String noidung,
             @RequestParam("A") String A, @RequestParam("B") String B,
             @RequestParam("C") String C, @RequestParam("D") String D,
-            @RequestParam("dapan") String dapan, HttpSession session) {
+            @RequestParam("dapan") String dapan, @RequestParam("magv") String magv, 
+            HttpSession session) {
         try {
-            GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
             int maxcauhoi = boDeJDBCTemplate.getMaxCauHoi();
-            BoDe bode = new BoDe(maxcauhoi + 1, mamh, trinhdo, noidung, A, B, C, D, dapan,
-                    currentConnection.getEmployeeID());
+            BoDe bode = new BoDe(maxcauhoi + 1, mamh, trinhdo, noidung, A, B, C, D, dapan, magv);
             boDeJDBCTemplate.create(bode);
-
             // Save the action in session history
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             BoDeAction bodeAction = new BoDeAction("add", bode);

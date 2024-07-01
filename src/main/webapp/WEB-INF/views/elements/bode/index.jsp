@@ -50,7 +50,7 @@
 					Thêm bộ đề
 				</button>
 				<div class="modal fade" id="add-bode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
+					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<form id="addBodeForm" method="POST" action="bode/add-bode.htm" class="form-control" target="formSubmitFrame">
 								<div class="mb-3">
@@ -99,6 +99,17 @@
 										<option value="D">D</option>
 									</select>
 								</div>
+								<c:if test="${role_al == 'COSO'}">
+									<div class="mb-3">
+										<label>Giáo viên</label>
+										<select class="form-select" name="magv">
+											<c:forEach var="gv" items="${giaoviens}">
+												<option value="${gv.MAGV}">
+													${gv.MAGV} (${gv.getFullName()})</option>
+											</c:forEach>
+										</select>
+									</div>
+								</c:if>
 								<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>

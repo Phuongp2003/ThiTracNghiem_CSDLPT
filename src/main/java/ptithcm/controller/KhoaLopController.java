@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.google.gson.Gson;
 
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
+import ptithcm.JDBCtemplate.CoSoJDBCTemplate;
 import ptithcm.JDBCtemplate.UtilJDBCTemplate;
+import ptithcm.bean.CoSo;
 import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
@@ -33,6 +35,9 @@ public class KhoaLopController {
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
 
     @Autowired
+    CoSoJDBCTemplate coSoJDBCTemplate;
+
+    @Autowired
     UtilJDBCTemplate utilJDBCTemplate;
 
     @RequestMapping("")
@@ -41,7 +46,7 @@ public class KhoaLopController {
         try {
             if (currentConnection != null) {
                 khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
-
+                coSoJDBCTemplate.setDataSource(currentConnection.getSite());
                 // Initialize HistoryAction in session if not present
                 session.setAttribute("historyAction", new HistoryAction());
 
@@ -57,6 +62,11 @@ public class KhoaLopController {
                     khoaMap.put(i.getMAKH(), i.getTENKH());
                 }
                 List<Lop> lops = khoaLopJDBCTemplate.listLop();
+                List<CoSo> cosos = coSoJDBCTemplate.listCoSo();
+                Map<String, String> cosoMap = new HashMap<>();
+                for (CoSo i : cosos) {
+                    cosoMap.put(i.getMACS(), i.getTENCS());
+                }
 
                 model.addAttribute("currentSite", session.getAttribute("site"));
                 utilJDBCTemplate.setRootDataSource(currentConnection.getRootSite());
@@ -64,6 +74,7 @@ public class KhoaLopController {
                 model.addAttribute("khoas", khoas);
                 model.addAttribute("lops", lops);
                 model.addAttribute("khoaMap", khoaMap);
+                model.addAttribute("cosoMap", cosoMap);
             } else {
                 model.addAttribute("message", "Không có khoa nào!");
             }
@@ -116,6 +127,7 @@ public class KhoaLopController {
                 for (Khoa i : khoasDiff) {
                     khoaMap.put(i.getMAKH(), i.getTENKH());
                 }
+
                 model.addAttribute("lops", lops);
                 model.addAttribute("khoas", khoas);
                 model.addAttribute("makh", makh);
@@ -138,6 +150,7 @@ public class KhoaLopController {
         try {
             if (currentConnection != null) {
                 khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                coSoJDBCTemplate.setDataSource(currentConnection.getSite());
                 Gson gson = new Gson();
                 Map<String, String> map = new HashMap<String, String>();
                 map = gson.fromJson(body, map.getClass());
@@ -147,7 +160,15 @@ public class KhoaLopController {
                     khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
                 else
                     khoas = khoaLopJDBCTemplate.listKhoa();
+                
+                List<CoSo> cosos = coSoJDBCTemplate.listCoSo();
+                Map<String, String> cosoMap = new HashMap<>();
+                for (CoSo i : cosos) {
+                    cosoMap.put(i.getMACS(), i.getTENCS());
+                }
                 model.addAttribute("khoas", khoas);
+                model.addAttribute("cosoMap", cosoMap);
+                model.addAttribute("sites", utilJDBCTemplate.getDSPhanManh());
                 model.addAttribute("role_al", currentConnection.getRoleAlias());
             } else {
                 model.addAttribute("message", "Không có khoa nào!");
@@ -175,7 +196,14 @@ public class KhoaLopController {
                     khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
                 else
                     khoas = khoaLopJDBCTemplate.listKhoa();
+
+                List<CoSo> cosos = coSoJDBCTemplate.listCoSo();
+                Map<String, String> cosoMap = new HashMap<>();
+                for (CoSo i : cosos) {
+                    cosoMap.put(i.getMACS(), i.getTENCS());
+                }
                 model.addAttribute("khoas", khoas);
+                model.addAttribute("cosoMap", cosoMap);
             } else {
                 model.addAttribute("message", "Không có khoa nào!");
             }
@@ -261,11 +289,12 @@ public class KhoaLopController {
     public String addDepartment(ModelMap model, @RequestParam("makh") String makh,
             @RequestParam("tenkh") String tenkh,
             HttpSession session) {
+        GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
         try {
             Khoa khoa = new Khoa();
             khoa.setMAKH(makh);
             khoa.setTENKH(tenkh);
-            khoa.setMACS("CS1");
+            khoa.setMACS(currentConnection.getSite_al());
             khoaLopJDBCTemplate.createKhoa(khoa);
 
             // Save the action in session history

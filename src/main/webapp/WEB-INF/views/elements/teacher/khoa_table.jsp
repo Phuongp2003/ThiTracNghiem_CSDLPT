@@ -13,7 +13,7 @@
 			<tr class="is-action sl-${k.MAKH} ${(k.MAKH == current ? 'selected' : '')}" onclick="toggleAndLoad('${k.MAKH}')">
 				<td>${k.MAKH}</td>
 				<td>${k.TENKH}</td>
-				<td>${k.MACS}</td>
+				<td>${cosoMap.get(k.MACS)}</td>
 			</tr>
 		</c:forEach>
 	</tbody>

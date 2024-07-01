@@ -5,7 +5,7 @@
         <tr>
             <th scope="col">Mã môn học</th>
             <th scope="col">Tên môn học</th>
-            <c:if test="${role_al != 'TRUONG'}"><th scope="col">Thao tác</th></c:if>
+            <c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}"><th scope="col">Thao tác</th></c:if>
         </tr>
     </thead>
     <tbody>
@@ -13,7 +13,7 @@
             <tr>
                 <td>${s.MAMH}</td>
                 <td>${s.TENMH}</td>
-                <c:if test="${role_al != 'TRUONG'}">
+                <c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
                     <td>
                         <form class="d-inline" action="subject/delete-subject/${s.MAMH.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa môn ${s.TENMH}?')" target="formSubmitFrame">
                             <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>

@@ -143,7 +143,7 @@ public class GiaoVienDKJDBCTemplate {
 
     public List<List<String>> listDKThi(Date startDate, Date endDate) throws Exception {
         try {
-            String SQL = "{? = call SP_DanhSachDangKyThi(?, ?)}";
+            String SQL = "{? = call SP_DanhSachDangKyThiJob(?, ?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
@@ -155,7 +155,7 @@ public class GiaoVienDKJDBCTemplate {
                     List<String> list = new ArrayList<>();
                     list.add(rs.getString("TENLOP"));
                     list.add(rs.getString("TENMH"));
-                    list.add(rs.getString("HOTEN"));
+                    list.add(rs.getString("GVDK"));
                     list.add(rs.getString("SOCAUTHI"));
                     list.add(DateFM.Date(rs.getDate("NGAYTHI")));
                     list.add(rs.getString("DATHI"));

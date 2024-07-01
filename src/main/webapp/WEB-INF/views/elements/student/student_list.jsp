@@ -18,13 +18,12 @@
 		</tr>
 	</thead>
 	<tbody>
-		<c:if test="${empty sinhViens}"><td>Không có sinh viên nào!</td></c:if>
 		<c:forEach var="sv" items="${sinhViens}">
 			<tr>
 				<td>${sv.MASV}</td>
 				<td>${sv.HO}</td>
 				<td>${sv.TEN}</td>
-				<td>${sv.getNGAYSINHF()}</td>
+				<td>${sv.getNGAYSINH()}</td>
 				<td>${sv.DIACHI}</td>
 				<td>${lopMap.get(sv.MALOP)}</td>
 				<td>${sv.MATKHAU}</td>
@@ -107,3 +106,4 @@
 		</c:forEach>
 	</tbody>
 </table>
+<c:if test="${empty sinhViens}"><h5>Không có sinh viên nào!</h5></c:if>

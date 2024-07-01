@@ -6,7 +6,7 @@
             <th scope="col">Mã khoa</th>
             <th scope="col">Tên khoa</th>
             <th scope="col">Cơ sở</th>
-            <c:if test="${role_al != 'TRUONG'}"><th scope="col">Thao tác</th></c:if>
+            <c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}"><th scope="col">Thao tác</th></c:if>
         </tr>
     </thead>
     <tbody>
@@ -14,8 +14,8 @@
             <tr class="is-action sl-${k.MAKH}">
                 <td onclick="toggleAndLoad('${k.MAKH}')">${k.MAKH}</td>
                 <td onclick="toggleAndLoad('${k.MAKH}')">${k.TENKH}</td>
-                <td onclick="toggleAndLoad('${k.MAKH}')">${k.MACS}</td>
-                <c:if test="${role_al != 'TRUONG'}">
+                <td onclick="toggleAndLoad('${k.MAKH}')">${cosoMap.get(k.MACS)}</td>
+                <c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
                     <td>
                         <form class="d-inline" action="department-class/delete-department/${k.MAKH.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa khoa ${k.TENKH}?')" target="formSubmitFrame">
                             <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>

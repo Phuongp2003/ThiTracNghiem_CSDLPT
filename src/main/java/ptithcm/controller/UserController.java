@@ -162,7 +162,7 @@ public class UserController {
                 roleAlias = giaoVienInfo.get("TENNHOM");
                 switch (roleAlias) {
                     case "GIANGVIEN":
-                        role = "Giáo viên";
+                        role = "Giảng viên";
                         break;
                     case "TRUONG":
                         role = "Trường";

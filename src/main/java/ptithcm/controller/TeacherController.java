@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.google.gson.Gson;
 
+import ptithcm.JDBCtemplate.CoSoJDBCTemplate;
 import ptithcm.JDBCtemplate.GiaoVienJDBCTemplate;
 import ptithcm.JDBCtemplate.KhoaLopJDBCTemplate;
 import ptithcm.JDBCtemplate.UtilJDBCTemplate;
@@ -24,6 +25,7 @@ import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
 import ptithcm.util.IDFix;
+import ptithcm.bean.CoSo;
 import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GiaoVienAction;
 
@@ -38,6 +40,9 @@ public class TeacherController {
     KhoaLopJDBCTemplate khoaLopJDBCTemplate;
 
     @Autowired
+    CoSoJDBCTemplate coSoJDBCTemplate;
+
+    @Autowired
     UtilJDBCTemplate utilJDBCTemplate;
 
     @RequestMapping("")
@@ -50,6 +55,7 @@ public class TeacherController {
 
             giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
             khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+            coSoJDBCTemplate.setDataSource(currentConnection.getSite());
             List<GiaoVien> giaoViens = giaoVienJDBCTemplate.listGiaoVien();
             List<Khoa> khoas = khoaLopJDBCTemplate.listKhoa();
             List<Khoa> khoasDiff = khoaLopJDBCTemplate.listKhoaDiffSite();
@@ -58,11 +64,18 @@ public class TeacherController {
             for (Khoa i : khoasDiff) {
                 khoaMap.put(i.getMAKH(), i.getTENKH());
             }
+            List<CoSo> cosos = coSoJDBCTemplate.listCoSo();
+            Map<String, String> cosoMap = new HashMap<>();
+            for (CoSo i : cosos) {
+                cosoMap.put(i.getMACS(), i.getTENCS());
+            }
+
             session.setAttribute("historyAction", new HistoryAction());
             model.addAttribute("idFix", new IDFix());
             model.addAttribute("giaoViens", giaoViens);
             model.addAttribute("khoa", khoaMap);
             model.addAttribute("khoas", khoas);
+            model.addAttribute("cosoMap", cosoMap);
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
         }
@@ -154,6 +167,7 @@ public class TeacherController {
         try {
             if (currentConnection != null) {
                 khoaLopJDBCTemplate.setDataSource(currentConnection.getSite());
+                coSoJDBCTemplate.setDataSource(currentConnection.getSite());
                 Gson gson = new Gson();
                 Map<String, String> map = new HashMap<String, String>();
                 map = gson.fromJson(body, map.getClass());
@@ -164,8 +178,15 @@ public class TeacherController {
                     khoas = khoaLopJDBCTemplate.listKhoaDiffSite();
                 else
                     khoas = khoaLopJDBCTemplate.listKhoa();
+
+                List<CoSo> cosos = coSoJDBCTemplate.listCoSo();
+                Map<String, String> cosoMap = new HashMap<>();
+                for (CoSo i : cosos) {
+                    cosoMap.put(i.getMACS(), i.getTENCS());
+                }
                 model.addAttribute("current", current);
                 model.addAttribute("khoas", khoas);
+                model.addAttribute("cosoMap", cosoMap);
             } else {
                 model.addAttribute("message", "Không có khoa nào!");
             }

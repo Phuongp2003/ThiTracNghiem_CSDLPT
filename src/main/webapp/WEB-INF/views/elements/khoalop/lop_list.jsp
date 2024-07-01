@@ -6,7 +6,7 @@
             <th scope="col">Mã lớp</th>
             <th scope="col">Tên lớp</th>
             <th scope="col">Khoa</th>
-            <c:if test="${role_al != 'TRUONG'}"><th scope="col">Thao tác</th></c:if>
+            <c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}"><th scope="col">Thao tác</th></c:if>
         </tr>
     </thead>
     <tbody>
@@ -15,7 +15,7 @@
                 <td>${l.MALOP}</td>
                 <td>${l.TENLOP}</td>
                 <td>${khoaMap.get(l.MAKH)}</td>
-                <c:if test="${role_al != 'TRUONG'}">
+                <c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
                     <td>
                         <form class="d-inline" action="department-class/delete-class/${l.MALOP.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa lớp ${l.TENLOP}?')" target="formSubmitFrame">
                             <button type="submit" class="btn btn-outline-primary" data-bs-dismiss="modal"><i class="bi bi-trash3-fill"></i></button>

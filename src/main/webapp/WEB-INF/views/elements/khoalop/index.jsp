@@ -83,7 +83,7 @@
 	<div class="filter-wrapper d-flex justify-content-between mt-4 mb-2">
 		<div></div>
 		<div class="">
-			<c:if test="${role_al != 'TRUONG'}">
+			<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 				<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#add-department">
 					Thêm khoa
 				</button>
