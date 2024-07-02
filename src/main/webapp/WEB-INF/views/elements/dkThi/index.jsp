@@ -60,17 +60,17 @@
 					</div>
 					<div class="mb-3">
 						<label>Số câu thi</label>
-						<input type="number" name="socauthi" class="form-control" min="1" required>
+						<input type="number" id="socauthi" name="socauthi" class="form-control" min="10" max="100" required>
 					</div>
 					<div class="mb-3">
 						<label>Ngày thi</label>
-						<input type="date" name="ngaythi" class="form-control" id="date-val-h-tomorow" required>
+						<input type="date" id="ngaythi" name="ngaythi" class="form-control" id="date-val-h-tomorow" required>
 					</div>
 					<div class="mb-3">
-						<label>Thời gian thi</label>
-						<input type="number" name="thoigianthi" max="60" min="2" class="form-control" required>
+						<label>Thời gian thi (phút)</label>
+						<input type="number" id="thoigianthi" name="thoigianthi" max="60" min="2" class="form-control" required>
 					</div>
-					<button type="button" onclick="submitClosestForm(this)" class="btn btn-primary">Đăng ký</button>
+					<button id="dangky" type="button" onclick="submitClosestForm(this)" class="btn btn-primary" disabled>Đăng ký</button>
 				</form>
 			</div>
 		</div>
@@ -85,6 +85,32 @@
 		today = yyyy + '-' + mm + '-' + dd;
 		document.getElementById('startdate').value = today;
 		document.getElementById('enddate').value = today;
-		
+		document.getElementById('ngaythi').value = today;
+	});
+
+	document.getElementById('socauthi').addEventListener('input', function() {
+		var dangky = document.getElementById('dangky');
+		this.value = Math.abs(this.value);
+		if(this.value !== '' || this.value !== null){
+			dangky.disabled = false;
+		}
+		if (this.value < 10) {
+			this.value = 10;
+		}
+
+		if (this.value > 100) {
+                this.value = 100;
+            }
+	});
+
+	document.getElementById('thoigianthi').addEventListener('input', function() {
+		this.value = Math.abs(this.value);
+		if (this.value < 2 || this.value === '' || this.value === null) {
+			this.value = 2;
+		}
+
+		if (this.value > 60) {
+                this.value = 60;
+            }
 	});
 </script>
