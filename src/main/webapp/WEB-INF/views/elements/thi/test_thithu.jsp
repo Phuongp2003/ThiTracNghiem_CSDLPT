@@ -33,7 +33,7 @@
 </style>
 <div class="start-exam container-fluid mt-4" style="width: 75%;">
 	<div class="navbar bg-body-tertiary d-flex justify-content-between sticky-top">
-		<a href="thi.htm">
+		<a href="thithu.htm">
 			<button type="button" class="btn btn-danger">Thoát</button></a>
 		<h5>Thi thử môn: ${jdbc.getMonHoc(monthi).getTENMH()}</h5>
 		<div class="d-flex gap-3">
