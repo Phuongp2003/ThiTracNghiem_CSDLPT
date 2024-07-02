@@ -3,48 +3,47 @@
     Fix SP support throw error
 </summary>
 
-| Is Fixed | Done? | Should delete  | Name (+Last time update?)                    |Link Message
-|----------|-------|----------------|--------------------------|-------------------
-| [ ]      | [ ]   |   [ ]          |LayDanhSachThiTracNghiem | example link
-| [ ]      | [X]   |   [ ]          | SP_CapNhatBaiThi         
-| [ ]      | [X]   |   [ ]          | ChamDiemBaiThi           
-| [ ]      | [X]   |   [ ]          | ChuyenKhoa               
-| [ ]      | [X]   |   [ ]          | ChuyenLop
-| [ ]      | [X]   |   [ ]          | DangKyThi
-| [ ]      | [X]   |   [ ]          | DangNhapGiangVien
-| [ ]      | [X]   |   [ ]          | DangNhapSinhVien
-| [ ]      | [X]   |   [ ]          | DanhSachCacMonThi
-| [ ]      | [X]   |   [ ]          | DanhSachDangKyThi
-| [ ]      | [ ]   |   [X]          | DanhSachLop
-| [ ]      | [X]   |   [ ]          | DanhSachMonCoDiem
-| [ ]      | [ ]   |   [X]          | DanhSachSinhVien
-| [ ]      | [X]   |   [ ]          | DeThi
-| [ ]      | [X]   |   [ ]          | InBangDiem
-| [ ]      | [X]   |   [ ]          | KiemTraBoDeTonTai
-| [ ]      | [X]   |   [ ]          | KiemTraDangKyThi
-| [ ]      | [X]   |   [ ]          | KiemTraGiaoVienTonTai
-| [ ]      | [X]   |   [ ]          | KiemTraKhoaTonTai
-| [ ]      | [X]   |   [ ]          | KiemTraLopTonTai
-| [ ]      | [X]   |   [ ]          | KiemTraMonHocTonTai
-| [ ]      | [X]   |   [ ]          | KiemTraSoLuongCau
-| [ ]      | [ ]   |   [X]          | KiemTraSoLuongCauCungBac
-| [ ]      | [X]   |   [ ]          | KiemTraTrangThaiThi
-| [ ]      | [X]   |   [ ]          | KiemTraXoaGVDK
-| [ ]      | [X]   |   [ ]          | KTSinhVienTonTai
-| [ ]      | [X]   |   [ ]          | LayThoiGianThi
-| [ ]      | [ ]   |   [ ]          | Login[?]
-| [ ]      | [X]   |   [ ]          | TaoLogin
-| [ ]      | [X]   |   [ ]          | TaoBaiThi
-| [ ]      | [X]   |   [ ]          | ThiSinhXemKetQua
-| [ ]      | [X]   |   [ ]          | TimKiemBoDe
-| [ ]      | [X]   |   [ ]          | TimKiemGiaoVien
-| [ ]      | [X]   |   [ ]          | TimKiemLop
-| [ ]      | [X]   |   [ ]          | TimKiemMonHoc
-| [ ]      | [ ]   |   [ ]          | TimKiemSinhVien
-| [ ]      | [X]   |   [ ]          | XemKetQua
-| [ ]      | [X]   |   [ ]          | XOA_LOGIN
-| [ ]      | [X]   |   [ ]          | XoaKhoa
-| [ ]      | [X]   |   [ ]          | XoaLop
+TẤT CẢ CÁC SP, FUNCTION
+| Is Fixed | Done? | Name (+Last time update?)                    |Link Message
+|----------|-------|--------------------------|-------------------
+| [ ]      | [X]   | SP_CapNhatBaiThi         
+| [ ]      | [X]   | SP_ChamDiemBaiThi           
+| [ ]      | [X]   | SP_DangKyThi
+| [ ]      | [X]   | SP_DangNhapGiangVien
+| [ ]      | [X]   | SP_DangNhapSinhVien
+| [ ]      | [X]   | SP_DanhSachCacMonThi
+| [ ]      | [X]   | SP_DanhSachDangKyThi
+| [ ]      | [X]   | SP_DanhSachDangKyThiJob
+| [ ]      | [X]   | SP_DanhSachMonCoDiem
+| [ ]      | [X]   | SP_DeThi
+| [ ]      | [X]   | SP_GiaoVienChuaTaoTK
+| [ ]      | [X]   | SP_InBangDiem
+| [ ]      | [X]   | SP_KiemTraBoDeTonTai
+| [ ]      | [X]   | SP_KiemTraDangKyThi
+| [ ]      | [X]   | SP_KiemTraGiaoVienTonTai
+| [ ]      | [X]   | SP_KiemTraKhoaTonTai
+| [ ]      | [X]   | SP_KiemTraLopTonTai
+| [ ]      | [X]   | SP_KiemTraMonHocTonTai
+| [ ]      | [X]   | SP_KiemTraSinhVienTonTai
+| [ ]      | [X]   | SP_KiemTraSoLuongCau
+| [ ]      | [X]   | SP_KiemTraTrangThaiThi
+| [ ]      | [X]   | SP_KiemTraXoaGVDK
+| [ ]      | [X]   | SP_LayThoiGianThi
+| [ ]      | [X]   | SP_TaoLogin
+| [ ]      | [X]   | SP_TaoBaiThi
+| [ ]      | [X]   | SP_ThiSinhXemKetQua
+| [ ]      | [X]   | SP_ThiThu
+| [ ]      | [X]   | SP_TimKiemBoDe
+| [ ]      | [X]   | SP_TimKiemGiaoVien
+| [ ]      | [X]   | SP_TimKiemLop
+| [ ]      | [X]   | SP_TimKiemMonHoc
+| [ ]      | [X]   | SP_TimKiemSinhVien
+| [ ]      | [X]   | SP_XemKetQua
+| [ ]      | [X]   | SP_XOA_LOGIN
+| [ ]      | [X]   | SP_XoaKhoa
+| [ ]      | [X]   | SP_XoaLop
+| [ ]      | [X]   | FUNCTION ConvertDiemChu
+| [ ]      | [X]   | FUNCTION KiemTraDotThi
 
 </details>
 
