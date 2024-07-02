@@ -44,14 +44,23 @@
 				<div class="modal fade" id="add-class" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
-							<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control">
+							<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control needs-validation">
 								<div class="mb-3">
 									<label>Mã lớp: </label>
-									<input name="malop" class="form-control" required />
+									<input name="malop" class="malop form-control" onchange="checkMalopExist(this)" required/>
+									<div class="valid-feedback">
+										Mã lớp hợp lệ!
+									</div>
+									<div class="invalid-feedback">
+										Mã lớp không hợp lệ hoặc đã tồn tại!
+									</div>
 								</div>
 								<div class="mb-3">
 									<label>Tên lớp: </label>
-									<input name="tenlop" class="form-control" />
+									<input name="tenlop" id="tenlop" class="tenlop form-control" required onchange="checkMalopExist(this)"/>
+									<div class="invalid-feedback">
+										Tên lớp đã tồn tại!
+									</div>
 								</div>
 								<div class="mb-3">
 									<label>Khoa</label>
@@ -62,7 +71,8 @@
 										</c:forEach>
 									</select>
 								</div>
-								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" 
+									data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -89,16 +99,26 @@
 				<div class="modal fade" id="add-department" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
-							<form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control" target="formSubmitFrame">
+							<form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control needs-validation" target="formSubmitFrame">
 								<div class="mb-3">
 									<label>Mã khoa: </label>
-									<input name="makh" class="form-control" required />
+									<input name="makh" class="makh form-control" required onchange="checkMakhExist(this)"/>
+									<div class="valid-feedback">
+										Mã khoa hợp lệ!
+									</div>
+									<div class="invalid-feedback">
+										Mã khoa không hợp lệ hoặc đã tồn tại!
+									</div>
 								</div>
 								<div class="mb-3">
 									<label>Tên khoa: </label>
-									<input name="tenkh" class="form-control" />
+									<input name="tenkh" id="tenkh" class="tenkh form-control" required onchange="checkMakhExist(this)"/>
+									<div class="invalid-feedback">
+										Tên khoa đã tồn tại!
+									</div>
 								</div>
-								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" 
+									data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -269,12 +289,151 @@
 		loadDepartments();
 	}
 	
-	var addClassModal = document.getElementById('add-class');
-	addClassModal.addEventListener('hidden.bs.modal', function() {
-		document.getElementById('addClassForm').reset();
-	});
-	var addDepartModal = document.getElementById('add-department');
-	addDepartModal.addEventListener('hidden.bs.modal', function() {
-		document.getElementById('addDepartForm').reset();
-	});
+	// var addClassModal = document.getElementById('add-class');
+	// addClassModal.addEventListener('hidden.bs.modal', function() {
+	// 	document.getElementById('addClassForm').reset();
+	// });
+	// var addDepartModal = document.getElementById('add-department');
+	// addDepartModal.addEventListener('hidden.bs.modal', function() {
+	// 	document.getElementById('addDepartForm').reset();
+	// });
+	
+	async function checkMalopExist(element) {
+		var malop, tenlop;
+		if (element.classList.contains('malop')) {
+			malop = element.value.trim();
+			tenlop = element.closest('#addClassForm').querySelector('.tenlop').value.trim();
+		} else {
+			malop = element.closest('#addClassForm').querySelector('.malop').value.trim();
+			tenlop = element.value.trim();
+		}
+		var submitForm = document.getElementById('submit-form');
+		var tenlop_unable = document.getElementById('tenlop');
+
+		// Convert the string representation of list to an actual array of objects
+		try {
+			var check = await fetch('department-class/check-malop.htm', {
+					method: 'POST',
+					body: JSON.stringify({
+						malop: malop,
+						tenlop: tenlop
+					})
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.text();
+				})
+				.then(data => {
+					return data.includes('true');
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+			// Check if the provided magv exists in the sinhVienArray by magv
+			if (check && (malop !== '' || tenlop !== '')) {
+				element.classList.remove('is-invalid')
+				element.classList.add('is-valid')
+				if (submitForm !== null) {
+					submitForm.disabled = false;
+					tenlop_unable.disabled = false;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			} else {
+				element.classList.remove('is-valid')
+				element.classList.add('is-invalid')
+				if (submitForm !== null) {
+					submitForm.disabled = true;
+					if(element.classList.contains('malop')) tenlop_unable.disabled = true;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			}
+		} catch (error) {
+			window.alert("Lỗi: ", error)
+		}
+	}
+
+	async function checkMakhExist(element) {
+		var makh, tenkh;
+		if (element.classList.contains('makh')) {
+			makh = element.value.trim();
+			tenkh = element.closest('#addDepartForm').querySelector('.tenkh').value.trim();
+		} else {
+			makh = element.closest('#addDepartForm').querySelector('.makh').value.trim();
+			tenkh = element.value.trim();
+		}
+		var submitForm = document.getElementById('submit-form');
+		var tenkh_unable = document.getElementById('tenkh');
+		// Convert the string representation of list to an actual array of objects
+		try {
+			var check = await fetch('department-class/check-makh.htm', {
+					method: 'POST',
+					body: JSON.stringify({
+						makh: makh,
+						tenkh: tenkh
+					})
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.text();
+				})
+				.then(data => {
+					return data.includes('true');
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+			// Check if the provided magv exists in the sinhVienArray by magv
+			if (check && (makh !== '' || tenkh !== '')) {
+				element.classList.remove('is-invalid')
+				element.classList.add('is-valid')
+				if (submitForm !== null) {
+					submitForm.disabled = false;
+					tenkh_unable.disabled = false;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			} else {
+				element.classList.remove('is-valid')
+				element.classList.add('is-invalid')
+				if (submitForm !== null) {
+					submitForm.disabled = true;
+					if(element.classList.contains('makh')) tenkh_unable.disabled = true;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			}
+		} catch (error) {
+			window.alert("Lỗi: ", error)
+		}
+	}
+	
+	// Fetch all the forms we want to apply custom Bootstrap validation styles to
+	var forms = document.querySelectorAll('.needs-validation')
+	
+	// Loop over them and prevent submission
+	Array.prototype.slice.call(forms)
+		.forEach(function(form) {
+			form.addEventListener('submit', function(event) {
+				// Loop over them and prevent submission
+				event.preventDefault(); // Prevent form submission
+				
+				const invalidElements = form.querySelectorAll('.is-invalid');
+				
+				if (invalidElements.length === 0) {
+					form.submit();
+				} else {
+					alert('Please fix the errors in the form before submitting.');
+				}
+			}, false)
+		})
 </script>

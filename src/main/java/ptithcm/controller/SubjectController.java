@@ -214,10 +214,8 @@ public class SubjectController {
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
             String mamh = map.get("mamh");
-            if (mamh == null || mamh.isEmpty()) {
-                return "false";
-            }
-            Boolean isAvai = monHocJDBCTemplate.checkMamh(mamh);
+            String tenmh = map.get("tenmh");
+            Boolean isAvai = monHocJDBCTemplate.checkMamh(mamh, tenmh);
             if (!isAvai) {
                 return "false";
             }

@@ -408,10 +408,8 @@ public class KhoaLopController {
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
             String malop = map.get("malop");
-            if (malop == null || malop.isEmpty()) {
-                return "false";
-            }
-            Boolean isAvai = khoaLopJDBCTemplate.checkMalop(malop);
+            String tenlop = map.get("tenlop");
+            Boolean isAvai = khoaLopJDBCTemplate.checkMalop(malop, tenlop);
             if (!isAvai) {
                 return "false";
             }
@@ -431,10 +429,8 @@ public class KhoaLopController {
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
             String makh = map.get("makh");
-            if (makh == null || makh.isEmpty()) {
-                return "false";
-            }
-            Boolean isAvai = khoaLopJDBCTemplate.checkMakh(makh);
+            String tenkh = map.get("tenkh");
+            Boolean isAvai = khoaLopJDBCTemplate.checkMakh(makh, tenkh);
             if (!isAvai) {
                 return "false";
             }

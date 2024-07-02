@@ -23,16 +23,26 @@
 				<div class="modal fade" id="add-subject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					<div class="modal-dialog">
 						<div class="modal-content">
-							<form id="addSubjectForm" method="POST" action="subject/add-subject.htm" class="form-control">
+							<form id="addSubjectForm" method="POST" action="subject/add-subject.htm" class="form-control needs-validation">
 								<div class="mb-3">
 									<label>Mã môn học: </label>
-									<input name="mamh" class="form-control" required />
+									<input name="mamh" class="mamh form-control" required onchange="checkMamhExist(this)"/>
+									<div class="valid-feedback">
+										Mã môn học hợp lệ!
+									</div>
+									<div class="invalid-feedback">
+										Mã môn học không hợp lệ hoặc đã tồn tại!
+									</div>
 								</div>
 								<div class="mb-3">
 									<label>Tên môn học: </label>
-									<input name="tenmh" class="form-control" />
+									<input name="tenmh" id="tenmh" class="tenmh form-control" required onchange="checkMamhExist(this)"/>
+									<div class="invalid-feedback">
+										Tên môn học đã tồn tại!
+									</div>
 								</div>
-								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" 
+									data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -161,4 +171,83 @@
 		loadActionButton();
 		loadSubjects();
 	}
+	
+	async function checkMamhExist(element) {
+		var mamh, tenmh;
+		if (element.classList.contains('mamh')) {
+			mamh = element.value.trim();
+			tenmh = element.closest('#addSubjectForm').querySelector('.tenmh').value.trim();
+		} else {
+			mamh = element.closest('#addSubjectForm').querySelector('.mamh').value.trim();
+			tenmh = element.value.trim();
+		}
+		var submitForm = document.getElementById('submit-form');
+		var tenmh_unable = document.getElementById('tenmh');
+		// Convert the string representation of list to an actual array of objects
+		try {
+			var check = await fetch('subject/check-mamh.htm', {
+					method: 'POST',
+					body: JSON.stringify({
+						mamh: mamh,
+						tenmh: tenmh
+					})
+				})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					return response.text();
+				})
+				.then(data => {
+					return data.includes('true');
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+			// Check if the provided magv exists in the sinhVienArray by magv
+			if (check && (mamh !== '' || tenmh !== '')) {
+				element.classList.remove('is-invalid')
+				element.classList.add('is-valid')
+				if (submitForm !== null) {
+					submitForm.disabled = false;
+					tenmh_unable.disabled = false;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			} else {
+				element.classList.remove('is-valid')
+				element.classList.add('is-invalid')
+				if (submitForm !== null) {
+					submitForm.disabled = true;
+					if(element.classList.contains('mamh')) tenmh_unable.disabled = true;
+				} else {
+					// Handle the case where no matching element is found
+					console.log("No element found with ID 'submit-form'");
+				}
+			}
+		} catch (error) {
+			window.alert("Lỗi: ", error)
+		}
+	}
+	
+	// Fetch all the forms we want to apply custom Bootstrap validation styles to
+	var forms = document.querySelectorAll('.needs-validation')
+	
+	// Loop over them and prevent submission
+	Array.prototype.slice.call(forms)
+		.forEach(function(form) {
+			form.addEventListener('submit', function(event) {
+				// Loop over them and prevent submission
+				event.preventDefault(); // Prevent form submission
+				
+				const invalidElements = form.querySelectorAll('.is-invalid');
+				
+				if (invalidElements.length === 0) {
+					form.submit();
+				} else {
+					alert('Please fix the errors in the form before submitting.');
+				}
+			}, false)
+		})
 </script>

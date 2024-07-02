@@ -34,7 +34,7 @@
 						Mã giáo viên hợp lệ!
 					</div>
 					<div class="invalid-feedback">
-						Mã giáo viên không hợp lệ!
+						Mã giáo viên không hợp lệ hoặc đã tồn tại!
 					</div>
 				</div>
 				<div class="mb-3">
@@ -59,7 +59,8 @@
 						</c:forEach>
 					</select>
 				</div>
-				<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
+				<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())"
+					data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
 				<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 			</form>
 		</div>
@@ -222,29 +223,13 @@
 		loadKhoa(window.currentKhoa);
 	}
 	
-	var addStudentModal = document.getElementById('add-teacher');
-	addStudentModal.addEventListener('hidden.bs.modal', function() {
-		document.getElementById('addTeacherForm').reset();
-	});
-
-	function parseGiaoVienList(listStr) {
-		const trimmedListStr = listStr.substring(1, listStr.length - 1); // Remove leading and trailing square brackets
-		const giaoVienStrs = trimmedListStr.split('}, ');
-		const giaoVienObjects = giaoVienStrs.map(giaoVienStr => {
-			const propertiesStr = giaoVienStr.replace('GiaoVien{', '').replace('}', '');
-			const properties = propertiesStr.split(', ');
-			const giaoVienObj = {};
-			properties.forEach(property => {
-				const [key, value] = property.split('=');
-				giaoVienObj[key.trim()] = value.trim().replace(/'/g, ''); // Remove single quotes from values
-			});
-			return giaoVienObj;
-		});
-		return giaoVienObjects;
-	}
+	// var addStudentModal = document.getElementById('add-teacher');
+	// addStudentModal.addEventListener('hidden.bs.modal', function() {
+	// 	document.getElementById('addTeacherForm').reset();
+	// });
 	
 	async function checkMagvExist(element) {
-		const manv = element.value;
+		const manv = element.value.trim();
 		var submitForm = document.getElementById('submit-form');
 		// Convert the string representation of list to an actual array of objects
 		try {
@@ -267,7 +252,7 @@
 					console.error('Error:', error);
 				});
 			// Check if the provided magv exists in the sinhVienArray by magv
-			if (check) {
+			if (check && (manv !== '')) {
 				element.classList.remove('is-invalid')
 				element.classList.add('is-valid')
 				if (submitForm !== null) {

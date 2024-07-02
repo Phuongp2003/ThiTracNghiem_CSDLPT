@@ -83,7 +83,8 @@
 											${l.MALOP} (${l.TENLOP})</option>
 									</c:forEach>
 								</select>
-								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" id="submit-form">Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())"
+									data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -270,29 +271,13 @@
 		loadLop(currentLop);
 	}
 	
-	var addStudentModal = document.getElementById('add-student');
-	addStudentModal.addEventListener('hidden.bs.modal', function() {
-		document.getElementById('addStudentForm').reset();
-	});
-	
-	function parseSinhVienList(listStr) {
-		const trimmedListStr = listStr.substring(1, listStr.length - 1); // Remove leading and trailing square brackets
-		const sinhVienStrs = trimmedListStr.split('}, ');
-		const sinhVienObjects = sinhVienStrs.map(sinhVienStr => {
-			const propertiesStr = sinhVienStr.replace('SinhVien{', '').replace('}', '');
-			const properties = propertiesStr.split(', ');
-			const sinhVienObj = {};
-			properties.forEach(property => {
-				const [key, value] = property.split('=');
-				sinhVienObj[key.trim()] = value.trim().replace(/'/g, ''); // Remove single quotes from values
-			});
-			return sinhVienObj;
-		});
-		return sinhVienObjects;
-	}
+	// var addStudentModal = document.getElementById('add-student');
+	// addStudentModal.addEventListener('hidden.bs.modal', function() {
+	// 	document.getElementById('addStudentForm').reset();
+	// });
 	
 	async function checkMasvExist(element) {
-		const masv = element.value;
+		const masv = element.value.trim();
 		var submitForm = document.getElementById('submit-form');
 		// Convert the string representation of list to an actual array of objects
 		try {
@@ -315,7 +300,7 @@
 					console.error('Error:', error);
 				});
 			// Check if the provided masv exists in the sinhVienArray by MASV
-			if (check) {
+			if (check && (masv !== '')) {
 				element.classList.remove('is-invalid')
 				element.classList.add('is-valid')
 				if (submitForm !== null) {

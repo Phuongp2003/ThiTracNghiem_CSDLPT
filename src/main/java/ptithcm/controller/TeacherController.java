@@ -348,8 +348,8 @@ public class TeacherController {
             if (manv == null || manv.isEmpty()) {
                 return "false";
             }
-            String isAvai = giaoVienJDBCTemplate.checkMagv(manv);
-            if (isAvai == "false") {
+            Boolean isAvai = giaoVienJDBCTemplate.checkMagv(manv);
+            if (!isAvai) {
                 return "false";
             }
         } catch (Exception e) {

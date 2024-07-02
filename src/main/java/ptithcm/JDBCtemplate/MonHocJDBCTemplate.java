@@ -231,13 +231,14 @@ public class MonHocJDBCTemplate {
         }
     }
 
-    public boolean checkMamh(String mamh) throws Exception {
+    public boolean checkMamh(String mamh, String tenmh) throws Exception {
         try {
-            String SQL = "{? = call SP_KiemTraMonHocTonTai(?)}";
+            String SQL = "{? = call SP_KiemTraMonHocTonTai(?, ?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
             cs.setString(2, mamh);
+            cs.setString(3, tenmh);
             cs.execute();
             return cs.getInt(1) == 0;
         } catch (SQLException e) {

@@ -1,6 +1,7 @@
 package ptithcm.JDBCtemplate;
 
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -302,7 +303,7 @@ public class GiaoVienJDBCTemplate {
         }
     }
 
-    public String checkMagv(String magv) throws Exception {
+    public boolean checkMagv(String magv) throws Exception{
         try {
             String SQL = "{? = call SP_KiemTraGiaoVienTonTai(?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
@@ -310,21 +311,21 @@ public class GiaoVienJDBCTemplate {
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
             cs.setString(2, magv);
             cs.execute();
-            return cs.getString(1);
+            return cs.getInt(1) == 0;
         } catch (SQLException e) {
             e.printStackTrace();
             String sqlState = e.getSQLState();
             int errorCode = e.getErrorCode();
             System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
             System.err.println("Database: " + e.getMessage());
-            throw new Exception(e.getMessage() + " (DB_ERR: KiemTraGiaoVienTonTai)");
+            throw new Exception(e.getMessage());
         } catch (DataAccessException e) {
             e.printStackTrace();
-            System.err.println("Giao Vien - find Error: " + e.getMessage());
-            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+            System.err.println("Giao Vien - search Error: " + e.getMessage());
+            throw new Exception("Lỗi không xác định!");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Giao Vien - find Unhandled Error: " + e.getMessage());
+            System.err.println("Giao Vien - search Unhandled Error: " + e.getMessage());
             throw new Exception("Lỗi không xác định!");
         }
     }

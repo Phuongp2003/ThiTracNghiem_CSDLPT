@@ -357,9 +357,6 @@ public class StudentController {
             Map<String, String> map = new HashMap<String, String>();
             map = gson.fromJson(body, map.getClass());
             String masv = map.get("masv");
-            if (masv == null || masv.isEmpty()) {
-                return "false";
-            }
             Boolean isAvai = sinhVienJDBCTemplate.checkMasv(masv);
             if (!isAvai) {
                 return "false";
