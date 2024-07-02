@@ -82,7 +82,7 @@ public class KetQuaThi {
     public int getSoCauDung() {
         int soCauDung = 0;
         for (ChiTietDapAn item : chiTietDapAn) {
-            if (item.getDAPANSV().equals(item.getDAPANDUNG())) {
+            if (item.getDAPANSV()!= null && item.getDAPANSV().equals(item.getDAPANDUNG())) {
                 soCauDung++;
             }
         }
