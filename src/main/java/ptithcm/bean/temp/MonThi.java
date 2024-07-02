@@ -9,6 +9,7 @@ public class MonThi {
     int lanThi;
     int soCau;
     int thoiGian;
+    String lop;
 
     public MonThi() {
     }
@@ -20,6 +21,16 @@ public class MonThi {
         this.lanThi = lanThi;
         this.soCau = soCau;
         this.thoiGian = thoiGian;
+    }
+
+    public MonThi(String maMon, String trinhDo, Date ngayThi, int lanThi, int soCau, int thoiGian, String lop) {
+        this.maMon = maMon;
+        this.trinhDo = trinhDo;
+        this.ngayThi = ngayThi;
+        this.lanThi = lanThi;
+        this.soCau = soCau;
+        this.thoiGian = thoiGian;
+        this.lop = lop;
     }
 
     public String getMaMon() {
@@ -68,6 +79,14 @@ public class MonThi {
 
     public void setThoiGian(int thoiGian) {
         this.thoiGian = thoiGian;
+    }
+
+    public String getLop() {
+        return lop;
+    }
+
+    public void setLop(String lop) {
+        this.lop = lop;
     }
 
     @Override

@@ -14,16 +14,16 @@ public class ChiTietDapAn {
         return CAUHOI;
     }
 
-    public void setCAUHOI(int cAUHOI) {
-        CAUHOI = cAUHOI;
+    public void setCAUHOI(int CAUHOI) {
+        this.CAUHOI = CAUHOI;
     }
 
     public String getNOIDUNG() {
         return NOIDUNG;
     }
 
-    public void setNOIDUNG(String nOIDUNG) {
-        NOIDUNG = nOIDUNG;
+    public void setNOIDUNG(String NOIDUNG) {
+        this.NOIDUNG = NOIDUNG;
     }
 
     public String getA() {
