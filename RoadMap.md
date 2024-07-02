@@ -16,6 +16,7 @@ TẤT CẢ CÁC SP, FUNCTION
 | [ ]      | [X]   | SP_DanhSachDangKyThiJob
 | [ ]      | [X]   | SP_DanhSachMonCoDiem
 | [ ]      | [X]   | SP_DeThi
+| [ ]      | [X]   | SP_GiaoVienChuaTaoTK
 | [ ]      | [X]   | SP_InBangDiem
 | [ ]      | [X]   | SP_KiemTraBoDeTonTai
 | [ ]      | [X]   | SP_KiemTraDangKyThi
