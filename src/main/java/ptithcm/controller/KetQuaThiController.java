@@ -50,10 +50,10 @@ public class KetQuaThiController {
                 thiJDBCTemplate.setDataSource(currentConnection.getSite());
                 SinhVien sv = sinhVienJDBCTemplate.getStudent(currentConnection.getUserName());
                 Lop lop = khoaLopJDBCTemplate.getLop(sv.getMALOP());
-                List<MonThi> monthi = thiJDBCTemplate.getListMonThi(sv.getMASV());
+                List<MonThi> monthi = thiJDBCTemplate.getListMonDaThi(sv.getMASV());
                 Map<String, String> trangthai = new HashMap<>();
                 for (MonThi item : monthi) {
-                    trangthai.put(item.getMaMon().trim(),
+                    trangthai.put(item.getMaMon().trim() + String.valueOf(item.getLanThi()),
                             thiJDBCTemplate.getTrangThaiThi(sv.getMASV(), item.getMaMon(), item.getLanThi()));
                 }
                 model.addAttribute("sv", sv);

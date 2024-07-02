@@ -22,4 +22,7 @@
 			</c:forEach>
 		</tbody>
 	</table>
+	<c:if test="${empty bangdiems}">
+		<h5 class="text-center">Chưa lên lịch thi!</h5>
+	</c:if>
 </div>

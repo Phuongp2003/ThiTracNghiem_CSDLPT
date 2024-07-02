@@ -8,6 +8,10 @@
 		position: relative;
 	}
 	
+	._2-row-info {
+		min-width: 600px;
+	}
+	
 	.kqt-title {
 		font-size: 18px;
 		width: MAX-CONTENT;
@@ -24,6 +28,19 @@
 	.ans {
 		text-wrap: wrap;
 	}
+	
+	.res {
+		position: sticky;
+		bottom: 0;
+	}
+	
+	.bg-red {
+		background: rgba(255, 0, 0, .4) !important;
+	}
+	
+	.bg-green {
+		background: rgba(0, 255, 0, .4) !important;
+	}
 </style>
 
 <div class="ketquathi">
@@ -37,8 +54,13 @@
 		<div class="monhoc">
 			Môn thi: ${kq.TENMH}
 		</div>
-		<div class="ngaythi">
-			Ngày thi: ${kq.getNgayThiF()}
+		<div class="row _2-row-info">
+			<div class="ngaythi col-6">
+				Ngày thi: ${kq.getNgayThiF()}
+			</div>
+			<div class="lanthi col-6">
+				Lần thi: ${kq.LAN}
+			</div>
 		</div>
 	</div>
 	<table class="table kqthi-table">
@@ -52,8 +74,8 @@
 				<th scope="col" style="width: 8%;">Đã chọn</th>
 			</tr>
 		</thead>
-		<c:forEach var="item" items="${kq.chiTietDapAn}" varStatus="status">
-			<tbody>
+		<tbody>
+			<c:forEach var="item" items="${kq.chiTietDapAn}" varStatus="status">
 				<tr class="">
 					<td scope="row">${status.index + 1}</td>
 					<td>${item.CAUHOI}</td>
@@ -64,11 +86,18 @@
 						C. ${item.getC()} <br>
 						D. ${item.getD()}
 					</td>
-					<td>${item.DAPANDUNG}</td>
-					<td>${item.DAPANSV}</td>
+					<td class="text-uppercase ${(item.DAPANDUNG.equals(item.DAPANSV)) ? 'bg-green' : 'bg-red'}">${item.DAPANDUNG}</td>
+					<td class="text-uppercase ${(item.DAPANDUNG.equals(item.DAPANSV)) ? 'bg-green' : 'bg-red'}">${item.DAPANSV}</td>
 				</tr>
-			</tbody>
-		</c:forEach>
+			</c:forEach>
+			<tr class="res">
+				<td></td>
+				<td></td>
+				<td></td>
+				<td style="font-weight: 500; font-size: 18px;">Kết quả: ${kq.getSoCauDung()}/${kq.getTongSoCau()}</td>
+				<td colspan="2" style="font-weight: 500; font-size: 18px;">Điểm số: ${kq.DIEM}</td>
+			</tr>
+		</tbody>
 	</table>
 	
 </div>

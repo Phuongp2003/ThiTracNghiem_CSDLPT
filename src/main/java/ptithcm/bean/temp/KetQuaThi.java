@@ -79,12 +79,26 @@ public class KetQuaThi {
         this.chiTietDapAn = chiTietDapAn;
     }
 
+    public int getSoCauDung() {
+        int soCauDung = 0;
+        for (ChiTietDapAn item : chiTietDapAn) {
+            if (item.getDAPANSV().equals(item.getDAPANDUNG())) {
+                soCauDung++;
+            }
+        }
+        return soCauDung;
+    }
+
+    public int getTongSoCau() {
+        return chiTietDapAn.size();
+    }
+
     public String getNgayThiF() {
         if (NGAYTHI == null) {
             return "";
         }
 
-        return DateFM.Datetime(NGAYTHI);
+        return DateFM.Date(NGAYTHI);
     }
 
     public KetQuaThi(String HOTEN, String LOP, String MAMH, String TENMH, Timestamp NGAYTHI, int LAN, float DIEM,

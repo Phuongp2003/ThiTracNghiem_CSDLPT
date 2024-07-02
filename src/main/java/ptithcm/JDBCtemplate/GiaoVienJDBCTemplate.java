@@ -119,8 +119,7 @@ public class GiaoVienJDBCTemplate {
             cs.setString(1, giaoVien.getHO());
             cs.setString(2, giaoVien.getTEN());
             cs.setString(3, giaoVien.getDIACHI());
-            cs.setString(4, giaoVien.getMAKH());
-            cs.setString(5, magv);
+            cs.setString(4, magv);
             cs.execute();
             System.out.println("Updated Record with ID = " + magv);
         } catch (SQLException e) {
@@ -166,8 +165,8 @@ public class GiaoVienJDBCTemplate {
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
-            cs.setString(2, magv);
-            cs.setString(3, giaoVien.getMAKH());
+            cs.setString(2, makh);
+            cs.setString(3, magv);
             cs.execute();
             System.out.println("Move Record with ID = " + magv);
         } catch (SQLException e) {

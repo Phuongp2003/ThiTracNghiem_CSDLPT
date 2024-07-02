@@ -24,14 +24,14 @@
 			<select class="form-select" id="monhoc" name="mamh" onchange="chonMonThi('f-'+this.value)">
 				<option value="">--- Hãy chọn môn thi ---</option>
 				<c:forEach var="mh" items="${monthi}">
-					<option value="${mh.maMon}">
+					<option value="${mh.maMon.trim()}-${mh.lanThi}">
 						${jdbc.getMonHoc(mh.maMon).getTENMH()}
 					</option>
 				</c:forEach>
 			</select>
 		</div>
 		<c:forEach var="mh" items="${monthi}">
-			<form method="POST" action="thi/start-exam.htm" id="f-${mh.maMon}" class="form-thi">
+			<form method="POST" action="thi/start-exam.htm" id="f-${mh.maMon.trim()}-${mh.lanThi}" class="form-thi">
 				<input type="text" value="${mh.maMon}" name="mamh" class="d-none">
 				<div class="mb-3">
 					<label>Ngày thi</label>
@@ -41,13 +41,13 @@
 					<label>Lần thi</label>
 					<input type="number" name="lanthi" class="form-control" max="2" min="1" value="${mh.lanThi}" readonly>
 				</div>
-				<c:if test="${trangthai.get(mh.maMon.trim()) == 'CHUATHI'}">
+				<c:if test="${trangthai.get(mh.maMon.trim().concat(String.valueOf(mh.lanThi))) == 'CHUATHI'}">
 					<button type="submit" class="btn btn-primary submit-form">Bắt đầu thi</button>
 				</c:if>
-				<c:if test="${trangthai.get(mh.maMon.trim()) == 'DANGTHI'}">
+				<c:if test="${trangthai.get(mh.maMon.trim().concat(String.valueOf(mh.lanThi))) == 'DANGTHI'}">
 					<button type="submit" class="btn btn-primary submit-form">Tiếp tục thi</button>
 				</c:if>
-				<c:if test="${trangthai.get(mh.maMon.trim()) == 'DATHI'}">
+				<c:if test="${trangthai.get(mh.maMon.trim().concat(String.valueOf(mh.lanThi))) == 'DATHI'}">
 					<button type="submit" class="btn btn-primary submit-form2">Xem kết quả</button>
 				</c:if>
 			</form>

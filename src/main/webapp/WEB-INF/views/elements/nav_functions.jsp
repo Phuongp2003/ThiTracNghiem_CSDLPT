@@ -16,12 +16,12 @@
 	<li class="nav-item">
 		<a class="nav-link" href="bode.htm">Nhập đề</a>
 	</li>
-	<li class="nav-item">
-		<a class="nav-link" href="dkthi.htm">Đăng ký thi</a>
-	</li>
 </c:if>
 <c:choose>
 	<c:when test="${role == 'COSO' || role == 'GIANGVIEN'}">
+		<li class="nav-item">
+			<a class="nav-link" href="dkthi.htm">Đăng ký thi</a>
+		</li>
 		<li class="nav-item">
 			<a class="nav-link" href="thithu.htm">Thi thử</a>
 		</li>

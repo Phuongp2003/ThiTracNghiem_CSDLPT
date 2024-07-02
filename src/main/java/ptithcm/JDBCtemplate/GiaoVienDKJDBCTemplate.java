@@ -58,20 +58,30 @@ public class GiaoVienDKJDBCTemplate {
 
     public GiaoVienDangKy getGVDK(String magv) throws Exception {
         String SQL = "SELECT * FROM GiaoVien_DangKy WHERE MAGV = ?";
-        GiaoVienDangKy res;
+        GiaoVienDangKy res = new GiaoVienDangKy();
         try {
-            res = jdbcTemplate.queryForObject(SQL, new Object[] { magv }, (rs, rowNum) -> {
-                GiaoVienDangKy gvdk = new GiaoVienDangKy();
-                gvdk.setMAGV(rs.getString("MAGV"));
-                gvdk.setMAMH(rs.getString("MAMH"));
-                gvdk.setMALOP(rs.getString("MALOP"));
-                gvdk.setTRINHDO(rs.getString("TRINHDO"));
-                gvdk.setNGAYTHI(rs.getDate("NGAYTHI"));
-                gvdk.setLAN(rs.getInt("LAN"));
-                gvdk.setSOCAUTHI(rs.getInt("SOCAUTHI"));
-                gvdk.setTHOIGIAN(rs.getInt("THOIGIAN"));
-                return gvdk;
-            });
+            CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
+                    .prepareCall(SQL);
+            cs.setString(1, magv);
+            try (ResultSet rs = cs.executeQuery()) {
+                if (rs.next()) {
+                    res.setMAGV(rs.getString("MAGV"));
+                    res.setMAMH(rs.getString("MAMH"));
+                    res.setMALOP(rs.getString("MALOP"));
+                    res.setTRINHDO(rs.getString("TRINHDO"));
+                    res.setNGAYTHI(rs.getDate("NGAYTHI"));
+                    res.setLAN(rs.getInt("LAN"));
+                    res.setSOCAUTHI(rs.getInt("SOCAUTHI"));
+                    res.setTHOIGIAN(rs.getInt("THOIGIAN"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            String sqlState = e.getSQLState();
+            int errorCode = e.getErrorCode();
+            System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
+            System.err.println("SQL: " + e.getMessage());
+            throw new Exception(e.getMessage() + " (DB_ERR: GiaoVien_DangKy)");
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("Giao Vien DK - select Error: " + e.getMessage());
