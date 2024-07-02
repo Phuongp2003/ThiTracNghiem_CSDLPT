@@ -419,15 +419,16 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
-    public boolean checkMalop(String malop) throws Exception {
+    public boolean checkMalop(String malop, String tenlop) throws Exception {
         try {
-            String SQL = "{? = call SP_KiemTraLopTonTai(?)}";
+            String SQL = "{? = call SP_KiemTraLopTonTai(?, ?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
             cs.setString(2, malop);
+            cs.setString(3, tenlop);
             cs.execute();
-            return cs.getInt(1) > 0;
+            return cs.getInt(1) == 0;
         } catch (SQLException e) {
             e.printStackTrace();
             String sqlState = e.getSQLState();
@@ -442,13 +443,14 @@ public class KhoaLopJDBCTemplate {
         }
     }
 
-    public boolean checkMakh(String makh) throws Exception {
+    public boolean checkMakh(String makh, String tenkh) throws Exception {
         try {
-            String SQL = "{? = call SP_KiemTraKhoaTonTai(?)}";
+            String SQL = "{? = call SP_KiemTraKhoaTonTai(?, ?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
             cs.setString(2, makh);
+            cs.setString(3, tenkh);
             cs.execute();
             return cs.getInt(1) == 0;
         } catch (SQLException e) {
