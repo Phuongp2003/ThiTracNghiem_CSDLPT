@@ -171,12 +171,12 @@ public class BoDeController {
             historyAction.addAction(bodeAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Thêm bộ đề thành công!");
+            model.addAttribute("ok_message", "Thêm bộ đề thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm bộ đề thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Thêm bộ đề thất bại! " + e.getMessage());
         }
 
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "delete-bode/{id}")
@@ -192,12 +192,12 @@ public class BoDeController {
             historyAction.addAction(bodeAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Xóa bộ đề thành công!");
+            model.addAttribute("ok_message", "Xóa bộ đề thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa bộ đề thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Xóa bộ đề thất bại! " + e.getMessage());
         }
 
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "edit-bode", method = RequestMethod.POST)
@@ -227,11 +227,11 @@ public class BoDeController {
             historyAction.addAction(bodeAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Cập nhật bộ đề thành công!");
+            model.addAttribute("ok_message", "Cập nhật bộ đề thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật bộ đề thất bại!" + e.getMessage());
+            model.addAttribute("e_message", "Cập nhật bộ đề thất bại!" + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "undo", method = RequestMethod.POST)
@@ -242,14 +242,14 @@ public class BoDeController {
                 if (!historyAction.undo()) {
                     throw new Exception("HistoryAction.java báo: Hoàn tác thất bại!");
                 }
-                model.addAttribute("message", "Hoàn tác thành công!");
+                model.addAttribute("ok_message", "Hoàn tác thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để hoàn tác!");
+                model.addAttribute("e_message", "Không có hành động nào để hoàn tác!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Hoàn tác thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "redo", method = RequestMethod.POST)
@@ -258,12 +258,12 @@ public class BoDeController {
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             if (historyAction != null && historyAction.canRedo()) {
                 historyAction.redo();
-                model.addAttribute("message", "Làm lại thành công!");
+                model.addAttribute("ok_message", "Làm lại thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để làm lại!");
+                model.addAttribute("e_message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Làm lại thất bại! " + e.getMessage());
         }
         return "elements/message";
     }

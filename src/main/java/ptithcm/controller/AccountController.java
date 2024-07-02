@@ -57,7 +57,7 @@ public class AccountController {
             accountJDBCTemplate.setDataSource(currentConnection.getSite());
 
             accountJDBCTemplate.createLogin(loginname, pass, magv, role);
-            model.addAttribute("message", "Tạo tài khoản thành công!");
+            model.addAttribute("ok_message", "Tạo tài khoản thành công!");
             model.addAttribute("role_al", currentConnection.getRoleAlias());
         } catch (Exception e) {
             redirectAttributes.addAttribute("e_message", "Tạo tài khoản thất bại! " + e.getMessage());

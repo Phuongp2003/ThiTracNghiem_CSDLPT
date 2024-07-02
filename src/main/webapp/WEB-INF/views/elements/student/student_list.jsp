@@ -29,8 +29,8 @@
 				<td>${sv.MATKHAU}</td>
 				<c:if test="${role_al != 'TRUONG' && role_al != 'GIANGVIEN'}">
 					<td>
-						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post" onsubmit="return confirm('Bạn có chắc muốn xóa sinh viên ${sv.TEN}?')" target="formSubmitFrame">
-							<button type="submit" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
+						<form class="d-inline" action="student/delete-student/${sv.MASV.trim()}.htm" method="post">
+							<button type="button" onclick="if(confirm('Bạn có chắc muốn xóa sinh viên ${sv.TEN}?')) submitClosestForm(this, () => refreshData())" class="btn btn-outline-primary"><i class="bi bi-trash3-fill"></i></button>
 						</form>
 						
 						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#edit-student-${sv.MASV.trim()}">
@@ -39,7 +39,7 @@
 						<div class="modal fade" id="edit-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
-									<form method="POST" action="student/edit-student.htm" class="form-control" target="formSubmitFrame">
+									<form method="POST" action="student/edit-student.htm" class="form-control">
 										<div class="mb-3">
 											<label>Mã sinh viên: </label>
 											<input name="masv" value="${sv.MASV}" class="form-control" disabled />
@@ -67,7 +67,7 @@
 												<option value="${sv.MALOP}">${sv.MALOP} (${lopMap.get(sv.MALOP)})</option>
 											</select>
 										</div>
-										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+										<button class="btn btn-primary mt-2" type="button" data-bs-dismiss="modal" onclick="submitClosestForm(this, () => refreshData())">Save</button>
 										<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 									</form>
 								</div>
@@ -80,7 +80,7 @@
 						<div class="modal fade" id="move-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content">
-									<form method="POST" action="student/move-student.htm" class="form-control" target="formSubmitFrame">
+									<form method="POST" action="student/move-student.htm" class="form-control">
 										<input type="hidden" name="masv" value="${sv.MASV}" />
 										<div class="mb-3">
 											<label>Lớp</label>
@@ -94,7 +94,7 @@
 												</c:forEach>
 											</select>
 										</div>
-										<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal">Save</button>
+										<button class="btn btn-primary mt-2" type="button" data-bs-dismiss="modal" onclick="submitClosestForm(this, () => refreshData())">Save</button>
 										<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 									</form>
 								</div>
@@ -106,4 +106,6 @@
 		</c:forEach>
 	</tbody>
 </table>
-<c:if test="${empty sinhViens}"><h5>Không có sinh viên nào!</h5></c:if>
+<c:if test="${empty sinhViens}">
+	<h5>Không có sinh viên nào!</h5>
+</c:if>

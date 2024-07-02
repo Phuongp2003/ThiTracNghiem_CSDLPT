@@ -26,6 +26,8 @@ public class GiaoVienDKJDBCTemplate {
 
     public void create(GiaoVienDangKy gvdk) throws Exception {
         try {
+            checkDKThi(gvdk.getMAMH(), gvdk.getMALOP(), gvdk.getLAN(), gvdk.getSOCAUTHI(), gvdk.getTRINHDO(),
+                    gvdk.getNGAYTHI());
             String SQL = "INSERT INTO GiaoVien_DangKy (MAGV, MAMH, MALOP, TRINHDO, NGAYTHI, LAN, SOCAUTHI, THOIGIAN) "
                     + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
@@ -46,7 +48,7 @@ public class GiaoVienDKJDBCTemplate {
             int errorCode = e.getErrorCode();
             System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
             System.err.println("SQL: " + e.getMessage());
-            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+            throw new Exception(e.getMessage() + " (DB_ERR: GiaoVien_DangKy)");
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Giao Vien DK - create Unhandled Error: " + e.getMessage());
@@ -182,33 +184,47 @@ public class GiaoVienDKJDBCTemplate {
         }
     }
 
-    public boolean checkDKThi(String mamh, String malop, int lan) throws Exception {
+    /**
+     * Kiểm tra đăng ký thi, Chỉ sài trong các hàm call SP khác
+     * 
+     * @param mamh
+     * @param malop
+     * @param lan
+     * @param socau
+     * @param trinhdo
+     * @return
+     * @throws Exception
+     */
+    public boolean checkDKThi(String mamh, String malop, int lan, int socau, String trinhdo, Date ngaythi)
+            throws Exception, DataAccessException, SQLException {
         try {
-            String SQL = "{? = call SP_KiemTraDangKyThi(?, ?, ?)}";
+            String SQL = "{? = call SP_KiemTraDangKyThi(?, ?, ?, ?, ?, ?)}";
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
             cs.registerOutParameter(1, java.sql.Types.INTEGER);
             cs.setString(2, mamh);
             cs.setString(3, malop);
             cs.setInt(4, lan);
-            try (ResultSet rs = cs.executeQuery()) {
-                return rs.getInt(1) > 0;
-            }
+            cs.setInt(5, socau);
+            cs.setString(6, trinhdo);
+            cs.setDate(7, ngaythi);
+            cs.execute();
+            return cs.getInt(1) == 0;
         } catch (SQLException e) {
             e.printStackTrace();
             String sqlState = e.getSQLState();
             int errorCode = e.getErrorCode();
             System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
             System.err.println("SQL: " + e.getMessage());
-            throw new Exception(e.getMessage() + " (DB_ERR: KiemTraDangKyThi)");
+            throw e;
         } catch (DataAccessException e) {
             e.printStackTrace();
             System.err.println("DK Thi - find Error: " + e.getMessage());
-            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+            throw e;
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("DK Thi - find Unhandled Error: " + e.getMessage());
-            throw new Exception("Lỗi không xác định!");
+            throw e;
         }
     }
 }

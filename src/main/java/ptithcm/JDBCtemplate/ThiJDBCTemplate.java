@@ -117,7 +117,7 @@ public class ThiJDBCTemplate {
 
     public String getTrangThaiThi(String masv, String mamh,
             int lanthi) throws Exception {
-        String SQL = "{? = call SP_KiemTraTrangThaiThi(?, ?, ?)}";
+        String SQL = "{? = call SP_KiemTraTrangThaiThi(?, ?, ?, ?)}";
         String res;
         try {
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
@@ -126,8 +126,9 @@ public class ThiJDBCTemplate {
             cs.setString(2, masv);
             cs.setString(3, mamh);
             cs.setInt(4, lanthi);
+            cs.registerOutParameter(5, java.sql.Types.NVARCHAR);
             cs.execute();
-            res = cs.getString(1); // Need change to return value
+            res = cs.getString(5);
         } catch (SQLException e) {
             e.printStackTrace();
             String sqlState = e.getSQLState();
@@ -283,8 +284,11 @@ public class ThiJDBCTemplate {
             cs.setString(2, masv);
             cs.setString(3, mamh);
             cs.setInt(4, lanthi);
+            cs.execute();
             KetQuaThiMapper mapper = new KetQuaThiMapper();
-            res = (KetQuaThi) mapper.mapRow(cs.getResultSet(), 0);
+            while (cs.getResultSet().next()) {
+                res = (KetQuaThi) mapper.mapRow(cs.getResultSet(), 0);
+            }
             return res;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -306,7 +310,7 @@ public class ThiJDBCTemplate {
 
     public KetQuaThi nhanDapAn(String masv, String mamh, int lanthi) throws Exception {
         String SQL = "{? = call SP_ThiSinhXemKetQua(?, ?, ?)}";
-        KetQuaThi res;
+        KetQuaThi res = new KetQuaThi();
         try {
             CallableStatement cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL);
@@ -314,8 +318,11 @@ public class ThiJDBCTemplate {
             cs.setString(2, masv);
             cs.setString(3, mamh);
             cs.setInt(4, lanthi);
+            cs.execute();
             KetQuaThiMapper mapper = new KetQuaThiMapper();
-            res = (KetQuaThi) mapper.mapRow(cs.getResultSet(), 0);
+            while (cs.getResultSet().next()) {
+                res = (KetQuaThi) mapper.mapRow(cs.getResultSet(), 0);
+            }
             String SQL2 = "{? = call SP_XemKetQua(?, ?, ?)}";
             cs = jdbcTemplate.getDataSource().getConnection()
                     .prepareCall(SQL2);
@@ -323,6 +330,7 @@ public class ThiJDBCTemplate {
             cs.setString(2, masv);
             cs.setString(3, mamh);
             cs.setInt(4, lanthi);
+            cs.execute();
             ChiTietDapAnMapper mapper2 = new ChiTietDapAnMapper();
             List<ChiTietDapAn> chiTietDapAn = new ArrayList<>();
             while (cs.getResultSet().next()) {

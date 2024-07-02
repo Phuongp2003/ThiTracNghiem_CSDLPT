@@ -26,7 +26,7 @@
 <div class="modal fade" id="add-student" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form id="addStudentForm" method="POST" action="teacher/add.htm" class="form-control needs-validation" target="formSubmitFrame">
+			<form id="addStudentForm" method="POST" action="teacher/add.htm" class="form-control needs-validation">
 				<div class="mb-3">
 					<label>Mã nhân viên: </label>
 					<input name="manv" class="form-control" required onblur="checkMagvExist(this)" />
@@ -59,7 +59,7 @@
 						</c:forEach>
 					</select>
 				</div>
-				<button class="btn btn-primary mt-2" type="submit" data-bs-dismiss="modal" id="submit-form">Save</button>
+				<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
 				<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 			</form>
 		</div>

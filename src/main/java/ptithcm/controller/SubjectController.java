@@ -86,7 +86,7 @@ public class SubjectController {
                 }
                 model.addAttribute("monHocs", monHocs);
             } else {
-                model.addAttribute("message", "Không có môn học nào!");
+                model.addAttribute("e_message", "Không có môn học nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -112,12 +112,12 @@ public class SubjectController {
             historyAction.addAction(monhocAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Thêm môn học thành công!");
+            model.addAttribute("ok_message", "Thêm môn học thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm môn học thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Thêm môn học thất bại! " + e.getMessage());
         }
 
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "delete-subject/{id}")
@@ -133,12 +133,12 @@ public class SubjectController {
             historyAction.addAction(monhocAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Xóa môn học thành công!");
+            model.addAttribute("ok_message", "Xóa môn học thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa môn học thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Xóa môn học thất bại! " + e.getMessage());
         }
 
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "edit-subject", method = RequestMethod.POST)
@@ -157,11 +157,11 @@ public class SubjectController {
             historyAction.addAction(monhocAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Cập nhật môn học thành công!");
+            model.addAttribute("ok_message", "Cập nhật môn học thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật môn học thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Cập nhật môn học thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "undo", method = RequestMethod.POST)
@@ -172,14 +172,14 @@ public class SubjectController {
                 if (!historyAction.undo()) {
                     throw new Exception("HistoryAction.java báo: Hoàn tác thất bại!");
                 }
-                model.addAttribute("message", "Hoàn tác thành công!");
+                model.addAttribute("ok_message", "Hoàn tác thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để hoàn tác!");
+                model.addAttribute("e_message", "Không có hành động nào để hoàn tác!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Hoàn tác thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "redo", method = RequestMethod.POST)
@@ -188,14 +188,14 @@ public class SubjectController {
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             if (historyAction != null && historyAction.canRedo()) {
                 historyAction.redo();
-                model.addAttribute("message", "Làm lại thành công!");
+                model.addAttribute("ok_message", "Làm lại thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để làm lại!");
+                model.addAttribute("e_message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Làm lại thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "refresh-action-buttons", method = RequestMethod.POST)
@@ -222,8 +222,8 @@ public class SubjectController {
                 return "false";
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Lỗi: " + e.getMessage());
-            return "elements/message";
+            model.addAttribute("e_message", "Lỗi: " + e.getMessage());
+            return "elements/message_box";
         }
         return "true";
     }
@@ -261,7 +261,7 @@ public class SubjectController {
                 model.addAttribute("monhocs", monhocs);
                 model.addAttribute("lops", lops);
             } else {
-                model.addAttribute("message", "Không có môn học nào!");
+                model.addAttribute("e_message", "Không có môn học nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());

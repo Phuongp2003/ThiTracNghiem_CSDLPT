@@ -34,6 +34,6 @@
 				</select>
 			</c:if>
 		</div>
-		<button class="btn btn-primary mt-2" type="submit">Tạo tài khoản</button>
+		<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this)">Tạo tài khoản</button>
 	</form>
 </div>

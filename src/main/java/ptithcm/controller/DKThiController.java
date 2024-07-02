@@ -1,8 +1,10 @@
 package ptithcm.controller;
 
 import java.util.ArrayList;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +60,7 @@ public class DKThiController {
                 throw new Exception("Không có kết nối nào!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("e_message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/dkthi";
@@ -69,7 +71,7 @@ public class DKThiController {
             @RequestParam("mamh") String mamh, @RequestParam("trinhdo") String trinhdo,
             @RequestParam("lanthi") int lanthi, @RequestParam("socauthi") int socauthi,
             @RequestParam("ngaythi") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaythi,
-            @RequestParam("thoigianthi") int thoigianthi, HttpSession session) {
+            @RequestParam("thoigianthi") int thoigianthi, HttpSession session, HttpServletResponse response) {
         try {
             GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
             GiaoVienDangKy gvdk = new GiaoVienDangKy();
@@ -77,18 +79,19 @@ public class DKThiController {
             gvdk.setMAMH(mamh);
             gvdk.setMALOP(malop);
             gvdk.setTRINHDO(trinhdo);
-            gvdk.setNGAYTHI(ngaythi);
+            gvdk.setNGAYTHI(DateFM.UtilToSQL(ngaythi));
             gvdk.setLAN(lanthi);
             gvdk.setSOCAUTHI(socauthi);
             gvdk.setTHOIGIAN(thoigianthi);
             giaoVienDKJDBCTemplate.create(gvdk);
 
-            model.addAttribute("message", "Đăng ký thành công!");
+            model.addAttribute("ok_message", "Đăng ký thành công!");
+            response.setStatus(200);
         } catch (Exception e) {
-            model.addAttribute("message", "Đăng ký thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Đăng ký thất bại! " + e.getMessage());
+            response.setStatus(400);
         }
-
-        return "pages/dkthi";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "dsdkthi", method = RequestMethod.POST)

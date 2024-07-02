@@ -53,7 +53,7 @@ public class SinhVienJDBCTemplate {
             int errorCode = e.getErrorCode();
             System.err.println("SQL Error - State: " + sqlState + ", Code: " + errorCode);
             System.err.println("Database: " + e.getMessage());
-            throw new Exception("Lỗi quyền hạn truy cập dữ liệu!");
+            throw new Exception(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Sinh Vien - create Unhandled Error: " + e.getMessage());

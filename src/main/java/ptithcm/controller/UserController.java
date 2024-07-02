@@ -89,8 +89,8 @@ public class UserController {
 
         response.addCookie(usernameCookie);
 
-        redirectAttributes.addFlashAttribute("message", "logout-success");
-        return "redirect:/home.htm";
+        redirectAttributes.addFlashAttribute("message", "Đăng xuất thành công!");
+        return "redirect:/auth/login.htm";
     }
 
     @RequestMapping(value = "check-login", method = RequestMethod.POST)
@@ -209,7 +209,8 @@ public class UserController {
         model.addAttribute("title", "PTITHCM Book Shop");
         model.addAttribute("type", "home");
         model.addAttribute("currentConnection", currentConnection);
-        model.addAttribute("message", "login-success");
+        model.addAttribute("in4_message", "Đăng nhập thành công! Chào mừng "
+                + currentConnection.getCurrentUser().getFullname() + " đến với pj of PTITHCM Group 7!");
         return "redirect:/home.htm";
     }
 

@@ -48,10 +48,10 @@ public class BangDiemController {
                 model.addAttribute("monhoc", monhoc);
                 model.addAttribute("lop", lop);
             } else {
-                model.addAttribute("message", "Không có bảng điểm nào!");
+                model.addAttribute("e_message", "Không có bảng điểm nào!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute("e_message", e.getMessage());
         }
         model.addAttribute("role_al", currentConnection.getRoleAlias());
         return "pages/score_subject";

@@ -15,5 +15,6 @@
 	<link rel="stylesheet" type="text/css" href="resources/scripts/${type}/index.js">
 </c:if>
 
+<script src="resources/scripts/global_pre.js"></script>
 
 <%@ include file="script.jsp" %>

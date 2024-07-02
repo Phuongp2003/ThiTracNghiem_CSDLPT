@@ -3,7 +3,6 @@ package ptithcm.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.sql.Date;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,6 +24,7 @@ import ptithcm.bean.GlobalVariable;
 import ptithcm.bean.HistoryAction;
 import ptithcm.bean.Khoa;
 import ptithcm.bean.SinhVienAction;
+import ptithcm.util.DateFM;
 import ptithcm.bean.Lop;
 import ptithcm.bean.SinhVien;
 
@@ -75,7 +75,7 @@ public class StudentController {
                 model.addAttribute("lopMap", lopMap);
                 model.addAttribute("khoaMap", khoaMap);
             } else {
-                model.addAttribute("message", "Không có sinh viên nào!");
+                model.addAttribute("in4_message", "Không có sinh viên nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -125,7 +125,7 @@ public class StudentController {
                 model.addAttribute("malop", malop);
                 model.addAttribute("lopMap", lopMap);
             } else {
-                model.addAttribute("message", "Không có sinh viên nào!");
+                model.addAttribute("in4_message", "Không có sinh viên nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -154,7 +154,7 @@ public class StudentController {
                 model.addAttribute("current", current);
                 model.addAttribute("lops", lops);
             } else {
-                model.addAttribute("message", "Không có lớp nào!");
+                model.addAttribute("in4_message", "Không có lớp nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -192,7 +192,7 @@ public class StudentController {
                 model.addAttribute("lops", lops);
                 model.addAttribute("khoaMap", khoaMap);
             } else {
-                model.addAttribute("message", "Không có lớp nào!");
+                model.addAttribute("in4_message", "Không có lớp nào!");
             }
         } catch (Exception e) {
             model.addAttribute("e_message", e.getMessage());
@@ -204,7 +204,7 @@ public class StudentController {
     @RequestMapping(value = "add-student", method = RequestMethod.POST)
     public String addStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
-            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
+            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date ngaysinh,
             @RequestParam("diachi") String diachi, @RequestParam("malop") String malop,
             HttpSession session) {
         try {
@@ -212,7 +212,7 @@ public class StudentController {
             sv.setMASV(masv);
             sv.setHO(ho);
             sv.setTEN(ten);
-            sv.setNGAYSINH(ngaysinh);
+            sv.setNGAYSINH(DateFM.UtilToSQL(ngaysinh));
             sv.setDIACHI(diachi);
             sv.setMALOP(malop);
             sv.setMATKHAU(masv);
@@ -226,11 +226,11 @@ public class StudentController {
             historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Thêm sinh viên thành công!");
+            model.addAttribute("ok_message", "Thêm sinh viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Thêm sinh viên thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Thêm sinh viên thất bại! Chi tiết: " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "delete-student/{id}")
@@ -246,24 +246,24 @@ public class StudentController {
             historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Xóa sinh viên thành công!");
+            model.addAttribute("ok_message", "Xóa sinh viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Xóa sinh viên thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Xóa sinh viên thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "edit-student", method = RequestMethod.POST)
     public String updateStudent(ModelMap model, @RequestParam("masv") String masv,
             @RequestParam("ho") String ho, @RequestParam("ten") String ten,
-            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") Date ngaysinh,
+            @RequestParam("ngaysinh") @DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date ngaysinh,
             @RequestParam("diachi") String diachi, HttpSession session) {
         try {
             SinhVien oldSv = sinhVienJDBCTemplate.getStudent(masv);
             SinhVien newSv = sinhVienJDBCTemplate.getStudent(masv);
             newSv.setHO(ho);
             newSv.setTEN(ten);
-            newSv.setNGAYSINH(ngaysinh);
+            newSv.setNGAYSINH(DateFM.UtilToSQL(ngaysinh));
             newSv.setDIACHI(diachi);
 
             sinhVienJDBCTemplate.update(masv, newSv);
@@ -275,11 +275,11 @@ public class StudentController {
             historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Cập nhật sinh viên thành công!");
+            model.addAttribute("ok_message", "Cập nhật sinh viên thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Cập nhật sinh viên thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Cập nhật sinh viên thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "move-student", method = RequestMethod.POST)
@@ -300,11 +300,11 @@ public class StudentController {
             historyAction.addAction(svAction);
             session.setAttribute("historyAction", historyAction);
 
-            model.addAttribute("message", "Chuyển lớp thành công!");
+            model.addAttribute("ok_message", "Chuyển lớp thành công!");
         } catch (Exception e) {
-            model.addAttribute("message", "Chuyển lớp thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Chuyển lớp thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "undo", method = RequestMethod.POST)
@@ -315,14 +315,14 @@ public class StudentController {
                 if (!historyAction.undo()) {
                     throw new Exception("HistoryAction.java báo: Hoàn tác thất bại!");
                 }
-                model.addAttribute("message", "Hoàn tác thành công!");
+                model.addAttribute("ok_message", "Hoàn tác thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để hoàn tác!");
+                model.addAttribute("e_message", "Không có hành động nào để hoàn tác!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Hoàn tác thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Hoàn tác thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "redo", method = RequestMethod.POST)
@@ -331,14 +331,14 @@ public class StudentController {
             HistoryAction historyAction = (HistoryAction) session.getAttribute("historyAction");
             if (historyAction != null && historyAction.canRedo()) {
                 historyAction.redo();
-                model.addAttribute("message", "Làm lại thành công!");
+                model.addAttribute("ok_message", "Làm lại thành công!");
             } else {
-                model.addAttribute("message", "Không có hành động nào để làm lại!");
+                model.addAttribute("e_message", "Không có hành động nào để làm lại!");
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Làm lại thất bại! " + e.getMessage());
+            model.addAttribute("e_message", "Làm lại thất bại! " + e.getMessage());
         }
-        return "elements/message";
+        return "elements/message_box";
     }
 
     @RequestMapping(value = "refresh-action-buttons", method = RequestMethod.POST)
@@ -365,8 +365,8 @@ public class StudentController {
                 return "false";
             }
         } catch (Exception e) {
-            model.addAttribute("message", "Kiểm tra mã sinh viên thất bại! " + e.getMessage());
-            return "elements/message";
+            model.addAttribute("e_message", "Kiểm tra mã sinh viên thất bại! " + e.getMessage());
+            return "elements/message_box";
         }
         return "true";
     }
