@@ -74,7 +74,7 @@
 							</div>
 						</div>
 						
-						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-student-${sv.MASV.trim()}">
+						<!-- <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-student-${sv.MASV.trim()}">
 							Chuyển lớp
 						</button>
 						<div class="modal fade" id="move-student-${sv.MASV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -99,7 +99,7 @@
 									</form>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</td>
 				</c:if>
 			</tr>

@@ -65,7 +65,7 @@
 							</div>
 						</div>
 						
-						<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-teacher-${gv.MAGV.trim()}">
+						<!-- <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#move-teacher-${gv.MAGV.trim()}">
 							Chuyển khoa
 						</button>
 						<div class="modal fade" id="move-teacher-${gv.MAGV.trim()}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,7 +90,7 @@
 									</form>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</td>
 				</c:if>
 			</tr>

@@ -1,13 +1,48 @@
 <%@ page pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jstl/core_rt" prefix="c" %>
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<style>
+	.hidden-print {
+		display: none;
+	}
 
+	@media print {
+		body * {
+			visibility: hidden;
+		}
+		.list-dkthi h5 {
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 18px;
+            color: #333;
+        }
+		.list-dkthi, .list-dkthi * {
+			visibility: visible;
+		}
+		.list-dkthi {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+		}
+		.list-dkthi th, .list-dkthi td {
+			border: 1px solid #000;
+			padding: 12px 8px;
+		}
+		.list-dkthi th {
+			background-color: #ddd;
+			color: #000;
+		}
+	}
+</style>
 <div class="container-fluid" style="width:75%;">
 	<fmt:formatDate value="${startdate}" pattern="yyyy-MM-dd" var="formattedStartDate" />
 	<fmt:formatDate value="${enddate}" pattern="yyyy-MM-dd" var="formattedEndDate" />
 	<fmt:formatDate value="${startdate}" pattern="dd-MM-yyyy" var="from" />
 	<fmt:formatDate value="${enddate}" pattern="dd-MM-yyyy" var="to" />
-	<div class="filter d-flex gap-3">
+	<div class="filter d-flex justify-content-between">
 		<form method="post" action="dkthi/dsdkthi.htm" class="d-flex gap-2">
 			<div class="mb-3">
 				<label>Từ ngày</label>
@@ -19,8 +54,12 @@
 			</div>
 			<div class="mt-4"><button type="submit" class="btn btn-primary">Lọc</button></div>
 		</form>
+		<div class="p-3 d-flex gap-3">
+			<button onclick="printReport1()">In báo cáo cơ sở 1</button>
+			<button onclick="printReport2()">In báo cáo cơ sở 2</button>
+		</div>
 	</div>
-	<div class="list-dkthi mt-2 mb-4">
+	<div id="report1" class="list-dkthi mt-2 mb-4">
 		<h5 class="fw-bold text-center">DANH SÁCH ĐĂNG KÝ THI TRẮC NGHIỆM CƠ SỞ 1 TỪ NGÀY ${from} ĐẾN NGÀY ${to}</h5>
 		<table class="table">
 			<thead>
@@ -51,7 +90,7 @@
 		</table>
 		<h6 class="fw-bold">Tổng số lượt đăng ký: ${total1}</h6>
 	</div>
-	<div class="list-dkthi2 mt-4">
+	<div id="report2" class="list-dkthi mt-4">
 		<h5 class="fw-bold text-center">DANH SÁCH ĐĂNG KÝ THI TRẮC NGHIỆM CƠ SỞ 2 TỪ NGÀY ${from} ĐẾN NGÀY ${to}</h5>
 		<table class="table">
 			<thead>
@@ -93,4 +132,28 @@
 		document.getElementById('startdate').value = today;
 		document.getElementById('enddate').value = today;
 	});
+
+	function printReport1() {
+            var printContents = document.getElementById('report1').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+            window.location.reload();
+        }
+
+        function printReport2() {
+            var printContents = document.getElementById('report2').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+
+            window.print();
+
+            document.body.innerHTML = originalContents;
+            window.location.reload();
+        }
 </script>
