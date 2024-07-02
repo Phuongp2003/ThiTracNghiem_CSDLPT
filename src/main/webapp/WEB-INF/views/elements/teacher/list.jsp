@@ -59,7 +59,7 @@
 											</select>
 										</div>
 										<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal">Save</button>
-										<button type=" button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+										<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 									</form>
 								</div>
 							</div>
