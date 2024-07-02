@@ -11,6 +11,7 @@ TẤT CẢ CÁC SP, FUNCTION
 | [ ]      | [X]   | SP_DangKyThi
 | [ ]      | [X]   | SP_DangNhapGiangVien
 | [ ]      | [X]   | SP_DangNhapSinhVien
+| [ ]      | [X]   | SP_DanhSachCacMonDaThi
 | [ ]      | [X]   | SP_DanhSachCacMonThi
 | [ ]      | [X]   | SP_DanhSachDangKyThi
 | [ ]      | [X]   | SP_DanhSachDangKyThiJob
