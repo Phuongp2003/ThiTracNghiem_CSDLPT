@@ -14,12 +14,10 @@
 		<div class="mb-3">
 			<label>Mã giáo viên: </label>
 			<select class="form-select" name="magv">
-				<c:forEach var="gv" items="${giaoviens}">
-					<c:if test="${user.MAGV != gv.MAGV}">
-						<option value="${gv.MAGV}" ${gv.MAGV==magv ? 'selected' : '' }>
-							${gv.MAGV} (${gv.getFullName()})
-						</option>
-					</c:if>
+				<c:forEach var="gv" items="${gvNoAccount}">
+					<option value="${gv[0]}" ${gv[0]==magv ? 'selected' : '' }>
+						${gv[0]} (${gv[1]})
+					</option>
 				</c:forEach>
 			</select>
 		</div>

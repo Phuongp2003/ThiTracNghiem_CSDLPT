@@ -13,7 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import ptithcm.JDBCtemplate.GiaoVienJDBCTemplate;
 import ptithcm.JDBCtemplate.AccountJDBCTemplate;
-import ptithcm.bean.GiaoVien;
 import ptithcm.bean.GlobalVariable;
 
 @Controller
@@ -37,11 +36,9 @@ public class AccountController {
         try {
             GlobalVariable currentConnection;
             currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
-            giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            GiaoVien user = giaoVienJDBCTemplate.getTeacher(currentConnection.getEmployeeID());
-            List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
-            model.addAttribute("giaoviens", giaoviens);
-            model.addAttribute("user", user);
+            accountJDBCTemplate.setDataSource(currentConnection.getSite());
+            List<List<String>> gvNoAccount = accountJDBCTemplate.listNoAccount();
+            model.addAttribute("gvNoAccount", gvNoAccount);
             model.addAttribute("role_al", currentConnection.getRoleAlias());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
@@ -58,18 +55,9 @@ public class AccountController {
         try {
             GlobalVariable currentConnection = (GlobalVariable) session.getAttribute("currentConnection");
             accountJDBCTemplate.setDataSource(currentConnection.getSite());
-            giaoVienJDBCTemplate.setDataSource(currentConnection.getSite());
-            GiaoVien user = giaoVienJDBCTemplate.getTeacher(currentConnection.getEmployeeID());
-            List<GiaoVien> giaoviens = giaoVienJDBCTemplate.listGiaoVien();
 
-            int res = accountJDBCTemplate.createLogin(loginname, pass, magv, role);
-            if (res == 0) {
-                model.addAttribute("in4_message", "Tạo tài khoản thành công!");
-            } else if (res == 1 || res == 2) {
-                model.addAttribute("e_message", "Tên login hoặc mã giáo viên đã tồn tại!");
-            }
-            model.addAttribute("giaoviens", giaoviens);
-            model.addAttribute("user", user);
+            accountJDBCTemplate.createLogin(loginname, pass, magv, role);
+            model.addAttribute("ok_message", "Tạo tài khoản thành công!");
             model.addAttribute("role_al", currentConnection.getRoleAlias());
         } catch (Exception e) {
             redirectAttributes.addAttribute("e_message", "Tạo tài khoản thất bại! " + e.getMessage());
