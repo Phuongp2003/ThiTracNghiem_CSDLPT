@@ -53,13 +53,8 @@
 										<input type="hidden" name="cauhoi" value="${bd.CAUHOI}" />
 										<div class="mb-3">
 											<label >Môn học</label>
-											<select class="form-select" id="monhoc" name="mamh">
-												<option value="${bd.MAMH}" ${mamh=='${bd.MAMH}' ? 'selected' : '' }>${monhocMap.get(bd.MAMH)}</option>
-												<c:forEach var="mh" items="${monhocs}">
-													<c:if test="${mh.MAMH != bd.MAMH}">
-														<option value="${mh.MAMH}" ${mh.MAMH == '${bd.MAMH}' ? 'hidden' : '' }>${mh.TENMH}</option>
-													</c:if>
-												</c:forEach>
+											<select class="form-select" id="monhoc" name="mamh" disabled>
+												<option value="${bd.MAMH}">${monhocMap.get(bd.MAMH)}</option>
 											</select>
 										</div>
 										<div class="mb-3">
