@@ -47,7 +47,7 @@
 							<form id="addClassForm" method="POST" action="department-class/add-class.htm" class="form-control needs-validation">
 								<div class="mb-3">
 									<label>Mã lớp: </label>
-									<input name="malop" class="malop form-control" onchange="checkMalopExist(this)" required/>
+									<input name="malop" class="malop form-control" onchange="checkMalopExist(this)" required />
 									<div class="valid-feedback">
 										Mã lớp hợp lệ!
 									</div>
@@ -57,7 +57,7 @@
 								</div>
 								<div class="mb-3">
 									<label>Tên lớp: </label>
-									<input name="tenlop" id="tenlop" class="tenlop form-control" required onchange="checkMalopExist(this)"/>
+									<input name="tenlop" id="tenlop" class="tenlop form-control" required onchange="checkMalopExist(this)" />
 									<div class="invalid-feedback">
 										Tên lớp đã tồn tại!
 									</div>
@@ -71,8 +71,7 @@
 										</c:forEach>
 									</select>
 								</div>
-								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" 
-									data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -102,7 +101,7 @@
 							<form id="addDepartForm" method="POST" action="department-class/add-department.htm" class="form-control needs-validation" target="formSubmitFrame">
 								<div class="mb-3">
 									<label>Mã khoa: </label>
-									<input name="makh" class="makh form-control" required onchange="checkMakhExist(this)"/>
+									<input name="makh" class="makh form-control" required onchange="checkMakhExist(this)" />
 									<div class="valid-feedback">
 										Mã khoa hợp lệ!
 									</div>
@@ -112,13 +111,12 @@
 								</div>
 								<div class="mb-3">
 									<label>Tên khoa: </label>
-									<input name="tenkh" id="tenkh" class="tenkh form-control" required onchange="checkMakhExist(this)"/>
+									<input name="tenkh" id="tenkh" class="tenkh form-control" required onchange="checkMakhExist(this)" />
 									<div class="invalid-feedback">
 										Tên khoa đã tồn tại!
 									</div>
 								</div>
-								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" 
-									data-bs-dismiss="modal" id="submit-form" disabled>Save</button>
+								<button class="btn btn-primary mt-2" type="button" onclick="submitClosestForm(this, () => refreshData())" data-bs-dismiss="modal" id="submit-form-dp" disabled>Save</button>
 								<button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
 							</form>
 						</div>
@@ -309,7 +307,7 @@
 		}
 		var submitForm = document.getElementById('submit-form');
 		var tenlop_unable = document.getElementById('tenlop');
-
+		
 		// Convert the string representation of list to an actual array of objects
 		try {
 			var check = await fetch('department-class/check-malop.htm', {
@@ -347,7 +345,7 @@
 				element.classList.add('is-invalid')
 				if (submitForm !== null) {
 					submitForm.disabled = true;
-					if(element.classList.contains('malop')) tenlop_unable.disabled = true;
+					if (element.classList.contains('malop')) tenlop_unable.disabled = true;
 				} else {
 					// Handle the case where no matching element is found
 					console.log("No element found with ID 'submit-form'");
@@ -357,7 +355,7 @@
 			window.alert("Lỗi: ", error)
 		}
 	}
-
+	
 	async function checkMakhExist(element) {
 		var makh, tenkh;
 		if (element.classList.contains('makh')) {
@@ -367,7 +365,7 @@
 			makh = element.closest('#addDepartForm').querySelector('.makh').value.trim();
 			tenkh = element.value.trim();
 		}
-		var submitForm = document.getElementById('submit-form');
+		var submitForm = document.getElementById('submit-form-dp');
 		var tenkh_unable = document.getElementById('tenkh');
 		// Convert the string representation of list to an actual array of objects
 		try {
@@ -406,7 +404,7 @@
 				element.classList.add('is-invalid')
 				if (submitForm !== null) {
 					submitForm.disabled = true;
-					if(element.classList.contains('makh')) tenkh_unable.disabled = true;
+					if (element.classList.contains('makh')) tenkh_unable.disabled = true;
 				} else {
 					// Handle the case where no matching element is found
 					console.log("No element found with ID 'submit-form'");

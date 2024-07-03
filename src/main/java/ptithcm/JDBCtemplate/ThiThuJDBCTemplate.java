@@ -10,20 +10,12 @@ import javax.sql.DataSource;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import ptithcm.bean.temp.CauHoiDeThi;
 import ptithcm.bean.temp.ChiTietDapAn;
-import ptithcm.bean.temp.KetQuaThi;
 import ptithcm.bean.temp.MonThi;
-import ptithcm.bean.temp.ThoiGianThi;
-import ptithcm.mapper.ChiTietDapAnMapper;
-import ptithcm.mapper.DeThiMapper;
-import ptithcm.mapper.KetQuaThiMapper;
 import ptithcm.mapper.MonThiMapper;
 import ptithcm.mapper.ThiThuMapper;
-import ptithcm.mapper.ThoiGianThiMapper;
 
 @Service
 public class ThiThuJDBCTemplate {

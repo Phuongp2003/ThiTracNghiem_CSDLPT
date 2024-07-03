@@ -73,6 +73,7 @@ public class SinhVienAction implements Action<SinhVien> {
             case "edit":
                 revertType = "edit";
                 rvAction = new SinhVienAction(revertType, oldData, data);
+                break;
             case "move":
                 revertType = "move";
                 rvAction = new SinhVienAction(revertType, oldData, data);

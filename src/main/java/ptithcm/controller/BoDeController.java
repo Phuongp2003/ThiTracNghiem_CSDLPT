@@ -64,7 +64,7 @@ public class BoDeController {
                 if (currentConnection.getRoleAlias().equals("TRUONG") ||
                         currentConnection.getRoleAlias().equals("COSO")) {
                     bodes = boDeJDBCTemplate.listAllBoDe();
-                    
+
                     Map<String, String> giaovienMap = new HashMap<String, String>();
                     for (GiaoVien i : giaoviens) {
                         giaovienMap.put(i.getMAGV(), i.getFullName());
@@ -158,7 +158,7 @@ public class BoDeController {
             @RequestParam("trinhdo") String trinhdo, @RequestParam("noidung") String noidung,
             @RequestParam("A") String A, @RequestParam("B") String B,
             @RequestParam("C") String C, @RequestParam("D") String D,
-            @RequestParam("dapan") String dapan, @RequestParam("magv") String magv, 
+            @RequestParam("dapan") String dapan, @RequestParam("magv") String magv,
             HttpSession session) {
         try {
             int maxcauhoi = boDeJDBCTemplate.getMaxCauHoi();
@@ -202,7 +202,7 @@ public class BoDeController {
 
     @RequestMapping(value = "edit-bode", method = RequestMethod.POST)
     public String updateBode(ModelMap model, @RequestParam("cauhoi") int cauhoi,
-            @RequestParam("mamh") String mamh, @RequestParam("trinhdo") String trinhdo,
+            @RequestParam("trinhdo") String trinhdo,
             @RequestParam("noidung") String noidung,
             @RequestParam("A") String A, @RequestParam("B") String B,
             @RequestParam("C") String C, @RequestParam("D") String D,
@@ -210,7 +210,6 @@ public class BoDeController {
         try {
             BoDe oldBode = boDeJDBCTemplate.getBoDe(cauhoi);
             BoDe newBode = boDeJDBCTemplate.getBoDe(cauhoi);
-            newBode.setMAMH(mamh);
             newBode.setTRINHDO(trinhdo);
             newBode.setNOIDUNG(noidung);
             newBode.setA(A);

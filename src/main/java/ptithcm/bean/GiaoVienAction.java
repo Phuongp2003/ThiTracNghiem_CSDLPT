@@ -73,6 +73,7 @@ public class GiaoVienAction implements Action<GiaoVien> {
             case "edit":
                 revertType = "edit";
                 rvAction = new GiaoVienAction(revertType, oldData, data);
+                break;
             case "move":
                 revertType = "move";
                 rvAction = new GiaoVienAction(revertType, oldData, data);
