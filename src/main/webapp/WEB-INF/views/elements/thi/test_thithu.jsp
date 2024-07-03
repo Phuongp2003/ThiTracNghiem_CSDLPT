@@ -206,7 +206,7 @@
 					controlE.style.backgroundColor = 'green';
 					controlE.style.color = 'black';
 				} else {
-					applyStyles(correctCheckedBox, {
+					applyStyles(labelForCorrectCheckbox, {
 						backgroundColor: 'green',
 						color: 'black'
 					})

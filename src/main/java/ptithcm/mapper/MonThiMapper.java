@@ -15,8 +15,11 @@ public class MonThiMapper implements RowMapper<MonThi> {
         monThi.setLanThi(rs.getInt("LAN"));
         monThi.setSoCau(rs.getInt("SOCAUTHI"));
         monThi.setThoiGian(rs.getInt("THOIGIAN"));
-        if (rs.getString("MALOP") != null) {
-            monThi.setLop(rs.getString("MALOP"));
+        try {
+            if (rs.getString("MALOP") != null)
+                monThi.setLop(rs.getString("MALOP"));
+        } catch (SQLException e) {
+            monThi.setLop(null);
         }
         return monThi;
     }
