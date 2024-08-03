@@ -3,6 +3,9 @@
 # Đồ án môn cơ sở dữ liệu phân tán nhóm 7 lớp D21CQCN02-N
 ## Đề tài: 
 - Quản lý thi trắc nghiệm
+- 
+## Giảng viên hướng dẫn
+- Lưu Nguyễn Kỳ Thư
 
 ## Thông tin kĩ thuật: 
  - JDK1.8(cho server tomcat)
@@ -13,17 +16,21 @@
 
 ## Cấu trúc phân tán
 - Xem sơ đồ dưới
+
  ![alt text](setup/phantan.png)
 ### Chi tiết
 #### Mảnh cơ sở 1 và 2
 - Cấu trúc:
+- 
  ![alt text](setup/phantan_site1_site2.png)
 - Danh sách SP sử dụng:
+- 
   ![alt text](setup/sp_site1n2_1.png)
-    ![alt text](setup/sp_site1n2_2.png)
+  ![alt text](setup/sp_site1n2_2.png)
  #### Mảnh tra cứu (không có SP)
  Cấu trúc:
-  ![alt text](setup/phantan_site_tracuu.png)
+ 
+ ![alt text](setup/phantan_site_tracuu.png)
   
 ## Phân công báo cáo
 **1 . PHẠM BÙI NAM PHƯƠNG**
