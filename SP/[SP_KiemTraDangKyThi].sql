@@ -1,0 +1,14 @@
+﻿USE [TN_CSDLPT]
+GO
+/****** Object:  StoredProcedure [dbo].[SP_KiemTraDangKyThi]    Script Date: 24/06/2024 3:43:07 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE OR ALTER PROC [dbo].[SP_KiemTraDangKyThi]
+@MAMH CHAR(5), @MALOP NCHAR(15), @LAN SMALLINT
+AS
+BEGIN
+    IF EXISTS(SELECT 1 FROM GIAOVIEN_DANGKY WHERE MAMH = @MAMH AND MALOP = @MALOP AND LAN = @LAN)
+    RAISERROR('Lớp này đã được đăng kí thi môn này lần này', 16, 1) 
+END
